@@ -1,0 +1,14 @@
+.DS_Store
+*.meta
+.idea/
+org.eclipse.buildship.core.prefs
+.project
+.classpath
+Android/.idea/*
+.vscode
+UnityExample/Assets/Plugins/Android/
+UnityExample/Library
+UnityExample/Obj
+UnityExample/Temp
+UnityExample/Logs
+UnityExample/test.apk
