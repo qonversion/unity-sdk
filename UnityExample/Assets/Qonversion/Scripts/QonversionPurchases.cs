@@ -17,8 +17,11 @@ namespace Qonversion.Scripts
         [Tooltip("An optional bool.")]
         public bool useQonversionBilling;
 
+        private Action<string> _onMakePurchase;
+
         public void Initialize(string appUserID, Action<string> onMakePurchase)
         {
+            _onMakePurchase = onMakePurchase;
 #if UNITY_ANDROID && !UNITY_EDITOR
             _wrapper = new PurchasesWrapperAndroid();
 #elif UNITY_IPHONE && !UNITY_EDITOR
@@ -38,7 +41,7 @@ namespace Qonversion.Scripts
         
         private void _makePurchase(string data)
         {
-            
+            _onMakePurchase?.Invoke(data);
         }
 
         private class PurchasesWrapperNoop : IPurchasesWrapper

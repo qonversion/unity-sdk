@@ -1,13 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Qonversion.Scripts;
-using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class QonversionUsage : MonoBehaviour
 {
     public QonversionPurchases QonversionPurchases;
-    public TextMeshPro Text;
+    public Text Text;
 
     void Start()
     {
