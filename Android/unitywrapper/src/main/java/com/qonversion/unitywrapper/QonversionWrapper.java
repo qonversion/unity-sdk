@@ -8,13 +8,13 @@ import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesUpdatedListener;
-import com.qonversion.android.sdk.BuildConfig;
+import com.android.billingclient.api.SkuDetails;
 import com.qonversion.android.sdk.Qonversion;
 import com.qonversion.android.sdk.QonversionBillingBuilder;
-import com.qonversion.unitywrapper.utils.MappersKt;
+import com.qonversion.android.sdk.QonversionCallback;
 import com.unity3d.player.UnityPlayer;
-import com.qonversion.android.sdk.Qonversion;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,53 +22,63 @@ import java.util.List;
 
 public class QonversionWrapper {
     //unity methods
-    private static final String MAKE_PURCHASE = "_makePurchase";
+    private static QonversionWrapper INSTANCE;
 
+    private String gameObject;
 
-    private static String gameObject;
     private static String TAG = "QonversionWrapper";
 
-    public static void setup(String gameObject_, String projectKey, String userID, boolean autoTracking, boolean useQonversionBilling) {
+    private QonversionWrapper(String gameObject_, String projectKey, String userID){
         //TODO: add logic checks
         gameObject = gameObject_;
         Log.d(TAG, "Initialize starting with projectKey: " + projectKey +
-                "; userID: " + userID +
-                "; autoTracking" + autoTracking +
-                "; useQonversionBilling: " + useQonversionBilling);
+                "; userID: " + userID);
 
-        QonversionBillingBuilder billingBuilder = buildBilling();
-        Log.d(TAG, "Billing built successfully");
-        Qonversion.initialize(UnityPlayer.currentActivity.getApplication(), projectKey, userID, billingBuilder, autoTracking);
+        Qonversion.initialize(UnityPlayer.currentActivity.getApplication(), projectKey, userID, buildBilling(), true);
         Log.d(TAG, "Qonversion initialized");
     }
 
     private static QonversionBillingBuilder buildBilling() {
         return new QonversionBillingBuilder()
                 .enablePendingPurchases()
-                .setChildDirected(BillingClient.ChildDirected.CHILD_DIRECTED)
-                .setUnderAgeOfConsent(BillingClient.UnderAgeOfConsent.UNDER_AGE_OF_CONSENT)
                 .setListener(new PurchasesUpdatedListener() {
                     @Override
                     public void onPurchasesUpdated(BillingResult billingResult, @Nullable List<Purchase> purchases) {
-                        try {
-                            JSONObject object = new JSONObject();
-                            object.put("responseCode", billingResult.getResponseCode());
-                            if (purchases != null) {
-                                object.put("purchases", MappersKt.convertToJsonArray(purchases));
-                            }
-                            sendJSONObject(object, MAKE_PURCHASE);
-                        } catch (JSONException e) {
-                            logJSONException(e);
-                        } catch (Exception e) {
-                            Log.wtf(TAG, e);
-                        }
                     }
                 });
     }
 
-    private static void sendJSONObject(JSONObject object, String method) {
-        Log.e(TAG, "Purchases. Result: " + object.toString());
-        UnityPlayer.UnitySendMessage(gameObject, method, object.toString());
+
+    public static synchronized void setup(String gameObject_, String projectKey, String userID) {
+        if (INSTANCE != null){
+            Log.w(TAG, "Qonversion SDK is already initialized");
+            return;
+        }
+
+        INSTANCE = new QonversionWrapper(gameObject_, projectKey, userID);
+    }
+
+    public static void trackPurchase(String jsonSkuDetails, String jsonPurchaseInfo, String signature){
+        try {
+            Qonversion q = Qonversion.getInstance();
+            if (q == null){
+                Log.w(TAG, "Qonversion isn't initialized");
+                return;
+            }
+            q.purchase(new SkuDetails(jsonSkuDetails), new Purchase(jsonPurchaseInfo, signature), new QonversionCallback() {
+                @Override
+                public void onSuccess(@NotNull String s) {
+                    Log.d(TAG, "Purchase tracked: " + s);
+                }
+
+                @Override
+                public void onError(@NotNull Throwable throwable) {
+                    Log.e(TAG, "Purchase error: " + throwable.getLocalizedMessage());
+                }
+            });
+        } catch (JSONException e) {
+            logJSONException(e);
+        }
     }
 
     private static void logJSONException(JSONException e) {

@@ -17,11 +17,9 @@ namespace Qonversion.Scripts
         [Tooltip("An optional bool.")]
         public bool useQonversionBilling;
 
-        private Action<string> _onMakePurchase;
 
-        public void Initialize(string appUserID, Action<string> onMakePurchase)
+        public void Initialize(string appUserID)
         {
-            _onMakePurchase = onMakePurchase;
 #if UNITY_ANDROID && !UNITY_EDITOR
             _wrapper = new PurchasesWrapperAndroid();
 #elif UNITY_IPHONE && !UNITY_EDITOR
@@ -35,19 +33,22 @@ namespace Qonversion.Scripts
         
         private void Setup(string newUserId)
         {            
-            _wrapper.Setup(gameObject.name, qonversionAPIKey, newUserId, autoTrackingMode, useQonversionBilling);            
+            _wrapper.Setup(gameObject.name, qonversionAPIKey, newUserId);            
         }
-        
-        
-        private void _makePurchase(string data)
+
+        public void TrackPurchase(string jsonSkuDetails, string jsonPurchaseInfo, string signature)
         {
-            _onMakePurchase?.Invoke(data);
+            _wrapper.TrackPurchase(jsonSkuDetails, jsonPurchaseInfo, signature);
         }
+        
 
         private class PurchasesWrapperNoop : IPurchasesWrapper
         {
-            public void Setup(string gameObject, string projectKey, string userID, bool autoTracking,
-                bool useQonversionBilling)
+            public void Setup(string gameObject, string projectKey, string userID)
+            {
+            }
+
+            public void TrackPurchase(string jsonSkuDetails, string jsonPurchaseInfo, string signature)
             {
             }
         }

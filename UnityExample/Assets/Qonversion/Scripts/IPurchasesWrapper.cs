@@ -1,4 +1,5 @@
 ﻿public interface IPurchasesWrapper
 {
-    void Setup(string gameObject, string projectKey, string userID, bool autoTracking, bool useQonversionBilling);
+    void Setup(string gameObject, string projectKey, string userID);
+    void TrackPurchase(string jsonSkuDetails, string jsonPurchaseInfo, string signature);
 }

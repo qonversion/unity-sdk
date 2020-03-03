@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/QonversionSDKUsageExample.unity
+    guid: 46fc999ffc3a3a54e8874a52f186b617
   m_configObjects: {}
