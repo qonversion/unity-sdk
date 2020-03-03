@@ -1,6 +1,7 @@
 package com.qonversion.unitywrapper;
 
 import android.util.Log;
+import android.util.Pair;
 
 import androidx.annotation.Nullable;
 
@@ -9,6 +10,7 @@ import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
+import com.qonversion.android.sdk.GooglePurchaseConverter;
 import com.qonversion.android.sdk.Qonversion;
 import com.qonversion.android.sdk.QonversionBillingBuilder;
 import com.qonversion.android.sdk.QonversionCallback;
@@ -34,7 +36,7 @@ public class QonversionWrapper {
         Log.d(TAG, "Initialize starting with projectKey: " + projectKey +
                 "; userID: " + userID);
 
-        Qonversion.initialize(UnityPlayer.currentActivity.getApplication(), projectKey, userID, buildBilling(), true);
+        Qonversion.initialize(UnityPlayer.currentActivity.getApplication(), projectKey, userID);
         Log.d(TAG, "Qonversion initialized");
     }
 
@@ -65,7 +67,14 @@ public class QonversionWrapper {
                 Log.w(TAG, "Qonversion isn't initialized");
                 return;
             }
-            q.purchase(new SkuDetails(jsonSkuDetails), new Purchase(jsonPurchaseInfo, signature), new QonversionCallback() {
+
+            GooglePurchaseConverter converter = new GooglePurchaseConverter();
+            SkuDetails s = new SkuDetails(jsonSkuDetails);
+            Purchase p = new Purchase(jsonPurchaseInfo, signature);
+            com.qonversion.android.sdk.entity.Purchase qqwe = converter.convert(new Pair<SkuDetails, Purchase>(s, p));
+            Log.w(TAG, "Converted purchase: " + qqwe.toString());
+
+            q.purchase(s, p, new QonversionCallback() {
                 @Override
                 public void onSuccess(@NotNull String s) {
                     Log.d(TAG, "Purchase tracked: " + s);

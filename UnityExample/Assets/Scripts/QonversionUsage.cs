@@ -14,7 +14,8 @@ public class QonversionUsage : MonoBehaviour
     public GameObject LoadingIAPText;
     public GameObject IAPBtnsContainer;
 
-    public Button AndrTestPurchasedBtn;
+    public Button TestPurchase;
+    public Button TestSubscription;
 
     void Start()
     {
@@ -23,10 +24,16 @@ public class QonversionUsage : MonoBehaviour
 
         InitializeBilling();
 
-        AndrTestPurchasedBtn.onClick.AddListener(() =>
+        TestPurchase.onClick.AddListener(() =>
         {
             _iapManagerConfigurator.PurchaseClick("com.qonversion.sdktestproduct1");
             Debug.Log("PurchaseClicked");
+        });
+
+        TestSubscription.onClick.AddListener(() =>
+        {
+            _iapManagerConfigurator.PurchaseClick("com.qonversion.testsubscription1");
+            Debug.Log("SubscriptionClicked");
         });
 
         QonversionPurchases.Initialize("test2");
@@ -37,6 +44,7 @@ public class QonversionUsage : MonoBehaviour
         var builder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
 #if UNITY_ANDROID && !UNITY_EDITOR
         builder.AddProduct("com.qonversion.sdktestproduct1", ProductType.Consumable);
+        builder.AddProduct("com.qonversion.testsubscription1", ProductType.Subscription);
         //#elif UNITY_IPHONE && !UNITY_EDITOR
 #endif
         
