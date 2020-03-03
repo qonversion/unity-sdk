@@ -36,18 +36,17 @@ public class QonversionWrapper {
         Log.d(TAG, "Initialize starting with projectKey: " + projectKey +
                 "; userID: " + userID);
 
-        Qonversion.initialize(UnityPlayer.currentActivity.getApplication(), projectKey, userID);
-        Log.d(TAG, "Qonversion initialized");
-    }
+        Qonversion.initialize(UnityPlayer.currentActivity.getApplication(), projectKey, userID, new QonversionCallback() {
+            @Override
+            public void onSuccess(@NotNull String uid) {
+                Log.d(TAG, "Qonversion initialized. UID: " + uid);
+            }
 
-    private static QonversionBillingBuilder buildBilling() {
-        return new QonversionBillingBuilder()
-                .enablePendingPurchases()
-                .setListener(new PurchasesUpdatedListener() {
-                    @Override
-                    public void onPurchasesUpdated(BillingResult billingResult, @Nullable List<Purchase> purchases) {
-                    }
-                });
+            @Override
+            public void onError(@NotNull Throwable t) {
+                Log.d(TAG, "Qonversion initializing error: " + t.getLocalizedMessage());
+            }
+        });
     }
 
 
