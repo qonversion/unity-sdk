@@ -25,13 +25,21 @@ public class QonversionUsage : MonoBehaviour
 
         TestPurchase.onClick.AddListener(() =>
         {
-            _iapManagerConfigurator.PurchaseClick("com.qonversion.sdktestproduct1");
+#if UNITY_ANDROID && !UNITY_EDITOR
+        _iapManagerConfigurator.PurchaseClick("com.qonversion.sdktestproduct1");
+#elif UNITY_IPHONE && !UNITY_EDITOR
+        _iapManagerConfigurator.PurchaseClick("q.test.coach.inapp.lifetimeaccess.19");
+#endif
             Debug.Log("PurchaseClicked");
         });
 
         TestSubscription.onClick.AddListener(() =>
         {
-            _iapManagerConfigurator.PurchaseClick("com.qonversion.testsubscription1");
+#if UNITY_ANDROID && !UNITY_EDITOR
+        _iapManagerConfigurator.PurchaseClick("com.qonversion.testsubscription1");
+#elif UNITY_IPHONE && !UNITY_EDITOR
+        _iapManagerConfigurator.PurchaseClick("coach.direct_subs.weekly.3.feb.19");
+#endif
             Debug.Log("SubscriptionClicked");
         });
 
@@ -45,7 +53,9 @@ public class QonversionUsage : MonoBehaviour
 #if UNITY_ANDROID && !UNITY_EDITOR
         builder.AddProduct("com.qonversion.sdktestproduct1", ProductType.Consumable);
         builder.AddProduct("com.qonversion.testsubscription1", ProductType.Subscription);
-        //#elif UNITY_IPHONE && !UNITY_EDITOR
+#elif UNITY_IPHONE && !UNITY_EDITOR
+        builder.AddProduct("q.test.coach.inapp.lifetimeaccess.19", ProductType.Consumable);
+        builder.AddProduct("coach.direct_subs.weekly.3.feb.19", ProductType.Subscription);
 #endif
         
         _iapManagerConfigurator = new IAPManagerConfigurator(() =>

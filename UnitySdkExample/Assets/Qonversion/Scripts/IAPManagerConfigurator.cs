@@ -78,9 +78,7 @@ public class IAPManagerConfigurator : IStoreListener
         var signature = parsedReceiptPayload["signature"];
         
         _qonversionPurchases.TrackPurchase(skuDetailsForProduct, jsonPurchaseInfo,signature);
-#elif UNITY_IPHONE && !UNITY_EDITOR
 #endif
-        var iosAppPurchaseReceipt = e.purchasedProduct.receipt;
 
 
         return PurchaseProcessingResult.Complete;
