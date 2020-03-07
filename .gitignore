@@ -6,13 +6,8 @@ org.eclipse.buildship.core.prefs
 .classpath
 Android/.idea/*
 .vscode
-UnityExample/Assets/Plugins/Android/
-UnityExample/Library
-UnityExample/Obj
-UnityExample/Temp
-UnityExample/Logs
-UnityExample/test.apk
 UnitySdkExample/Assets/Plugins/Android/
+UnitySdkExample/.vs
 UnitySdkExample/Library
 UnitySdkExample/Obj
 UnitySdkExample/Temp
