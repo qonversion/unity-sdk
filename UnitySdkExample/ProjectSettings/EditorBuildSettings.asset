@@ -7,5 +7,5 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 1
     path: Assets/Scenes/QonversionSDKUsageExample.unity
-    guid: da6c0c683c7064f0b9afab4e3cf46bd7
+    guid: 7847ff8847d5b374287020ccdaed844a
   m_configObjects: {}

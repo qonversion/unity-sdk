@@ -60,10 +60,7 @@ public class IAPManagerConfigurator : IStoreListener
     public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs e)
     {
 
-#if UNITY_ANDROID && !UNITY_EDITOR
-        builder.AddProduct("com.qonversion.sdktestproduct1", ProductType.Consumable);
-        builder.AddProduct("com.qonversion.testsubscription1", ProductType.Subscription);
-
+#if UNITY_ANDROID && !UNITY_EDITOR       
         var skuDetails = extensions.GetExtension<IGooglePlayStoreExtensions>().GetProductJSONDictionary();
         Debug.Log($"IAPReceipt: {e.purchasedProduct.receipt}");
         Debug.Log($"SkuDetails: {string.Join(";", skuDetails.Select(x => x.Key + "=" + x.Value).ToArray())}");
