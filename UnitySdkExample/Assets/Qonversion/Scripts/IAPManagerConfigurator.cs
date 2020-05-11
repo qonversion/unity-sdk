@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Qonversion.Scripts;
-using Qonversion.Scripts.Utils;
 using UnityEngine;
 using UnityEngine.Purchasing;
 
