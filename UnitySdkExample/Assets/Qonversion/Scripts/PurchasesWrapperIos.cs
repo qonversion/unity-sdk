@@ -23,6 +23,11 @@ namespace Qonversion.Scripts
             
         }
 
+        public void PushAttribution(Dictionary<string, object> conversionData, string attributionSource, string conversionUid)
+        {
+            
+        }
+
         public void TrackPurchaseIos(string receipt)
         {
             // _QVRSTrackPurchase(receipt);

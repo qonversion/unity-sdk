@@ -32,6 +32,11 @@ public class IAPManagerConfigurator : IStoreListener
         _onInitialized();
     }
 
+    public void PushAttribution(Dictionary<string, object> conversionData, string attributionSource, string conversionUid)
+    {
+        _qonversionPurchases.PushAttribution(conversionData, attributionSource, conversionUid);
+    }
+
     public void PurchaseClick(string productId) {
         if (controller == null)
         {

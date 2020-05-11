@@ -15,6 +15,7 @@ public class QonversionUsage : MonoBehaviour
 
     public Button TestPurchase;
     public Button TestSubscription;
+    public Button TestPushingAttribution;
 
     void Start()
     {
@@ -41,6 +42,15 @@ public class QonversionUsage : MonoBehaviour
         _iapManagerConfigurator.PurchaseClick("coach.direct_subs.weekly.3.feb.19");
 #endif
             Debug.Log("SubscriptionClicked");
+        });
+        
+        TestPushingAttribution.onClick.AddListener(() =>
+        {
+             _iapManagerConfigurator.PushAttribution(new Dictionary<string, object>
+             {
+                ["test"] = "test2"
+             }, "", "uid");
+             Debug.Log("PushAttribution Clicked");
         });
 
         QonversionPurchases.Initialize("test3");

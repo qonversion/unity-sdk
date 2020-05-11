@@ -10,17 +10,21 @@ import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
+import com.qonversion.android.sdk.AttributionSource;
 import com.qonversion.android.sdk.GooglePurchaseConverter;
 import com.qonversion.android.sdk.Qonversion;
 import com.qonversion.android.sdk.QonversionBillingBuilder;
 import com.qonversion.android.sdk.QonversionCallback;
+import com.qonversion.unitywrapper.utils.Helper;
 import com.unity3d.player.UnityPlayer;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class QonversionWrapper {
     //unity methods
@@ -28,7 +32,7 @@ public class QonversionWrapper {
 
     private String gameObject;
 
-    private static String TAG = "QonversionWrapper";
+    public static String TAG = "QonversionWrapper";
 
     private QonversionWrapper(String gameObject_, String projectKey, String userID){
         //TODO: add logic checks
@@ -59,7 +63,23 @@ public class QonversionWrapper {
         INSTANCE = new QonversionWrapper(gameObject_, projectKey, userID);
     }
 
-    public static void trackPurchase(String jsonSkuDetails, String jsonPurchaseInfo, String signature){
+    public static synchronized void pushAttribution(HashMap<Object, Object> conversionData, String attributionSource, String conversionUid) {
+        try {
+            Qonversion q = Qonversion.getInstance();
+            if (q == null){
+                Log.w(TAG, "Qonversion isn't initialized");
+                return;
+            }
+            q.attribution(Helper.convertToMap(conversionData), AttributionSource.APPS_FLYER, conversionUid);
+            Log.e(TAG, "Attribution sent");
+        } catch (Exception e) {
+            Log.e(TAG, "Purchases. " + "pushAttribution error: " + e.getLocalizedMessage());
+        }
+    }
+
+
+
+    public static synchronized void trackPurchase(String jsonSkuDetails, String jsonPurchaseInfo, String signature){
         try {
             Qonversion q = Qonversion.getInstance();
             if (q == null){

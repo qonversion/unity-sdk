@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Qonversion.Scripts
@@ -10,12 +12,6 @@ namespace Qonversion.Scripts
         [Tooltip("Your Qonversion API Key. Get from https://qonversion.io/")]
         // ReSharper disable once InconsistentNaming
         public string qonversionAPIKey;
-        
-        [Tooltip("An optional bool.")]
-        public bool autoTrackingMode;
-        
-        [Tooltip("An optional bool.")]
-        public bool useQonversionBilling;
 
 
         public void Initialize(string appUserID)
@@ -39,6 +35,11 @@ namespace Qonversion.Scripts
         {
             _wrapper.TrackPurchase(jsonSkuDetails, jsonPurchaseInfo, signature);
         }
+
+        public void PushAttribution(Dictionary<string, object> conversionData, string attributionSource, string conversionUid)
+        {
+            _wrapper.PushAttribution(conversionData, attributionSource, conversionUid);
+        }
         
 
         private class PurchasesWrapperNoop : IPurchasesWrapper
@@ -49,6 +50,11 @@ namespace Qonversion.Scripts
 
             public void TrackPurchase(string jsonSkuDetails, string jsonPurchaseInfo, string signature)
             {
+            }
+
+            public void PushAttribution(Dictionary<string, object> conversionData, string attributionSource, string conversionUid)
+            {
+                
             }
 
             public void TrackPurchaseIos(string receipt)
