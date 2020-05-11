@@ -1,7 +1,7 @@
 
 <p  align="center">
 
-<a  href="https://qonversion.io"><img  width="260"  src="https://qonversion.io/img/brand.svg"></a>
+<a  href="https://qonversion.io"><img  width="260"  src="https://qonversion.io/img/q_brand.svg"></a>
 
 </p>
 
@@ -29,8 +29,7 @@ Get access to the powerful yet simple subscription analytics:
 
 ## 1. Import dependencies
 1) Add to your unity project [Unity Dependencies Resolver](https://github.com/googlesamples/unity-jar-resolver#overview) (in UnitySdkExample already imported)
-2) Import to your project UnityIAP ([docs](https://docs.unity3d.com/Manual/UnityIAP.html)). While importing UnityIAP uncheck this library 
-<img  width="660"  src="./img/t1.png">
+2) Import to your project UnityIAP ([docs](https://docs.unity3d.com/Manual/UnityIAP.html)).
 
 ## 2. Add Qonversion sdk
 Import <a  href="./qonversionsdk.unitypackage">qonversionsdk.unitypackage</a> to your project. (in UnitySdkExample already imported)
