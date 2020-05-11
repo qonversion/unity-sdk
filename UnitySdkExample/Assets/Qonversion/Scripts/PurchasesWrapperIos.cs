@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using SimpleJSON;
 using UnityEngine;
 
-//#if UNITY_IOS
+#if UNITY_IOS
 namespace Qonversion.Scripts
 {
     public class PurchasesWrapperIos : IPurchasesWrapper
@@ -48,4 +48,4 @@ namespace Qonversion.Scripts
         }
     }
 }
-//#endif
+#endif
