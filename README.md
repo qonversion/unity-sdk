@@ -1,15 +1,9 @@
-
-<p  align="center">
-
-<a  href="https://qonversion.io"><img  width="260"  src="https://qonversion.io/img/q_brand.svg"></a>
-
+<p align="center">
+ <a href="https://qonversion.io" target="_blank"><img width="460" height="150" src="https://qonversion.io/img/q_brand.svg"></a>
 </p>
 
-  
-
-<p  align="center">
-
-<a  href="https://qonversion.io"><img  width="660"  src="https://qonversion.io/img/illustrations/charts.svg"></a></p>
+<p align="center">
+     <a href="https://qonversion.io"><img width="660" src="https://qonversion.io/img/illustrations/charts.svg"></a></p>
 
   
 
