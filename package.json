@@ -1,0 +1,33 @@
+{
+	"name": "com.qonversion.unity",
+	"displayName": "Qonversion",
+	"version": "1.0.0",
+	"unity": "2018.3",
+	"description": "Empower your mobile app marketing and product decisions with precise subscription data.",
+	"author": {
+		"name": "qonversion.io",
+		"url": "https://github.com/qonversion/unity-sdk"
+	},
+	"keywords": [
+		"unity",
+		"qonversion",
+		"ios",
+		"android",
+		"apple",
+		"subscription",
+		"analytics",
+		"iap",
+		"purchase"
+	],
+	"category": "Unity",
+	"files": [
+		"/README.md",
+		"/README.md.meta",
+		"/package.json",
+		"/package.json.meta",
+		"/Runtime",
+		"/Runtime.meta",
+		"/Editor",
+		"/Editor.meta"
+	]
+}
