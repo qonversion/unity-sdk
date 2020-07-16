@@ -23,14 +23,14 @@ Just add this line to the `Packages/manifest.json` file of your Unity Project:
 
 ```json
 "dependencies": {
-    "com.qonversion.unity": "https://github.com/qonversion/unity-sdk.git#v1.0.1",
+    "com.qonversion.unity": "https://github.com/qonversion/unity-sdk.git#v1.0.0",
 }
 ```
 
 If you want to use a specific [release](https://github.com/qonversion/unity-sdk/releases) in your code, just add `#release` at the end, like so:
 ```json
 "dependencies": {
-    "com.qonversion.unity": "https://github.com/lupidan/apple-signin-unity.git#v1.0.1",
+    "com.qonversion.unity": "https://github.com/lupidan/apple-signin-unity.git#v1.0.0",
 }
 ```
 
