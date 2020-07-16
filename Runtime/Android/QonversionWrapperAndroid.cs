@@ -5,22 +5,17 @@ namespace QonversionUnity
 {
     internal class QonversionWrapperAndroid : IQonversionWrapper
     {
-        public void SetDebugMode(bool debugMode)
-        {
-            //Will be available soon
-            Debug.LogWarning("[Qonversion] Not Supported SetDebugMode on Android platform.");
-        }
-
-        public void Initialize(string projectKey, string userID, bool debugMode)
+        public void Launch(string projectKey, string userID, bool debugMode)
         {
             if (debugMode)
             {
-                SetDebugMode(debugMode);
+                //Will be available soon
+                Debug.LogWarning("[Qonversion] Not Supported SetDebugMode on Android platform.");
             }
 
             using (var purchases = new AndroidJavaClass("com.qonversion.unitywrapper.QonversionWrapper"))
             {
-                purchases.CallStatic("initialize", projectKey, userID);
+                purchases.CallStatic("Launch", projectKey, userID);
             }
         }
 
@@ -32,7 +27,7 @@ namespace QonversionUnity
             switch(source)
             {
                 case AttributionSource.AppsFlyer:
-                    attibutionSource = "appsflyer";
+                    attibutionSource = "APPSFLYER";
                     break;
                 default:
                     Debug.LogWarning(string.Format("[Qonversion] Not Supported AttributionSource.{0} on Android platform.", source));

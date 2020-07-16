@@ -41,7 +41,7 @@ public class QonversionWrapper {
     private static Class<?> unityPlayer;
 
     private QonversionWrapper(String projectKey, String userID) {
-        Log.d(TAG, "Qonversion Initialize starting with userID: " + userID);
+        Log.d(TAG, "Qonversion Launch starting with userID: " + userID);
 
         Activity unityActivity = UnityPlayer.currentActivity;
 
@@ -76,7 +76,7 @@ public class QonversionWrapper {
         return sdkInitialized;
     }
 
-    public static synchronized void initialize(String projectKey, String userID) {
+    public static synchronized void Launch(String projectKey, String userID) {
         if (INSTANCE != null){
             Log.w(TAG, "Qonversion SDK is already initialized");
             return;

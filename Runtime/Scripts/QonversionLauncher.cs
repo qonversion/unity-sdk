@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace QonversionUnity
 {
-    public class QonversionPurchases : MonoBehaviour
+    public class QonversionLauncher : MonoBehaviour
     {
         [Tooltip("Your Qonversion Application Access Key. Get from https://dash.qonversion.io/")]
         [SerializeField]
@@ -14,7 +14,7 @@ namespace QonversionUnity
 
         private void Start()
         {
-            Qonversion.Initialize(m_ApplicationAccessKey, m_DebugMode);
+            Qonversion.Launch(m_ApplicationAccessKey, m_DebugMode);
         }
     }
 }

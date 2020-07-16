@@ -49,10 +49,10 @@ openupm add com.qonversion.unity
 | **Application Access Key**   |  Qonversion [Application Access Key](https://dash.qonversion.io/project/settings), If debug mode set to true, user purchases will be checked on the sandbox environment and will not be sent to third-party integrations.  |
 | **Debug Mode**    | Set this to true to view the debug logs. (for development only!)  |
 
-### Simple setup with a Script
+### Setup with a Launcher
 
 <p align="center">
-    <a href="./Img/AddEntitlements.png"><img src="./img/UnitySimpleScript.png" alt="Unity Simple Script" width="509"/></a>
+    <a href="./Img/AddEntitlements.png"><img src="./img/UnityQonversionLauncher.png" alt="Unity Simple Script" width="559"/></a>
 </p>
 
 ### Programmatic setup with a Script
@@ -63,11 +63,11 @@ Sample code:
 ```csharp
 using QonversionUnity;
 
-public class QonversionPurchases : MonoBehaviour
+public class QonversionLauncher : MonoBehaviour
 {
     private void Start()
     {
-		Qonversion.Initialize(applicationAccessKey, debugMode);
+		Qonversion.Launch(applicationAccessKey, debugMode);
     }
 }
 ```

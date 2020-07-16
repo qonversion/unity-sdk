@@ -11,7 +11,7 @@ public final class Validate {
         if (!QonversionWrapper.isInitialized()) {
             throw new QonversionSdkNotInitializedException(
                     "The SDK has not been initialized, make sure to call "
-                            + "QonversionWrapper.initialize() first.");
+                            + "QonversionWrapper.Launch() first.");
         }
     }
 }

@@ -17,18 +17,11 @@ namespace QonversionUnity
         private static extern void _addAttributionData(string conversionData, int provider);
 #endif
 
-        public void SetDebugMode(bool debugMode)
+        public void Launch(string projectKey, string userID, bool debugMode)
         {
 #if UNITY_IOS
             _setDebugMode(debugMode);
-#endif
-        }
 
-        public void Initialize(string projectKey, string userID, bool debugMode)
-        {
-            SetDebugMode(debugMode);
-
-#if UNITY_IOS
             _launchWithKey(projectKey, userID);
 #endif
         }
