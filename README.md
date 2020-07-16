@@ -15,6 +15,14 @@ Get access to the powerful yet simple subscription analytics:
 
 ### Unity Package Manager
 
+#### Install via OpenUPM
+
+The package is available on the [openupm registry](https://openupm.com). You can install it via [openupm-cli](https://github.com/openupm/openupm-cli).
+
+```
+openupm add com.qonversion.unity
+```
+
 #### Install via Git URL
 
 Available starting from Unity 2018.3.
@@ -32,14 +40,6 @@ If you want to use a specific [release](https://github.com/qonversion/unity-sdk/
 "dependencies": {
     "com.qonversion.unity": "https://github.com/lupidan/apple-signin-unity.git#v1.0.0",
 }
-```
-
-#### Install via OpenUPM
-
-The package is available on the [openupm registry](https://openupm.com). You can install it via [openupm-cli](https://github.com/openupm/openupm-cli).
-
-```
-openupm add com.qonversion.unity
 ```
 
 ## Plugin setup (Android/iOS)
@@ -67,7 +67,7 @@ public class QonversionLauncher : MonoBehaviour
 {
     private void Start()
     {
-		Qonversion.Launch(applicationAccessKey, debugMode);
+        Qonversion.Launch(applicationAccessKey, debugMode);
     }
 }
 ```
@@ -98,7 +98,7 @@ public class AppsFlyerObjectScript : MonoBehaviour , IAppsFlyerConversionData
         Dictionary<string, object> conversionDataDictionary = AppsFlyer.CallbackStringToDictionary(conversionData);
         // add deferred deeplink logic here
 		
-		Qonversion.AddAttributionData(conversionData, AttributionSource.AppsFlyer, AppsFlyer.getAppsFlyerId());
+        Qonversion.AddAttributionData(conversionData, AttributionSource.AppsFlyer, AppsFlyer.getAppsFlyerId());
     }
 
     public void onConversionDataFail(string error)
