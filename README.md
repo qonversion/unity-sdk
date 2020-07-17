@@ -70,7 +70,7 @@ public class QonversionLauncher : MonoBehaviour
 
 ### Appsflyer Integration
 
-[Appsflyer Init SDK with deeplinking callbacks] https://github.com/AppsFlyerSDK/appsflyer-unity-plugin/blob/master/docs/Guides.md#-init-sdk-with-deeplinking-callbacks
+Init Appsflyer SDK with [deeplinking callbacks](https://github.com/AppsFlyerSDK/appsflyer-unity-plugin/blob/master/docs/Guides.md#-init-sdk-with-deeplinking-callbacks)
 
 Sample code:
 ```csharp
