@@ -3,10 +3,21 @@ using UnityEngine;
 
 namespace QonversionUnity
 {
-    internal class QonversionWrapperAndroid : IQonversionWrapper
+    internal class QonversionWrapperAndroid : AndroidJavaProxy, IQonversionWrapper, IQonversionResultHandler
     {
-        public void Launch(string projectKey, string userID, bool debugMode)
+        private const string QONVERSION_WRAPPER_INTERFACE_PATH = "com.qonversion.unitywrapper.IQonversionResultHandler";
+
+        private InitDelegate onInitCompleteDelegate;
+
+        public QonversionWrapperAndroid() : base(QONVERSION_WRAPPER_INTERFACE_PATH)
         {
+
+        }
+
+        public void Launch(string projectKey, string userID, bool debugMode, InitDelegate onInitComplete)
+        {
+            onInitCompleteDelegate = onInitComplete;
+
             if (debugMode)
             {
                 //Will be available soon
@@ -15,7 +26,7 @@ namespace QonversionUnity
 
             using (var purchases = new AndroidJavaClass("com.qonversion.unitywrapper.QonversionWrapper"))
             {
-                purchases.CallStatic("Launch", projectKey, userID);
+                purchases.CallStatic("Launch", projectKey, userID, this);
             }
         }
 
@@ -48,6 +59,16 @@ namespace QonversionUnity
             {
                 Debug.LogError($"[Qonversion] AddAttributionData Marshalling Error: {e}");
             }
+        }
+
+        public void onSuccessInit(string uid)
+        {
+            onInitCompleteDelegate?.Invoke(uid, string.Empty);
+        }
+
+        public void onErrorInit(string errorMessage)
+        {
+            onInitCompleteDelegate?.Invoke(string.Empty, errorMessage);
         }
     }
 }
