@@ -28,7 +28,7 @@ import java.util.concurrent.Executor;
 import android.os.Handler;
 
 public class QonversionWrapper {
-	
+
     public static String TAG = "QonversionWrapper";
 
     private static Executor executor;
@@ -40,36 +40,35 @@ public class QonversionWrapper {
     private static Context applicationContext;
 
     private static Boolean sdkInitialized = false;
-	
-	private static Handler mUnityMainThreadHandler;
-	
-	private IQonversionResultHandler mUnityMessageHandler;
+
+    private static Handler mUnityMainThreadHandler;
+
+    private IQonversionResultHandler mUnityMessageHandler;
 
     private QonversionWrapper(IQonversionResultHandler handler) {
 
-		mUnityMessageHandler = handler;
-		
-		if (mUnityMainThreadHandler == null)
-        {
+        mUnityMessageHandler = handler;
+
+        if (mUnityMainThreadHandler == null) {
             mUnityMainThreadHandler = new Handler();
         }
 
         applicationContext = UnityPlayer.currentActivity.getApplicationContext();
     }
-	
+
     public static synchronized boolean isInitialized() {
         return sdkInitialized;
     }
 
     public static synchronized void Launch(String projectKey, String userID, IQonversionResultHandler handler) {
-        if (INSTANCE != null){
+        if (INSTANCE != null) {
             Log.w(TAG, "Qonversion SDK is already initialized");
             return;
         }
 
         INSTANCE = new QonversionWrapper(handler);
-		
-		INSTANCE.Launch(projectKey, userID);
+
+        INSTANCE.Launch(projectKey, userID);
     }
 
     public static synchronized void attribution(String conversionData, String attributionSource, String conversionUid) {
@@ -92,7 +91,7 @@ public class QonversionWrapper {
 
             qonversion.attribution(conversionInfo, source, conversionUid);
             Log.e(TAG, "Attribution sent");
-            
+
         } catch (Exception e) {
             Log.e(TAG, "Purchases. " + "pushAttribution error: " + e.getLocalizedMessage());
         }
@@ -103,7 +102,7 @@ public class QonversionWrapper {
 
         try {
             Qonversion qonversion = Qonversion.getInstance();
-            if (qonversion == null){
+            if (qonversion == null) {
                 Log.w(TAG, "Qonversion isn't initialized");
                 return;
             }
@@ -126,18 +125,17 @@ public class QonversionWrapper {
             logJSONException(e);
         }
     }
-	
-	public void Launch(String projectKey, String userID)
-	{
-		Log.d(TAG, "Qonversion Launch starting with userID: " + userID);
+
+    public void Launch(String projectKey, String userID) {
+        Log.d(TAG, "Qonversion Launch starting with userID: " + userID);
 
         Activity unityActivity = UnityPlayer.currentActivity;
 
-        if(userID == null){
+        if (userID == null) {
             userID = "";
         }
 
-		Qonversion.initialize(unityActivity.getApplication(), projectKey, userID, new QonversionCallback() {
+        Qonversion.initialize(unityActivity.getApplication(), projectKey, userID, new QonversionCallback() {
             @Override
             public void onSuccess(@NotNull String uid) {
                 Log.d(TAG, "Qonversion initialized. UID: " + uid);
@@ -154,50 +152,42 @@ public class QonversionWrapper {
                                     }
                                 });
 
-				SendLaunchCallbackToUnity(true, uid, null);
+                SendLaunchCallbackToUnity(true, uid, null);
             }
 
             @Override
             public void onError(@NotNull Throwable t) {
-				String message = t.getLocalizedMessage();
+                String message = t.getLocalizedMessage();
 
                 Log.d(TAG, "Qonversion initializing error: " + message);
 
-				SendLaunchCallbackToUnity(false, null, message);
+                SendLaunchCallbackToUnity(false, null, message);
             }
         });
-	}
+    }
 
-	public void SendLaunchCallbackToUnity(Boolean success, String uid, String error)
-	{
-		runOnUnityThread(new Runnable()
-        {
+    public void SendLaunchCallbackToUnity(Boolean success, String uid, String error) {
+        runOnUnityThread(new Runnable() {
             @Override
-            public void run()
-            {
-                if (mUnityMessageHandler != null)
-                {
-					if(success){
-						mUnityMessageHandler.onSuccessInit(uid);
-					}
-					else
-					{
-						mUnityMessageHandler.onErrorInit(error);
-					}
-				}
+            public void run() {
+                if (mUnityMessageHandler != null) {
+                    if (success) {
+                        mUnityMessageHandler.onSuccessInit(uid);
+                    } else {
+                        mUnityMessageHandler.onErrorInit(error);
+                    }
+                }
             }
         });
-	}
+    }
 
-    public void runOnUnityThread(Runnable runnable)
-    {
-        if (mUnityMainThreadHandler != null && runnable != null)
-        {
+    public void runOnUnityThread(Runnable runnable) {
+        if (mUnityMainThreadHandler != null && runnable != null) {
             mUnityMainThreadHandler.post(runnable);
         }
     }
-	
-	public static Executor getExecutor() {
+
+    public static Executor getExecutor() {
         synchronized (LOCK) {
             if (QonversionWrapper.executor == null) {
                 QonversionWrapper.executor = AsyncTask.THREAD_POOL_EXECUTOR;
