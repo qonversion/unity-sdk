@@ -3,20 +3,22 @@ using UnityEngine;
 
 namespace QonversionUnity
 {
-    internal class QonversionWrapperAndroid : AndroidJavaProxy, IQonversionWrapper, IQonversionResultHandler
+    internal class QonversionWrapperAndroid : IQonversionWrapper
     {
-        private const string QONVERSION_WRAPPER_INTERFACE_PATH = "com.qonversion.unitywrapper.IQonversionResultHandler";
+        private readonly QonversionAndroidHandler Handler;
 
         private InitDelegate onInitCompleteDelegate;
 
-        public QonversionWrapperAndroid() : base(QONVERSION_WRAPPER_INTERFACE_PATH)
+        public QonversionWrapperAndroid()
         {
-
+            Handler = new QonversionAndroidHandler();
         }
 
         public void Launch(string projectKey, string userID, bool debugMode, InitDelegate onInitComplete)
         {
             onInitCompleteDelegate = onInitComplete;
+
+            Handler.InitComplete += OnInitComplete;
 
             if (debugMode)
             {
@@ -61,14 +63,14 @@ namespace QonversionUnity
             }
         }
 
-        public void onSuccessInit(string uid)
+        private void OnInitComplete()
         {
-            onInitCompleteDelegate?.Invoke();
-        }
+            Handler.InitComplete -= OnInitComplete;
 
-        public void onErrorInit(string errorMessage)
-        {
-            Debug.LogError(string.Format("[Qonversion] onErrorInit Error: {0}", errorMessage));
+            if (onInitCompleteDelegate != null)
+            {
+                onInitCompleteDelegate.Invoke();
+            }
         }
     }
 }
