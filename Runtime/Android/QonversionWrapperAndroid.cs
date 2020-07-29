@@ -7,9 +7,7 @@ namespace QonversionUnity
     {
         public void Launch(string projectKey, string userID, bool debugMode, InitDelegate onInitComplete)
         {
-            var handler = new QonversionAndroidHandler();
-
-            handler.InitComplete = onInitComplete;
+            var handler = new QonversionAndroidHandler(onInitComplete);
 
             if (debugMode)
             {

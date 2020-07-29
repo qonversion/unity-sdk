@@ -8,9 +8,9 @@ namespace QonversionUnity
 
         public InitDelegate InitComplete;
 
-        public QonversionAndroidHandler() : base(QONVERSION_WRAPPER_INTERFACE_PATH)
+        public QonversionAndroidHandler(InitDelegate onInitComplete) : base(QONVERSION_WRAPPER_INTERFACE_PATH)
         {
-
+            InitComplete = onInitComplete;
         }
 
         public void onSuccessInit(string uid)
