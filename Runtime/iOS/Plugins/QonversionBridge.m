@@ -1,7 +1,7 @@
 ﻿#import "Qonversion.h"
 #import "UtilityBridge.h"
 
-typedef void (*QonversionSuccessInitCallback)(const char *);
+typedef void (*QonversionSuccessInitCallback)();
 
 void _setDebugMode(bool debugMode) {
     [Qonversion setDebugMode:debugMode];
@@ -14,7 +14,7 @@ void _launchWithKey(const char* key, const char* userID,
         userID: [UtilityBridge сonvertCStringToNSString: userID]];
 	
 	if (_onSuccessInitCallback != NULL) {
-        _onSuccessInitCallback("Not Supported, will be available soon.");
+        _onSuccessInitCallback();
     }
 }
 

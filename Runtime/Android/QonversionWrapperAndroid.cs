@@ -57,18 +57,18 @@ namespace QonversionUnity
             }
             catch (Exception e)
             {
-                Debug.LogError($"[Qonversion] AddAttributionData Marshalling Error: {e}");
+                Debug.LogError(string.Format("[Qonversion] AddAttributionData Marshalling Error: {0}", e));
             }
         }
 
         public void onSuccessInit(string uid)
         {
-            onInitCompleteDelegate?.Invoke(uid, string.Empty);
+            onInitCompleteDelegate?.Invoke();
         }
 
         public void onErrorInit(string errorMessage)
         {
-            onInitCompleteDelegate?.Invoke(string.Empty, errorMessage);
+            Debug.LogError(string.Format("[Qonversion] onErrorInit Error: {0}", errorMessage));
         }
     }
 }

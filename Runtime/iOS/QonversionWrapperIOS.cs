@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace QonversionUnity
 {
-    internal class QonversionWrapperIOS : IQonversionWrapper, IQonversionResultHandler
+    internal class QonversionWrapperIOS : IQonversionWrapper
     {
 #if UNITY_IOS
         [DllImport("__Internal")]
@@ -18,7 +18,7 @@ namespace QonversionUnity
         private static extern void _addAttributionData(string conversionData, int provider);
 #endif
 
-        private delegate void QonversionSuccessInitCallback(string uid);
+        private delegate void QonversionSuccessInitCallback();
 
         private InitDelegate onInitCompleteDelegate;
 
@@ -43,11 +43,9 @@ namespace QonversionUnity
 #if UNITY_IOS
         [AOT.MonoPInvokeCallback(typeof(QonversionSuccessInitCallback))]
 #endif
-        public void onSuccessInit(string uid)
+        public void onSuccessInit()
         {
-            onInitCompleteDelegate?.Invoke(uid, string.Empty);
+            onInitCompleteDelegate?.Invoke();
         }
-
-        public void onErrorInit(string errorMessage) { }
     }
 }

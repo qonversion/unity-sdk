@@ -3,6 +3,6 @@
 namespace QonversionUnity
 {
     [System.Serializable]
-    public class InitEvent : UnityEvent<string, string>
+    public class InitEvent : UnityEvent
     {}
 }

@@ -3,5 +3,5 @@
     /// <summary>
     /// Init delegate.
     /// </summary>
-    public delegate void InitDelegate(string uid, string errorMessage);
+    public delegate void InitDelegate();
 }
