@@ -80,7 +80,8 @@ public class InAppPurchaseActivityLifecycleTracker {
                     }
 
                     @Override
-                    public void onServiceDisconnected(ComponentName name) {}
+                    public void onServiceDisconnected(ComponentName name) {
+                    }
                 };
 
         callbacks =
@@ -109,13 +110,16 @@ public class InAppPurchaseActivityLifecycleTracker {
                     }
 
                     @Override
-                    public void onActivityCreated(Activity activity, Bundle savedInstanceState) {}
+                    public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+                    }
 
                     @Override
-                    public void onActivityStarted(Activity activity) {}
+                    public void onActivityStarted(Activity activity) {
+                    }
 
                     @Override
-                    public void onActivityPaused(Activity activity) {}
+                    public void onActivityPaused(Activity activity) {
+                    }
 
                     @Override
                     public void onActivityStopped(Activity activity) {
@@ -146,10 +150,12 @@ public class InAppPurchaseActivityLifecycleTracker {
                     }
 
                     @Override
-                    public void onActivitySaveInstanceState(Activity activity, Bundle outState) {}
+                    public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+                    }
 
                     @Override
-                    public void onActivityDestroyed(Activity activity) {}
+                    public void onActivityDestroyed(Activity activity) {
+                    }
                 };
     }
 
@@ -191,8 +197,8 @@ public class InAppPurchaseActivityLifecycleTracker {
         for (Map.Entry<String, String> pair : skuDetailsMap.entrySet()) {
 
             String skuDetailsForProduct = pair.getValue();
-            String jsonPurchaseInfo  = purchaseMap.get(pair.getKey());
-			
+            String jsonPurchaseInfo = purchaseMap.get(pair.getKey());
+
             QonversionWrapper.trackPurchase(skuDetailsForProduct, jsonPurchaseInfo, null);
         }
     }

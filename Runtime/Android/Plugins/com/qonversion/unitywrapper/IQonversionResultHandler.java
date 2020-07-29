@@ -1,8 +1,7 @@
 package com.qonversion.unitywrapper;
 
-public interface IQonversionResultHandler
-{
+public interface IQonversionResultHandler {
     void onSuccessInit(String uid);
-	
-	void onErrorInit(String errorMessage);
+
+    void onErrorInit(String errorMessage);
 }

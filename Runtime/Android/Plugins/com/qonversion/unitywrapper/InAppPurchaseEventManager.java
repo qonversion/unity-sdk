@@ -66,7 +66,7 @@ class InAppPurchaseEventManager {
 
     @Nullable
     static Object asInterface(Context context, IBinder service) {
-        Object[] args = new Object[] {service};
+        Object[] args = new Object[]{service};
         return invokeMethod(context, IN_APP_BILLING_SERVICE_STUB, AS_INTERFACE, null, args);
     }
 
@@ -100,7 +100,7 @@ class InAppPurchaseEventManager {
         Bundle querySkus = new Bundle();
         querySkus.putStringArrayList(ITEM_ID_LIST, skuList);
         Object[] args =
-                new Object[] {3, PACKAGE_NAME, isSubscription ? SUBSCRIPTION : INAPP, querySkus};
+                new Object[]{3, PACKAGE_NAME, isSubscription ? SUBSCRIPTION : INAPP, querySkus};
 
         Object result =
                 invokeMethod(context, IN_APP_BILLING_SERVICE, GET_SKU_DETAILS, inAppBillingObj, args);
@@ -159,7 +159,7 @@ class InAppPurchaseEventManager {
             return false;
         }
 
-        Object[] args = new Object[] {3, PACKAGE_NAME, type};
+        Object[] args = new Object[]{3, PACKAGE_NAME, type};
         Object result =
                 invokeMethod(context, IN_APP_BILLING_SERVICE, IS_BILLING_SUPPORTED, inAppBillingObj, args);
 
@@ -188,7 +188,7 @@ class InAppPurchaseEventManager {
             int queriedPurchaseNum = 0;
 
             do {
-                Object[] args = new Object[] {3, PACKAGE_NAME, type, continuationToken};
+                Object[] args = new Object[]{3, PACKAGE_NAME, type, continuationToken};
                 Object result =
                         invokeMethod(context, IN_APP_BILLING_SERVICE, GET_PURCHASES, inAppBillingObj, args);
 
@@ -259,7 +259,7 @@ class InAppPurchaseEventManager {
             boolean reachTimeLimit = false;
 
             do {
-                Object[] args = new Object[] {6, PACKAGE_NAME, type, continuationToken, new Bundle()};
+                Object[] args = new Object[]{6, PACKAGE_NAME, type, continuationToken, new Bundle()};
                 continuationToken = null;
 
                 Object result =
@@ -347,20 +347,20 @@ class InAppPurchaseEventManager {
             Class<?>[] paramTypes = null;
             switch (methodName) {
                 case AS_INTERFACE:
-                    paramTypes = new Class[] {IBinder.class};
+                    paramTypes = new Class[]{IBinder.class};
                     break;
                 case GET_SKU_DETAILS:
-                    paramTypes = new Class[] {Integer.TYPE, String.class, String.class, Bundle.class};
+                    paramTypes = new Class[]{Integer.TYPE, String.class, String.class, Bundle.class};
                     break;
                 case IS_BILLING_SUPPORTED:
-                    paramTypes = new Class[] {Integer.TYPE, String.class, String.class};
+                    paramTypes = new Class[]{Integer.TYPE, String.class, String.class};
                     break;
                 case GET_PURCHASES:
-                    paramTypes = new Class[] {Integer.TYPE, String.class, String.class, String.class};
+                    paramTypes = new Class[]{Integer.TYPE, String.class, String.class, String.class};
                     break;
                 case GET_PURCHASE_HISTORY:
                     paramTypes =
-                            new Class[] {Integer.TYPE, String.class, String.class, String.class, Bundle.class};
+                            new Class[]{Integer.TYPE, String.class, String.class, String.class, Bundle.class};
                     break;
             }
 

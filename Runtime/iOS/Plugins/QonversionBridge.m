@@ -13,7 +13,7 @@ void _launchWithKey(const char* key, const char* userID,
     [Qonversion launchWithKey: [UtilityBridge сonvertCStringToNSString: key] 
         userID: [UtilityBridge сonvertCStringToNSString: userID]];
 	
-	if (_onSuccessInitCallback != NULL) {
+    if (_onSuccessInitCallback != NULL) {
         _onSuccessInitCallback();
     }
 }
