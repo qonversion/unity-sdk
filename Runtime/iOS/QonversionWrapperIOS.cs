@@ -20,7 +20,7 @@ namespace QonversionUnity
 
         private delegate void QonversionSuccessInitCallback();
 
-        private InitDelegate onInitCompleteDelegate;
+        private static InitDelegate onInitCompleteDelegate;
 
         public void Launch(string projectKey, string userID, bool debugMode, InitDelegate onInitComplete)
         {
@@ -43,7 +43,7 @@ namespace QonversionUnity
 #if UNITY_IOS
         [AOT.MonoPInvokeCallback(typeof(QonversionSuccessInitCallback))]
 #endif
-        public void onSuccessInit()
+        private static void onSuccessInit()
         {
             onInitCompleteDelegate?.Invoke();
         }
