@@ -3,8 +3,6 @@
 
 typedef void (*QonversionSuccessInitCallback)(const char *);
 
-static QonversionSuccessInitCallback onSuccessInitCallback;
-
 void _setDebugMode(bool debugMode) {
     [Qonversion setDebugMode:debugMode];
 }
@@ -12,12 +10,12 @@ void _setDebugMode(bool debugMode) {
 void _launchWithKey(const char* key, const char* userID,
 	QonversionSuccessInitCallback _onSuccessInitCallback) 
 {
-	onSuccessInitCallback = _onSuccessInitCallback;
-
     [Qonversion launchWithKey: [UtilityBridge сonvertCStringToNSString: key] 
-        userID: [UtilityBridge сonvertCStringToNSString: userID] completion:^(NSString * _Nonnull uid) {
-		_CallSuccessInitCallback(uid);
-	}];
+        userID: [UtilityBridge сonvertCStringToNSString: userID]];
+	
+	if (_onSuccessInitCallback != NULL) {
+        _onSuccessInitCallback("Not Supported, will be available soon.");
+    }
 }
 
 void _addAttributionData(const char* conversionData, const int provider) {
@@ -25,10 +23,4 @@ void _addAttributionData(const char* conversionData, const int provider) {
 
     [Qonversion addAttributionData:conversionInfo 
         fromProvider:(QAttributionProvider)provider];
-}
-
-void _CallSuccessInitCallback(NSString* uid) {
-    if (onSuccessInitCallback != NULL) {
-        onSuccessInitCallback([uid UTF8String]);
-    }
 }
