@@ -5,8 +5,10 @@ namespace QonversionUnity
 {
     internal class QonversionWrapperAndroid : IQonversionWrapper
     {
-        public void Launch(string projectKey, string userID, bool debugMode)
+        public void Launch(string projectKey, string userID, bool debugMode, InitDelegate onInitComplete)
         {
+            var handler = new QonversionAndroidHandler(onInitComplete);
+
             if (debugMode)
             {
                 //Will be available soon
@@ -15,7 +17,7 @@ namespace QonversionUnity
 
             using (var purchases = new AndroidJavaClass("com.qonversion.unitywrapper.QonversionWrapper"))
             {
-                purchases.CallStatic("Launch", projectKey, userID);
+                purchases.CallStatic("Launch", projectKey, userID, handler);
             }
         }
 
@@ -46,7 +48,7 @@ namespace QonversionUnity
             }
             catch (Exception e)
             {
-                Debug.LogError($"[Qonversion] AddAttributionData Marshalling Error: {e}");
+                Debug.LogError(string.Format("[Qonversion] AddAttributionData Marshalling Error: {0}", e));
             }
         }
     }

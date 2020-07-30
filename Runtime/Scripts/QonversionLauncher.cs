@@ -12,9 +12,23 @@ namespace QonversionUnity
         [SerializeField]
         protected bool m_DebugMode;
 
+        /// <summary>
+        /// Called when qonversion has completed initialization.
+        /// </summary>
+        [SerializeField]
+        public InitEvent OnInitComplete;
+
         private void Start()
         {
-            Qonversion.Launch(m_ApplicationAccessKey, m_DebugMode);
+            Qonversion.Launch(m_ApplicationAccessKey, m_DebugMode, InitComplete);
+        }
+
+        private void InitComplete()
+        {
+            if(OnInitComplete != null)
+            {
+                OnInitComplete.Invoke();
+            }
         }
     }
 }

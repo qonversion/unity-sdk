@@ -25,7 +25,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
+import android.os.Handler;
+
 public class QonversionWrapper {
+
     public static String TAG = "QonversionWrapper";
 
     private static Executor executor;
@@ -38,51 +41,34 @@ public class QonversionWrapper {
 
     private static Boolean sdkInitialized = false;
 
-    private static Class<?> unityPlayer;
+    private static Handler mUnityMainThreadHandler;
 
-    private QonversionWrapper(String projectKey, String userID) {
-        Log.d(TAG, "Qonversion Launch starting with userID: " + userID);
+    private IQonversionResultHandler mUnityMessageHandler;
 
-        Activity unityActivity = UnityPlayer.currentActivity;
+    private QonversionWrapper(IQonversionResultHandler handler) {
+
+        mUnityMessageHandler = handler;
+
+        if (mUnityMainThreadHandler == null) {
+            mUnityMainThreadHandler = new Handler();
+        }
 
         applicationContext = UnityPlayer.currentActivity.getApplicationContext();
-
-        Qonversion.initialize(unityActivity.getApplication(), projectKey, userID, new QonversionCallback() {
-            @Override
-            public void onSuccess(@NotNull String uid) {
-                Log.d(TAG, "Qonversion initialized. UID: " + uid);
-
-                sdkInitialized = true;
-
-                QonversionWrapper.getExecutor()
-                        .execute(
-                                new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        // Automatically log In App Purchase events
-                                        InAppPurchaseActivityLifecycleTracker.update();
-                                    }
-                                });
-            }
-
-            @Override
-            public void onError(@NotNull Throwable t) {
-                Log.d(TAG, "Qonversion initializing error: " + t.getLocalizedMessage());
-            }
-        });
     }
 
     public static synchronized boolean isInitialized() {
         return sdkInitialized;
     }
 
-    public static synchronized void Launch(String projectKey, String userID) {
-        if (INSTANCE != null){
+    public static synchronized void Launch(String projectKey, String userID, IQonversionResultHandler handler) {
+        if (INSTANCE != null) {
             Log.w(TAG, "Qonversion SDK is already initialized");
             return;
         }
 
-        INSTANCE = new QonversionWrapper(projectKey, userID);
+        INSTANCE = new QonversionWrapper(handler);
+
+        INSTANCE.Launch(projectKey, userID);
     }
 
     public static synchronized void attribution(String conversionData, String attributionSource, String conversionUid) {
@@ -105,18 +91,18 @@ public class QonversionWrapper {
 
             qonversion.attribution(conversionInfo, source, conversionUid);
             Log.e(TAG, "Attribution sent");
-            
+
         } catch (Exception e) {
             Log.e(TAG, "Purchases. " + "pushAttribution error: " + e.getLocalizedMessage());
         }
     }
 
-    public static synchronized void trackPurchase(String jsonSkuDetails, String jsonPurchaseInfo, String signature){
+    public static synchronized void trackPurchase(String jsonSkuDetails, String jsonPurchaseInfo, String signature) {
         Validate.sdkInitialized();
 
         try {
             Qonversion qonversion = Qonversion.getInstance();
-            if (qonversion == null){
+            if (qonversion == null) {
                 Log.w(TAG, "Qonversion isn't initialized");
                 return;
             }
@@ -137,6 +123,67 @@ public class QonversionWrapper {
             });
         } catch (JSONException e) {
             logJSONException(e);
+        }
+    }
+
+    public void Launch(String projectKey, String userID) {
+        Log.d(TAG, "Qonversion Launch starting with userID: " + userID);
+
+        Activity unityActivity = UnityPlayer.currentActivity;
+
+        if (userID == null) {
+            userID = "";
+        }
+
+        Qonversion.initialize(unityActivity.getApplication(), projectKey, userID, new QonversionCallback() {
+            @Override
+            public void onSuccess(@NotNull String uid) {
+                Log.d(TAG, "Qonversion initialized. UID: " + uid);
+
+                sdkInitialized = true;
+
+                QonversionWrapper.getExecutor()
+                        .execute(
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        // Automatically log In App Purchase events
+                                        InAppPurchaseActivityLifecycleTracker.update();
+                                    }
+                                });
+
+                SendLaunchCallbackToUnity(true, uid, null);
+            }
+
+            @Override
+            public void onError(@NotNull Throwable t) {
+                String message = t.getLocalizedMessage();
+
+                Log.d(TAG, "Qonversion initializing error: " + message);
+
+                SendLaunchCallbackToUnity(false, null, message);
+            }
+        });
+    }
+
+    public void SendLaunchCallbackToUnity(Boolean success, String uid, String error) {
+        runOnUnityThread(new Runnable() {
+            @Override
+            public void run() {
+                if (mUnityMessageHandler != null) {
+                    if (success) {
+                        mUnityMessageHandler.onSuccessInit(uid);
+                    } else {
+                        mUnityMessageHandler.onErrorInit(error);
+                    }
+                }
+            }
+        });
+    }
+
+    public void runOnUnityThread(Runnable runnable) {
+        if (mUnityMainThreadHandler != null && runnable != null) {
+            mUnityMainThreadHandler.post(runnable);
         }
     }
 

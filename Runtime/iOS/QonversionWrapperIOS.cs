@@ -11,18 +11,25 @@ namespace QonversionUnity
         private static extern void _setDebugMode(bool debugMode);
 
         [DllImport("__Internal")]
-        private static extern void _launchWithKey(string key, string userID);
+        private static extern void _launchWithKey(string key, string userID, 
+        QonversionSuccessInitCallback onSuccessInitCallback);
 
         [DllImport("__Internal")]
         private static extern void _addAttributionData(string conversionData, int provider);
 #endif
 
-        public void Launch(string projectKey, string userID, bool debugMode)
+        private delegate void QonversionSuccessInitCallback();
+
+        private static InitDelegate onInitCompleteDelegate;
+
+        public void Launch(string projectKey, string userID, bool debugMode, InitDelegate onInitComplete)
         {
+            onInitCompleteDelegate = onInitComplete;
+
 #if UNITY_IOS
             _setDebugMode(debugMode);
 
-            _launchWithKey(projectKey, userID);
+            _launchWithKey(projectKey, userID, onSuccessInit);
 #endif
         }
 
@@ -31,6 +38,14 @@ namespace QonversionUnity
 #if UNITY_IOS
             _addAttributionData(conversionData, (int)source);
 #endif
+        }
+
+#if UNITY_IOS
+        [AOT.MonoPInvokeCallback(typeof(QonversionSuccessInitCallback))]
+#endif
+        private static void onSuccessInit()
+        {
+            onInitCompleteDelegate?.Invoke();
         }
     }
 }

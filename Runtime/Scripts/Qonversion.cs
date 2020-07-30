@@ -10,12 +10,12 @@ namespace QonversionUnity
 
         public static void Launch(string apiKey)
         {
-            Launch(apiKey, null);
+            Launch(apiKey, false);
         }
 
-        public static void Launch(string apiKey, bool debugMode)
+        public static void Launch(string apiKey, bool debugMode, InitDelegate onInitComplete = null)
         {
-            Launch(apiKey, null, debugMode);
+            Launch(apiKey, null, debugMode, onInitComplete);
         }
 
         public static void Launch(string apiKey, string appUserID)
@@ -23,7 +23,7 @@ namespace QonversionUnity
             Launch(apiKey, appUserID, false);
         }
 
-        public static void Launch(string apiKey, string appUserID, bool debugMode)
+        public static void Launch(string apiKey, string appUserID, bool debugMode, InitDelegate onInitComplete = null)
         {
             if(_Instance != null)
             {
@@ -45,7 +45,7 @@ namespace QonversionUnity
                     break;
             }
 
-            _Instance.Launch(apiKey, string.IsNullOrEmpty(appUserID) ? null : appUserID, debugMode);
+            _Instance.Launch(apiKey, string.IsNullOrEmpty(appUserID) ? null : appUserID, debugMode, onInitComplete);
         }
 
         public static void AddAttributionData(Dictionary<string, object> conversionData, AttributionSource attributionSource, string conversionUid)
@@ -67,7 +67,7 @@ namespace QonversionUnity
         private class PurchasesWrapperNoop : IQonversionWrapper
         {
 
-            public void Launch(string projectKey, string userID, bool debugMode)
+            public void Launch(string projectKey, string userID, bool debugMode, InitDelegate onInitComplete)
             {
             }
 
