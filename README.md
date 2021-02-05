@@ -3,7 +3,9 @@
 </p>
 
 <p align="center">
-     <a href="https://qonversion.io"><img width="660" src="https://qonversion.io/img/illustrations/charts.svg"></a></p>
+     <a href="https://qonversion.io"><img width="660" src="https://qonversion.io/img/images/product-center.svg">
+     </a>
+</p>
 
 Get access to the powerful yet simple subscription analytics:
 * Conversion from install to paying user, MRR, LTV, churn and other metrics.
