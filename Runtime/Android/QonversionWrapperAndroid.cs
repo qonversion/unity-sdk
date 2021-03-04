@@ -5,23 +5,39 @@ namespace QonversionUnity
 {
     internal class QonversionWrapperAndroid : IQonversionWrapper
     {
-        public void Launch(string projectKey, string userID, bool debugMode, InitDelegate onInitComplete)
+        public void Launch(string projectKey)
         {
-            var handler = new QonversionAndroidHandler(onInitComplete);
-
-            if (debugMode)
-            {
-                //Will be available soon
-                Debug.LogWarning("[Qonversion] Not Supported SetDebugMode on Android platform.");
-            }
-
             using (var purchases = new AndroidJavaClass("com.qonversion.unitywrapper.QonversionWrapper"))
             {
-                purchases.CallStatic("Launch", projectKey, userID, handler);
+                purchases.CallStatic("launch", projectKey);
             }
         }
 
-        public void AddAttributionData(string conversionData, AttributionSource source, string conversionUid)
+        public void SetDebugMode()
+        {
+            using (var purchases = new AndroidJavaClass("com.qonversion.unitywrapper.QonversionWrapper"))
+            {
+                purchases.CallStatic("setDebugMode");
+            }
+        }
+
+        public void SetUserID(string userID)
+        {
+            using (var purchases = new AndroidJavaClass("com.qonversion.unitywrapper.QonversionWrapper"))
+            {
+                purchases.CallStatic("setUserID", userID);
+            }
+        }
+
+        public void SyncPurchases()
+        {
+            using (var purchases = new AndroidJavaClass("com.qonversion.unitywrapper.QonversionWrapper"))
+            {
+                purchases.CallStatic("syncPurchases");
+            }
+        }
+
+        public void AddAttributionData(string conversionData, AttributionSource source)
         {
 
             string attibutionSource;
@@ -29,7 +45,7 @@ namespace QonversionUnity
             switch(source)
             {
                 case AttributionSource.AppsFlyer:
-                    attibutionSource = "APPSFLYER";
+                    attibutionSource = "AppsFlyer";
                     break;
                 default:
                     Debug.LogWarning(string.Format("[Qonversion] Not Supported AttributionSource.{0} on Android platform.", source));
@@ -42,8 +58,7 @@ namespace QonversionUnity
                 {
                     purchases.CallStatic("attribution", 
                         conversionData,
-                        attibutionSource,
-                        conversionUid);
+                        attibutionSource);
                 }
             }
             catch (Exception e)

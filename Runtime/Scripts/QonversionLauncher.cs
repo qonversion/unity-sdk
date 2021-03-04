@@ -8,27 +8,18 @@ namespace QonversionUnity
         [SerializeField]
         protected string m_ApplicationAccessKey;
 
-        [Tooltip("Debug Mode: https://docs.qonversion.io/getting-started/debug-mode")]
+        [Tooltip("Debug Mode: https://documentation.qonversion.io/docs/debug-mode")]
         [SerializeField]
         protected bool m_DebugMode;
 
-        /// <summary>
-        /// Called when qonversion has completed initialization.
-        /// </summary>
-        [SerializeField]
-        public InitEvent OnInitComplete;
-
         private void Start()
         {
-            Qonversion.Launch(m_ApplicationAccessKey, m_DebugMode, InitComplete);
-        }
-
-        private void InitComplete()
-        {
-            if(OnInitComplete != null)
+            if (m_DebugMode)
             {
-                OnInitComplete.Invoke();
+                Qonversion.SetDebugMode();
             }
+
+            Qonversion.Launch(m_ApplicationAccessKey);
         }
     }
 }

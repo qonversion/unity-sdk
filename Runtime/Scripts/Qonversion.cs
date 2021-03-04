@@ -4,76 +4,92 @@ using UnityEngine;
 
 namespace QonversionUnity
 {
+
     public static class Qonversion
     {
         private static IQonversionWrapper _Instance;
 
+        private static IQonversionWrapper getFinalInstance()
+        {
+            if (_Instance == null)
+            {
+                switch (Application.platform)
+                {
+                    case RuntimePlatform.Android:
+                        _Instance = new QonversionWrapperAndroid();
+                        break;
+                    case RuntimePlatform.IPhonePlayer:
+                        _Instance = new QonversionWrapperIOS();
+                        break;
+                    default:
+                        _Instance = new PurchasesWrapperNoop();
+                        break;
+                }
+            }
+
+            return _Instance;
+        }
+
         public static void Launch(string apiKey)
         {
-            Launch(apiKey, false);
+            IQonversionWrapper instance = getFinalInstance();
+            Debug.Log("INSTAAAANCE LAUNCH:" + instance);
+            instance.Launch(apiKey);
         }
 
-        public static void Launch(string apiKey, bool debugMode, InitDelegate onInitComplete = null)
+        public static void SetDebugMode()
         {
-            Launch(apiKey, null, debugMode, onInitComplete);
+            IQonversionWrapper instance = getFinalInstance();
+            Debug.Log("INSTAAAANCE DEBUG:" + instance);
+            instance.SetDebugMode();
         }
 
-        public static void Launch(string apiKey, string appUserID)
+        public static void SetUserID(string userID)
         {
-            Launch(apiKey, appUserID, false);
+            IQonversionWrapper instance = getFinalInstance();
+            Debug.Log("INSTAAAANCE SETUSERID:" + instance);
+            instance.SetUserID(userID);
         }
 
-        public static void Launch(string apiKey, string appUserID, bool debugMode, InitDelegate onInitComplete = null)
+        public static void SyncPurchases()
         {
-            if(_Instance != null)
-            {
-                return;
-            }
-
-            Debug.Log(string.Format("[Qonversion] Launch userID={0}", appUserID));
-
-            switch (Application.platform)
-            {
-                case RuntimePlatform.Android:
-                    _Instance = new QonversionWrapperAndroid();
-                    break;
-                case RuntimePlatform.IPhonePlayer:
-                    _Instance = new QonversionWrapperIOS();
-                    break;
-                default:
-                    _Instance = new PurchasesWrapperNoop();
-                    break;
-            }
-
-            _Instance.Launch(apiKey, string.IsNullOrEmpty(appUserID) ? null : appUserID, debugMode, onInitComplete);
+            IQonversionWrapper instance = getFinalInstance();
+            instance.SyncPurchases();
         }
 
-        public static void AddAttributionData(Dictionary<string, object> conversionData, AttributionSource attributionSource, string conversionUid)
+        public static void AddAttributionData(Dictionary<string, object> conversionData, AttributionSource attributionSource)
         {
-            AddAttributionData(conversionData.toJson(), attributionSource, conversionUid);
+            AddAttributionData(conversionData.toJson(), attributionSource);
         }
 
-        public static void AddAttributionData(string conversionData, AttributionSource attributionSource, string conversionUid)
+        public static void AddAttributionData(string conversionData, AttributionSource attributionSource)
         {
-            if(_Instance == null)
-            {
-                throw new System.InvalidOperationException("The SDK has not been initialized, make sure to call "
-                            + "Qonversion.Launch() first.");
-            }
+            IQonversionWrapper instance = getFinalInstance();
 
-            _Instance.AddAttributionData(conversionData, attributionSource, conversionUid);
+            instance.AddAttributionData(conversionData, attributionSource);
         }
 
         private class PurchasesWrapperNoop : IQonversionWrapper
         {
 
-            public void Launch(string projectKey, string userID, bool debugMode, InitDelegate onInitComplete)
+            public void Launch(string projectKey)
             {
             }
 
-            public void AddAttributionData(string conversionData, AttributionSource source, string conversionUid)
+            public void SetDebugMode()
             {
+            }
 
+            public void SetUserID(string userID)
+            {
+            }
+
+            public void AddAttributionData(string conversionData, AttributionSource source)
+            {
+            }
+
+            public void SyncPurchases()
+            {
             }
         }
     }

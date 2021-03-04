@@ -1,26 +1,23 @@
-﻿#import "Qonversion.h"
+#import "Qonversion.h"
 #import "UtilityBridge.h"
 
-typedef void (*QonversionSuccessInitCallback)();
-
-void _setDebugMode(bool debugMode) {
-    [Qonversion setDebugMode:debugMode];
+void _setDebugMode() {
+    [Qonversion setDebugMode];
 }
 
-void _launchWithKey(const char* key, const char* userID,
-	QonversionSuccessInitCallback _onSuccessInitCallback) 
+void _launchWithKey(const char* key, const char* userID)
 {
-    [Qonversion launchWithKey: [UtilityBridge сonvertCStringToNSString: key] 
-        userID: [UtilityBridge сonvertCStringToNSString: userID]];
-	
-    if (_onSuccessInitCallback != NULL) {
-        _onSuccessInitCallback();
-    }
+    [Qonversion launchWithKey:[UtilityBridge сonvertCStringToNSString:key]];
+}
+
+void _setUserID(const char* userID)
+{
+    [Qonversion setUserID:[UtilityBridge сonvertCStringToNSString:userID]];
 }
 
 void _addAttributionData(const char* conversionData, const int provider) {
     NSDictionary *conversionInfo = [UtilityBridge dictionaryFromJsonString: [UtilityBridge сonvertCStringToNSString: conversionData]];
 
-    [Qonversion addAttributionData:conversionInfo 
-        fromProvider:(QAttributionProvider)provider];
+    [Qonversion addAttributionData:conversionInfo
+        fromProvider:(QNAttributionProvider)provider];
 }
