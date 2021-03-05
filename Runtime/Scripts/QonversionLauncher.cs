@@ -12,6 +12,10 @@ namespace QonversionUnity
         [SerializeField]
         protected bool m_DebugMode;
 
+        [Tooltip("Observer Mode: https://documentation.qonversion.io/docs/observer-mode")]
+        [SerializeField]
+        protected bool m_ObserverMode;
+
         private void Start()
         {
             if (m_DebugMode)
@@ -19,7 +23,7 @@ namespace QonversionUnity
                 Qonversion.SetDebugMode();
             }
 
-            Qonversion.Launch(m_ApplicationAccessKey);
+            Qonversion.Launch(m_ApplicationAccessKey, m_ObserverMode);
         }
     }
 }

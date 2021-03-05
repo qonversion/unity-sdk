@@ -44,6 +44,7 @@ Just add this line to the `Packages/manifest.json` file of your Unity Project:
 | -------- | ------------- |
 | **Application Access Key**   |  Qonversion [Application Access Key](https://dash.qonversion.io/project/settings), If debug mode set to true, user purchases will be checked on the sandbox environment and will not be sent to third-party integrations.  |
 | **Debug Mode**    | Set this to true to view the debug logs. (for development only!)  |
+| **Observer Mode**    | Set this to true for this SDK version. |
 
 ### Setup with a Launcher
 
@@ -56,6 +57,7 @@ Just add this line to the `Packages/manifest.json` file of your Unity Project:
 *RECOMMENDED*
 
 Sample code:
+
 ```csharp
 using QonversionUnity;
 
@@ -63,7 +65,7 @@ public class QonversionLauncher : MonoBehaviour
 {
     private void Start()
     {
-        Qonversion.Launch(applicationAccessKey);
+        Qonversion.Launch(applicationAccessKey, true);
     }
 }
 ```
@@ -125,6 +127,9 @@ public class AppsFlyerObjectScript : MonoBehaviour , IAppsFlyerConversionData
     }
 }
 ```
+
+## Documentation
+See more info in the [documentation](https://documentation.qonversion.io/docs/observer-mode)
 
 ## License
 

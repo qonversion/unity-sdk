@@ -5,7 +5,7 @@ void _setDebugMode() {
     [Qonversion setDebugMode];
 }
 
-void _launchWithKey(const char* key, const char* userID)
+void _launchWithKey(const char* key)
 {
     [Qonversion launchWithKey:[UtilityBridge сonvertCStringToNSString:key]];
 }

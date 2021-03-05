@@ -46,12 +46,12 @@ public class QonversionWrapper {
 
     private static Handler mUnityMainThreadHandler;
 
-    public static synchronized void launch(String projectKey) {
+    public static synchronized void launch(String projectKey, boolean observerMode) {
         Log.d(TAG, "Qonversion Launch starting. Project key: " + projectKey);
 
         Activity unityActivity = UnityPlayer.currentActivity;
 
-        Qonversion.launch(unityActivity.getApplication(), projectKey, true, new QonversionLaunchCallback()
+        Qonversion.launch(unityActivity.getApplication(), projectKey, observerMode, new QonversionLaunchCallback()
         {
             @Override
             public void onSuccess(@NotNull QLaunchResult launchResult) {

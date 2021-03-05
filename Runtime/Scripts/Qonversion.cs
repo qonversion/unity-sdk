@@ -30,24 +30,21 @@ namespace QonversionUnity
             return _Instance;
         }
 
-        public static void Launch(string apiKey)
+        public static void Launch(string apiKey, bool observerMode)
         {
             IQonversionWrapper instance = getFinalInstance();
-            Debug.Log("INSTAAAANCE LAUNCH:" + instance);
-            instance.Launch(apiKey);
+            instance.Launch(apiKey, observerMode);
         }
 
         public static void SetDebugMode()
         {
             IQonversionWrapper instance = getFinalInstance();
-            Debug.Log("INSTAAAANCE DEBUG:" + instance);
             instance.SetDebugMode();
         }
 
         public static void SetUserID(string userID)
         {
             IQonversionWrapper instance = getFinalInstance();
-            Debug.Log("INSTAAAANCE SETUSERID:" + instance);
             instance.SetUserID(userID);
         }
 
@@ -72,7 +69,7 @@ namespace QonversionUnity
         private class PurchasesWrapperNoop : IQonversionWrapper
         {
 
-            public void Launch(string projectKey)
+            public void Launch(string projectKey, bool observerMode)
             {
             }
 

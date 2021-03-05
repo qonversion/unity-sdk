@@ -5,11 +5,11 @@ namespace QonversionUnity
 {
     internal class QonversionWrapperAndroid : IQonversionWrapper
     {
-        public void Launch(string projectKey)
+        public void Launch(string projectKey, bool observerMode)
         {
             using (var purchases = new AndroidJavaClass("com.qonversion.unitywrapper.QonversionWrapper"))
             {
-                purchases.CallStatic("launch", projectKey);
+                purchases.CallStatic("launch", projectKey, observerMode);
             }
         }
 

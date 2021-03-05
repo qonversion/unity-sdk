@@ -22,7 +22,7 @@ namespace QonversionUnity
         private static extern void _addAttributionData(string conversionData, int provider);
 #endif
 
-        public void Launch(string projectKey)
+        public void Launch(string projectKey, bool observerMode)
         {
 #if UNITY_IOS
             _launchWithKey(projectKey);
