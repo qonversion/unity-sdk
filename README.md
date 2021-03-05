@@ -33,7 +33,7 @@ Just add this line to the `Packages/manifest.json` file of your Unity Project:
 
 ```json
 "dependencies": {
-    "com.qonversion.unity": "https://github.com/qonversion/unity-sdk.git#1.0.1"
+    "com.qonversion.unity": "https://github.com/qonversion/unity-sdk.git#2.0.0"
 }
 ```
 
@@ -63,9 +63,18 @@ public class QonversionLauncher : MonoBehaviour
 {
     private void Start()
     {
-        Qonversion.Launch(applicationAccessKey, debugMode);
+        Qonversion.Launch(applicationAccessKey);
     }
 }
+```
+
+## Track purchases
+For tracking purchases you need to call `SyncPurchases()` when a purchase completed.
+
+Sample code:
+
+```csharp
+Qonversion.SyncPurchases();
 ```
 
 ## Third-party integrations
@@ -75,6 +84,7 @@ public class QonversionLauncher : MonoBehaviour
 Init Appsflyer SDK with [deeplinking callbacks](https://github.com/AppsFlyerSDK/appsflyer-unity-plugin/blob/master/docs/Guides.md#-init-sdk-with-deeplinking-callbacks)
 
 Sample code:
+
 ```csharp
 using AppsFlyerSDK;
 using QonversionUnity;
@@ -94,7 +104,7 @@ public class AppsFlyerObjectScript : MonoBehaviour , IAppsFlyerConversionData
         Dictionary<string, object> conversionDataDictionary = AppsFlyer.CallbackStringToDictionary(conversionData);
         // add deferred deeplink logic here
 		
-        Qonversion.AddAttributionData(conversionData, AttributionSource.AppsFlyer, AppsFlyer.getAppsFlyerId());
+        Qonversion.AddAttributionData(conversionData, AttributionSource.AppsFlyer);
     }
 
     public void onConversionDataFail(string error)
