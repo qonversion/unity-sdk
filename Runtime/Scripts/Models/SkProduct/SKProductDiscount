@@ -1,0 +1,40 @@
+﻿namespace QonversionUnity
+{
+ public class SKProductDiscount
+    {
+        public readonly string Identifier;
+        public readonly SKProductDiscountType Type;
+        public readonly string Price;
+        public readonly string LocaleIdentifier;
+        public readonly SKProductDiscountPaymentMode PaymentMode;
+        public readonly int NumberOfPeriods;
+        public readonly SKProductSubscriptionPeriod SubscriptionPeriod;
+
+        public SKProductDiscount(Dictionary<string, object> keyValues)
+        {
+            if (keyValues.TryGetValue("identifier", out object value)) Identifier = (string)value;
+            if (keyValues.TryGetValue("type", out value)) Type = FormatDiscountType(value);
+            if (keyValues.TryGetValue("price", out value)) Price = (string)value;
+            if (keyValues.TryGetValue("localeIdentifier", out value)) LocaleIdentifier = (string)value;
+            if (keyValues.TryGetValue("paymentMode", out value)) PaymentMode = FormatPaymentMode(value);
+            if (keyValues.TryGetValue("numberOfPeriods", out value)) NumberOfPeriods = Convert.ToInt32(value);
+            if (keyValues.TryGetValue("subscriptionPeriod", out value)) SubscriptionPeriod = new SKProductSubscriptionPeriod((Dictionary<string, object>)value);
+        }
+
+        private SKProductDiscountType FormatDiscountType(object discountType) => (SKProductDiscountType)Convert.ToInt32(discountType);
+
+        private SKProductDiscountPaymentMode FormatPaymentMode(object paymentMode) => (SKProductDiscountPaymentMode)Convert.ToInt32(paymentMode);
+
+        public override string ToString()
+        {
+            return $"{nameof(Identifier)}: {Identifier}, " +
+                   $"{nameof(Type)}: {Type}, " +
+                   $"{nameof(Price)}: {Price}, " +
+                   $"{nameof(LocaleIdentifier)}: {LocaleIdentifier}, " +
+                   $"{nameof(Price)}: {Price} , " +
+                   $"{nameof(PaymentMode)}: {PaymentMode}, " +
+                   $"{nameof(NumberOfPeriods)}: {NumberOfPeriods}, " +
+                   $"{nameof(SubscriptionPeriod)}: {SubscriptionPeriod}";
+        }
+    }
+}

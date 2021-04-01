@@ -16,16 +16,31 @@ namespace QonversionUnity
         private static extern void _setUserID(string userID);
 
         [DllImport("__Internal")]
-        private static extern void _launchWithKey(string key);
+        private static extern void _launchWithKey(string gameObjectName, string key);
 
         [DllImport("__Internal")]
         private static extern void _addAttributionData(string conversionData, int provider);
+
+        [DllImport("__Internal")]
+        private static extern void _checkPermissions();
+
+        [DllImport("__Internal")]
+        private static extern void _restore();
+
+        [DllImport("__Internal")]
+        private static extern void _purchase(string productID);
+
+        [DllImport("__Internal")]
+        private static extern void _products();
+
+        [DllImport("__Internal")]
+        private static extern void _offerings();
 #endif
 
-        public void Launch(string projectKey, bool observerMode)
+        public void Launch(string gameObjectName, string projectKey, bool observerMode)
         {
 #if UNITY_IOS
-            _launchWithKey(projectKey);
+            _launchWithKey(gameObjectName, projectKey);
 #endif
         }
 
@@ -51,6 +66,45 @@ namespace QonversionUnity
         {
 #if UNITY_IOS
             _addAttributionData(conversionData, (int)source);
+#endif
+        }
+
+        public void CheckPermissions()
+        {
+#if UNITY_IOS
+            _checkPermissions();
+#endif
+        }
+
+        public void Purchase(string productId)
+        {
+#if UNITY_IOS
+            _purchase(productId);
+#endif
+        }
+
+        public void Restore()
+        {
+#if UNITY_IOS
+            _restore();
+#endif
+        }
+
+        public void UpdatePurchase(string productId, string oldProductId, ProrationMode prorationMode)
+        {
+        }
+
+        public void Products()
+        {
+#if UNITY_IOS
+            _products();
+#endif
+        }
+
+        public void Offerings()
+        {
+#if UNITY_IOS
+            _offerings();
 #endif
         }
     }

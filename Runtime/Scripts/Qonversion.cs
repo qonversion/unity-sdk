@@ -4,9 +4,14 @@ using UnityEngine;
 
 namespace QonversionUnity
 {
-
-    public static class Qonversion
+    public class Qonversion : MonoBehaviour
     {
+        public delegate void OnPermissionsReceived(Dictionary<string, QPermission> permissions, QError error);
+        public delegate void OnProductsReceived(Dictionary<string, QProduct> products, QError error);
+        public delegate void OnOfferingsReceived(QOfferings offerings, QError error);
+
+        private const string gameObjectName = "QonvesrionRuntimeGameObject";
+
         private static IQonversionWrapper _Instance;
 
         private static IQonversionWrapper getFinalInstance()
@@ -22,10 +27,14 @@ namespace QonversionUnity
                         _Instance = new QonversionWrapperIOS();
                         break;
                     default:
-                        _Instance = new PurchasesWrapperNoop();
+                        _Instance = new QonversionWrapperNoop();
                         break;
                 }
             }
+
+            GameObject go = new GameObject(gameObjectName);
+            go.AddComponent<Qonversion>();
+            DontDestroyOnLoad(go);
 
             return _Instance;
         }
@@ -33,7 +42,7 @@ namespace QonversionUnity
         public static void Launch(string apiKey, bool observerMode)
         {
             IQonversionWrapper instance = getFinalInstance();
-            instance.Launch(apiKey, observerMode);
+            instance.Launch(gameObjectName, apiKey, observerMode);
         }
 
         public static void SetDebugMode()
@@ -66,28 +75,184 @@ namespace QonversionUnity
             instance.AddAttributionData(conversionData, attributionSource);
         }
 
-        private class PurchasesWrapperNoop : IQonversionWrapper
+        private static OnPermissionsReceived CheckPermissionsCallback { get; set; }
+
+        public static void CheckPermissions(OnPermissionsReceived callback)
         {
+            CheckPermissionsCallback = callback;
+            IQonversionWrapper instance = getFinalInstance();
+            instance.CheckPermissions();
+        }
 
-            public void Launch(string projectKey, bool observerMode)
+        private static OnPermissionsReceived PurchaseCallback { get; set; }
+
+        public static void Purchase(string productId, OnPermissionsReceived callback)
+        {
+            PurchaseCallback = callback;
+            IQonversionWrapper instance = getFinalInstance();
+            instance.Purchase(productId);
+        }
+
+        private static OnPermissionsReceived RestoreCallback { get; set; }
+
+        public static void Restore(OnPermissionsReceived callback)
+        {
+            RestoreCallback = callback;
+            IQonversionWrapper instance = getFinalInstance();
+            instance.Restore();
+        }
+
+        private static OnPermissionsReceived UpdatePurchaseCallback { get; set; }
+
+        public static void UpdatePurchase(string productId, string oldProductId, OnPermissionsReceived callback, ProrationMode prorationMode = ProrationMode.UnknownSubscriptionUpgradeDowngradePolicy)
+        {
+            UpdatePurchaseCallback = callback;
+            IQonversionWrapper instance = getFinalInstance();
+            instance.UpdatePurchase(productId, oldProductId, prorationMode);
+        }
+
+        private static OnProductsReceived ProductsCallback { get; set; }
+
+        public static void Products(OnProductsReceived callback)
+        {
+            ProductsCallback = callback;
+            IQonversionWrapper instance = getFinalInstance();
+            instance.Products();
+        }
+
+        private static OnOfferingsReceived OfferingsCallback { get; set; }
+
+        public static void Offerings(OnOfferingsReceived callback)
+        {
+            OfferingsCallback = callback;
+            IQonversionWrapper instance = getFinalInstance();
+            instance.Offerings();
+        }
+
+        // Called from the native SDK - Called when permissions received from the checkPermissions() method 
+        private void OnCheckPermissions(string jsonString)
+        {
+            Debug.Log("OnCheckPermissions " + jsonString);
+
+            if (CheckPermissionsCallback == null) return;
+
+            var error = Mapper.ErrorFromJson(jsonString);
+            if (error != null)
             {
+                CheckPermissionsCallback(null, error);
+            }
+            else
+            {
+                Dictionary<string, QPermission> permissions = Mapper.PermissionsFromJson(jsonString);
+                CheckPermissionsCallback(permissions, null);
             }
 
-            public void SetDebugMode()
+            CheckPermissionsCallback = null;
+        }
+
+        // Called from the native SDK - Called when permissions received from the purchase() method 
+        private void OnPurchase(string jsonString)
+        {
+            Debug.Log("OnPurchase callback " + jsonString);
+
+            if (PurchaseCallback == null) return;
+
+            var error = Mapper.ErrorFromJson(jsonString);
+            if (error != null)
             {
+                PurchaseCallback(null, error);
+            }
+            else
+            {
+                Dictionary<string, QPermission> permissions = Mapper.PermissionsFromJson(jsonString);
+                PurchaseCallback(permissions, null);
             }
 
-            public void SetUserID(string userID)
+            PurchaseCallback = null;
+        }
+
+        // Called from the native SDK - Called when permissions received from the restore() method 
+        private void OnRestore(string jsonString)
+        {
+            Debug.Log("OnRestore " + jsonString);
+
+            if (RestoreCallback == null) return;
+
+            var error = Mapper.ErrorFromJson(jsonString);
+            if (error != null)
             {
+                RestoreCallback(null, error);
+            }
+            else
+            {
+                Dictionary<string, QPermission> permissions = Mapper.PermissionsFromJson(jsonString);
+                RestoreCallback(permissions, null);
             }
 
-            public void AddAttributionData(string conversionData, AttributionSource source)
+            RestoreCallback = null;
+        }
+
+        // Called from the native SDK - Called when permissions received from the updatePurchase() method 
+        private void OnUpdatePurchase(string jsonString)
+        {
+            Debug.Log("OnUpdatePurchase " + jsonString);
+
+            if (UpdatePurchaseCallback == null) return;
+
+            var error = Mapper.ErrorFromJson(jsonString);
+            if (error != null)
             {
+                UpdatePurchaseCallback(null, error);
+            }
+            else
+            {
+                Dictionary<string, QPermission> permissions = Mapper.PermissionsFromJson(jsonString);
+                UpdatePurchaseCallback(permissions, null);
             }
 
-            public void SyncPurchases()
+            UpdatePurchaseCallback = null;
+        }
+
+        // Called from the native SDK - Called when products received from the products() method 
+        private void OnProducts(string jsonString)
+        {
+            Debug.Log("OnProducts " + jsonString);
+
+            if (ProductsCallback == null) return;
+
+            var error = Mapper.ErrorFromJson(jsonString);
+            if (error != null)
             {
+                ProductsCallback(null, error);
             }
+            else
+            {
+                Dictionary<string, QProduct> products = Mapper.ProductsFromJson(jsonString);
+                ProductsCallback(products, null);
+            }
+
+            ProductsCallback = null;
+        }
+
+        // Called from the native SDK - Called when offerings received from the offerings() method 
+        private void OnOfferings(string jsonString)
+        {
+            Debug.Log("OnOfferings " + jsonString);
+
+            if (OfferingsCallback == null) return;
+
+            var error = Mapper.ErrorFromJson(jsonString);
+            if (error != null)
+            {
+                OfferingsCallback(null, error);
+            }
+            else
+            {
+                QOfferings offerings = Mapper.OfferingsFromJson(jsonString);
+                OfferingsCallback(offerings, null);
+            }
+
+            OfferingsCallback = null;
         }
     }
 }
