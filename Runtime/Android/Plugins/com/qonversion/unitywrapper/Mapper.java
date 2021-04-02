@@ -71,7 +71,7 @@ public final class Mapper {
 
         SkuDetails skuDetails = product.getSkuDetail();
         if (skuDetails != null) {
-            Map<String, Object> mappedSkuDetails = mapSkuDetails(product.getSkuDetail());
+            Map<String, Object> mappedSkuDetails = mapSkuDetails(skuDetails);
             result.put("storeProduct", mappedSkuDetails);
             result.put("prettyPrice", product.getPrettyPrice());
         }
