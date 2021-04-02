@@ -2,24 +2,24 @@
 
 namespace QonversionUnity
 {
-    public class QOfferings
+    public class Offerings
     {
-        public readonly QOffering Main;
-        public readonly List<QOffering> AvailableOfferings;
+        public readonly Offering Main;
+        public readonly List<Offering> AvailableOfferings;
 
-        public QOfferings(Dictionary<string, object> dict)
+        public Offerings(Dictionary<string, object> dict)
         {
             if (dict.TryGetValue("main", out object value) && value is Dictionary<string, object> offering)
             {
-                Main = new QOffering(offering);
+                Main = new Offering(offering);
             }
             if (dict.TryGetValue("availableOfferings", out value) && value is List<object> offerings)
             {
-                AvailableOfferings = Mapper.ConvertObjectsList<QOffering>(offerings);
+                AvailableOfferings = Mapper.ConvertObjectsList<Offering>(offerings);
             }
         }
 
-        public QOffering OfferingForID(string id)
+        public Offering OfferingForID(string id)
         {
             return AvailableOfferings.Find(offering => offering.Id == id);
         }
@@ -27,7 +27,7 @@ namespace QonversionUnity
         public override string ToString()
         {
             return $"{nameof(Main)}: {Main}, " +
-                   $"{nameof(AvailableOfferings)}: {AvailableOfferings}";
+            $"{nameof(AvailableOfferings)}: {Utils.PrintObjectList(AvailableOfferings)}";
         }
     }   
 }

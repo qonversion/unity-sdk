@@ -7,9 +7,9 @@ namespace QonversionUnity
 {
     internal class Mapper
     {
-        internal static Dictionary<string, QPermission> PermissionsFromJson(string jsonStr)
+        internal static Dictionary<string, Permission> PermissionsFromJson(string jsonStr)
         {
-            var result = new Dictionary<string, QPermission>();
+            var result = new Dictionary<string, Permission>();
 
             if (!(Json.Deserialize(jsonStr) is List<object> permissions))
             {
@@ -19,16 +19,16 @@ namespace QonversionUnity
 
             foreach (Dictionary<string, object> permissionDict in permissions)
             {
-                QPermission permission = new QPermission(permissionDict);
+                Permission permission = new Permission(permissionDict);
                 result.Add(permission.PermissionID, permission);
             }
 
             return result;
         }
 
-        internal static Dictionary<string, QProduct> ProductsFromJson(string jsonStr)
+        internal static Dictionary<string, Product> ProductsFromJson(string jsonStr)
         {
-            var result = new Dictionary<string, QProduct>();
+            var result = new Dictionary<string, Product>();
 
             if (!(Json.Deserialize(jsonStr) is List<object> products))
             {
@@ -38,14 +38,14 @@ namespace QonversionUnity
 
             foreach (Dictionary<string, object> productDict in products)
             {
-                QProduct product = new QProduct(productDict);
+                Product product = new Product(productDict);
                 result.Add(product.QonversionId, product);
             }
 
             return result;
         }
 
-        internal static QOfferings OfferingsFromJson(string jsonStr)
+        internal static Offerings OfferingsFromJson(string jsonStr)
         {
             if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> offerings))
             {
@@ -53,18 +53,18 @@ namespace QonversionUnity
                 return null;
             }
 
-            return new QOfferings(offerings);
+            return new Offerings(offerings);
         }
         
 
-        internal static QError ErrorFromJson(string jsonStr)
+        internal static QonversionError ErrorFromJson(string jsonStr)
         {
             if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> dict)) return null;
             
-            QError error = null;
+            QonversionError error = null;
             if (dict.TryGetValue("error", out object errorObj))
             {
-                error = new QError((Dictionary<string, object>)errorObj);
+                error = new QonversionError((Dictionary<string, object>)errorObj);
             }
 
             return error;

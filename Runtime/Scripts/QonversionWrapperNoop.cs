@@ -22,27 +22,27 @@ namespace QonversionUnity
         {
         }
 
-        public void CheckPermissions()
+        public void CheckPermissions(string callbackName)
         {
         }
 
-        public void Purchase(string productId)
+        public void Purchase(string productId, string callbackName)
         {
         }
 
-        public void Restore()
+        public void Restore(string callbackName)
         {
         }
 
-        public void UpdatePurchase(string productId, string oldProductId, ProrationMode prorationMode)
+        public void UpdatePurchase(string productId, string oldProductId, ProrationMode prorationMode, string callbackName)
         {
         }
 
-        public void Products()
+        public void Products(string callbackName)
         {
         }
 
-        public void Offerings()
+        public void Offerings(string callbackName)
         {
         }
     }

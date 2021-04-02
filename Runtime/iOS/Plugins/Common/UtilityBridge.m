@@ -198,7 +198,7 @@
 }
 
 + (void)handlePermissionsResponse:(NSDictionary<NSString *,QNPermission *> *) result withError:( NSError *)error
-                         toMethod:(const char *) methodName
+                         toMethod:(NSString *) methodName
                     unityListener:(const char *)unityListenerName{
     if (error) {
         [UtilityBridge handleErrorResponse:error toMethod:methodName unityListener:unityListenerName];
@@ -209,13 +209,13 @@
     [UtilityBridge sendUnityMessage:permissions toMethod:methodName unityListener: unityListenerName];
 }
 
-+ (void)handleErrorResponse:(NSError *)error toMethod:(const char *) methodName
++ (void)handleErrorResponse:(NSError *)error toMethod:(NSString *) methodName
               unityListener:(const char *)unityListenerName{
     NSDictionary *errorDict = [UtilityBridge convertError:error];
     [UtilityBridge sendUnityMessage:errorDict toMethod:methodName unityListener: unityListenerName];
 }
 
-+ (void)sendUnityMessage:(NSObject *)objectToConvert toMethod:(const char *)methodName
++ (void)sendUnityMessage:(NSObject *)objectToConvert toMethod:(NSString *)methodName
            unityListener:(const char *)unityListenerName{
     NSError *error = nil;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:objectToConvert options:0 error:&error];
@@ -226,7 +226,7 @@
     }
     if (jsonData) {
         NSString *json = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        UnitySendMessage(unityListenerName, methodName, json.UTF8String);
+        UnitySendMessage(unityListenerName, methodName.UTF8String, json.UTF8String);
     }
 }
 

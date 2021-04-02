@@ -26,7 +26,7 @@ namespace QonversionUnity
 
             if (dict.TryGetValue("isFamilyShareable", out value))
             {
-                if(value is bool boolValue) IsFamilyShareable = boolValue;
+                if (value is bool boolValue) IsFamilyShareable = boolValue;
             }
 
             if (dict.TryGetValue("price", out value)) Price = value as string;
@@ -66,11 +66,11 @@ namespace QonversionUnity
                    $"{nameof(IsFamilyShareable)}: {IsFamilyShareable}, " +
                    $"{nameof(Price)}: {Price} , " +
                    $"{nameof(IntroductoryPrice)}: {IntroductoryPrice}, " +
-                   $"{nameof(Discounts)}: {Discounts}, " +
+                   $"{nameof(Discounts)}: {Utils.PrintObjectList(Discounts)}, " +
                    $"{nameof(SubscriptionGroupIdentifier)}: {SubscriptionGroupIdentifier}, " +
                    $"{nameof(SubscriptionPeriod)}: {SubscriptionPeriod}, " +
                    $"{nameof(IsDownloadable)}: {IsDownloadable} , " +
-                   $"{nameof(DownloadContentLengths)}: {DownloadContentLengths}, " +
+                   $"{nameof(DownloadContentLengths)}: {Utils.PrintObjectList(DownloadContentLengths)}, " +
                    $"{nameof(DownloadContentVersion)}: {DownloadContentVersion}, " +
                    $"{nameof(CurrencyCode)}: {CurrencyCode}";
         }

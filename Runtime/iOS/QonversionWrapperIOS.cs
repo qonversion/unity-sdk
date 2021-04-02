@@ -22,19 +22,19 @@ namespace QonversionUnity
         private static extern void _addAttributionData(string conversionData, int provider);
 
         [DllImport("__Internal")]
-        private static extern void _checkPermissions();
+        private static extern void _checkPermissions(string callbackName);
 
         [DllImport("__Internal")]
-        private static extern void _restore();
+        private static extern void _restore(string callbackName);
 
         [DllImport("__Internal")]
-        private static extern void _purchase(string productID);
+        private static extern void _purchase(string productID, string callbackName);
 
         [DllImport("__Internal")]
-        private static extern void _products();
+        private static extern void _products(string callbackName);
 
         [DllImport("__Internal")]
-        private static extern void _offerings();
+        private static extern void _offerings(string callbackName);
 #endif
 
         public void Launch(string gameObjectName, string projectKey, bool observerMode)
@@ -69,42 +69,42 @@ namespace QonversionUnity
 #endif
         }
 
-        public void CheckPermissions()
+        public void CheckPermissions(string callbackName)
         {
 #if UNITY_IOS
-            _checkPermissions();
+            _checkPermissions(callbackName);
 #endif
         }
 
-        public void Purchase(string productId)
+        public void Purchase(string productId, string callbackName)
         {
 #if UNITY_IOS
-            _purchase(productId);
+            _purchase(productId, callbackName);
 #endif
         }
 
-        public void Restore()
+        public void Restore(string callbackName)
         {
 #if UNITY_IOS
-            _restore();
+            _restore(callbackName);
 #endif
         }
 
-        public void UpdatePurchase(string productId, string oldProductId, ProrationMode prorationMode)
+        public void UpdatePurchase(string productId, string oldProductId, ProrationMode prorationMode, string callbackName)
         {
         }
 
-        public void Products()
+        public void Products(string callbackName)
         {
 #if UNITY_IOS
-            _products();
+            _products(callbackName);
 #endif
         }
 
-        public void Offerings()
+        public void Offerings(string callbackName)
         {
 #if UNITY_IOS
-            _offerings();
+            _offerings(callbackName);
 #endif
         }
     }

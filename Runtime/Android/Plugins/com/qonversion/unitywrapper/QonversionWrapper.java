@@ -33,13 +33,6 @@ import com.qonversion.android.sdk.dto.QPermission;
 import android.os.Handler;
 
 public class QonversionWrapper {
-    private static final String ON_CHECK_PERMISSIONS_METHOD = "OnCheckPermissions";
-    private static final String ON_PURCHASE_METHOD = "OnPurchase";
-    private static final String ON_UPDATE_PURCHASE_METHOD = "OnUpdatePurchase";
-    private static final String ON_RESTORE_METHOD = "OnRestore";
-    private static final String ON_PRODUCTS_METHOD = "OnProducts";
-    private static final String ON_OFFERINGS_METHOD = "OnOfferings";
-
     public static String TAG = "QonversionWrapper";
 
     private static String unityListenerName;
@@ -104,88 +97,88 @@ public class QonversionWrapper {
         Qonversion.setUserID(value);
     }
 
-    public static synchronized void checkPermissions() {
+    public static synchronized void checkPermissions(String unityCallbackName) {
         Qonversion.checkPermissions(new QonversionPermissionsCallback() {
             @Override
             public void onSuccess(@NotNull Map<String, QPermission> permissions) {
-                handlePermissionsResponse(permissions, ON_CHECK_PERMISSIONS_METHOD);
+                handlePermissionsResponse(permissions, unityCallbackName);
             }
 
             @Override
             public void onError(@NotNull QonversionError error) {
-                handleErrorResponse(error, ON_CHECK_PERMISSIONS_METHOD);
+                handleErrorResponse(error, unityCallbackName);
             }
         });
     }
 
-    public static synchronized void purchase(String productId) {
+    public static synchronized void purchase(String productId, String unityCallbackName) {
         Qonversion.purchase(UnityPlayer.currentActivity, productId, new QonversionPermissionsCallback() {
             @Override
             public void onSuccess(@NotNull Map<String, QPermission> permissions) {
-                handlePermissionsResponse(permissions, ON_PURCHASE_METHOD);
+                handlePermissionsResponse(permissions, unityCallbackName);
             }
 
             @Override
             public void onError(@NotNull QonversionError error) {
-                handleErrorResponse(error, ON_PURCHASE_METHOD);
+                handleErrorResponse(error, unityCallbackName);
             }
         });
     }
 
-    public static synchronized void updatePurchase(String productId, String oldProductId, int prorationMode) {
+    public static synchronized void updatePurchase(String productId, String oldProductId, int prorationMode, String unityCallbackName) {
         Qonversion.updatePurchase(UnityPlayer.currentActivity, productId, oldProductId, prorationMode, new QonversionPermissionsCallback() {
             @Override
             public void onSuccess(@NotNull Map<String, QPermission> permissions) {
-                handlePermissionsResponse(permissions, ON_UPDATE_PURCHASE_METHOD);
+                handlePermissionsResponse(permissions, unityCallbackName);
             }
 
             @Override
             public void onError(@NotNull QonversionError error) {
-                handleErrorResponse(error, ON_UPDATE_PURCHASE_METHOD);
+                handleErrorResponse(error, unityCallbackName);
             }
         });
     }
 
-    public static synchronized void restore() {
+    public static synchronized void restore(String unityCallbackName) {
         Qonversion.restore(new QonversionPermissionsCallback() {
             @Override
             public void onSuccess(@NotNull Map<String, QPermission> permissions) {
-                handlePermissionsResponse(permissions, ON_RESTORE_METHOD);
+                handlePermissionsResponse(permissions, unityCallbackName);
             }
 
             @Override
             public void onError(@NotNull QonversionError error) {
-                handleErrorResponse(error, ON_RESTORE_METHOD);
+                handleErrorResponse(error, unityCallbackName);
             }
         });
     }
 
-    public static synchronized void products() {
+    public static synchronized void products(String unityCallbackName) {
         Qonversion.products(new QonversionProductsCallback() {
             @Override
             public void onSuccess(@NotNull Map<String, QProduct> products) {
                 List<Map<String, Object>> mappedProducts = Mapper.mapProducts(products);
-                sendMessageToUnity(mappedProducts, ON_PRODUCTS_METHOD);
+                sendMessageToUnity(mappedProducts, unityCallbackName);
             }
 
             @Override
             public void onError(@NotNull QonversionError error) {
-                handleErrorResponse(error, ON_PRODUCTS_METHOD);
+                handleErrorResponse(error, unityCallbackName);
             }
         });
     }
 
-    public static synchronized void offerings() {
+    public static synchronized void offerings(String unityCallbackName) {
         Qonversion.offerings(new QonversionOfferingsCallback() {
             @Override
             public void onSuccess(@NotNull QOfferings qOfferings) {
                 Map<String, Object> mappedOfferings = Mapper.mapOfferings(qOfferings);
-                sendMessageToUnity(mappedOfferings, ON_OFFERINGS_METHOD);
+                sendMessageToUnity(mappedOfferings, unityCallbackName);
             }
 
             @Override
             public void onError(@NotNull QonversionError error) {
-                handleErrorResponse(error, ON_OFFERINGS_METHOD);
+                handleErrorResponse(error, unityCallbackName);
             }
         });
     }

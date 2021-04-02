@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace QonversionUnity
 {
-    public class QProduct
+    public class Product
     {
         /// Product ID created in Qonversion Dashboard.
         [Tooltip("Create Products: https://qonversion.io/docs/create-products")]
@@ -37,7 +37,7 @@ namespace QonversionUnity
         /// Available for Android only.
         public readonly SkuDetails SkuDetails;
 
-        public QProduct(Dictionary<string, object> dict)
+        public Product(Dictionary<string, object> dict)
         {
             if (dict.TryGetValue("id", out object value)) QonversionId = value as string;
             if (dict.TryGetValue("store_id", out value)) StoreId = value as string;

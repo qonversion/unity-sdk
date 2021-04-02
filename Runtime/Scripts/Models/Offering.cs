@@ -3,23 +3,23 @@ using System.Collections.Generic;
 
 namespace QonversionUnity
 {
-    public class QOffering
+    public class Offering
     {
         public readonly string Id;
         public readonly QOfferingTag Tag;
-        public readonly List<QProduct> Products;
+        public readonly List<Product> Products;
 
-        public QOffering(Dictionary<string, object> dict)
+        public Offering(Dictionary<string, object> dict)
         {
             if (dict.TryGetValue("id", out object value)) Id = value as string;
             if (dict.TryGetValue("tag", out value)) Tag = FormatOfferingTag(value);
             if (dict.TryGetValue("products", out value))
             {
-                if (value is List<object> products) Products = Mapper.ConvertObjectsList<QProduct>(products);
+                if (value is List<object> products) Products = Mapper.ConvertObjectsList<Product>(products);
             }
         }
 
-        public QProduct ProductForID(string id)
+        public Product ProductForID(string id)
         {
             return Products.Find(product => product.QonversionId == id);
         }
@@ -31,7 +31,7 @@ namespace QonversionUnity
         {
             return $"{nameof(Id)}: {Id}, " +
                    $"{nameof(Tag)}: {Tag}, " +
-                   $"{nameof(Products)}: {Products}";
+                   $"{nameof(Products)}: {Utils.PrintObjectList(Products)}";
         }
     }
 

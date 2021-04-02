@@ -14,13 +14,13 @@
 + (NSDictionary *)convertOfferings:(QNOfferings *)offerings;
 + (NSDictionary *)convertError:(NSError *)error;
 
-+ (void)sendUnityMessage:(NSObject *)objectToConvert toMethod:(const char *)methodName
++ (void)sendUnityMessage:(NSObject *)objectToConvert toMethod:(NSString *)methodName
            unityListener:(const char *)unityListenerName;
 
 + (void)handlePermissionsResponse:(NSDictionary<NSString *,QNPermission *> *) result withError:( NSError *)error
-                         toMethod:(const char *)methodName
+                         toMethod:(NSString *)methodName
                     unityListener:(const char *)unityListenerName;
 
-+ (void)handleErrorResponse:(NSError *)error toMethod:(const char *) methodName
++ (void)handleErrorResponse:(NSError *)error toMethod:(NSString *) methodName
               unityListener:(const char *)unityListenerName;
 @end

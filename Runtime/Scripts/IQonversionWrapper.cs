@@ -7,11 +7,11 @@
         void SetUserID(string userID);
         void SyncPurchases();
         void AddAttributionData(string conversionData, AttributionSource source);
-        void CheckPermissions();
-        void Purchase(string productId);
-        void Restore();
-        void UpdatePurchase(string productId, string oldProductId, ProrationMode prorationMode);
-        void Products();
-        void Offerings();
+        void CheckPermissions(string callbackName);
+        void Purchase(string productId, string callbackName);
+        void Restore(string callbackName);
+        void UpdatePurchase(string productId, string oldProductId, ProrationMode prorationMode, string callbackName);
+        void Products(string callbackName);
+        void Offerings(string callbackName);
     }
 }

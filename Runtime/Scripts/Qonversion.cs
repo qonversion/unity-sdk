@@ -6,11 +6,17 @@ namespace QonversionUnity
 {
     public class Qonversion : MonoBehaviour
     {
-        public delegate void OnPermissionsReceived(Dictionary<string, QPermission> permissions, QError error);
-        public delegate void OnProductsReceived(Dictionary<string, QProduct> products, QError error);
-        public delegate void OnOfferingsReceived(QOfferings offerings, QError error);
+        public delegate void OnPermissionsReceived(Dictionary<string, Permission> permissions, QonversionError error);
+        public delegate void OnProductsReceived(Dictionary<string, Product> products, QonversionError error);
+        public delegate void OnOfferingsReceived(Offerings offerings, QonversionError error);
 
-        private const string gameObjectName = "QonvesrionRuntimeGameObject";
+        private const string GameObjectName = "QonvesrionRuntimeGameObject";
+        private const string OnCheckPermissionsMethodName = "OnCheckPermissions";
+        private const string OnPurchaseMethodName = "OnPurchase";
+        private const string OnUpdatePurchaseMethodName = "OnUpdatePurchase";
+        private const string OnRestoreMethodName = "OnRestore";
+        private const string OnProductsMethodName = "OnProducts";
+        private const string OnOfferingsMethodName = "OnOfferings";
 
         private static IQonversionWrapper _Instance;
 
@@ -32,7 +38,7 @@ namespace QonversionUnity
                 }
             }
 
-            GameObject go = new GameObject(gameObjectName);
+            GameObject go = new GameObject(GameObjectName);
             go.AddComponent<Qonversion>();
             DontDestroyOnLoad(go);
 
@@ -42,7 +48,7 @@ namespace QonversionUnity
         public static void Launch(string apiKey, bool observerMode)
         {
             IQonversionWrapper instance = getFinalInstance();
-            instance.Launch(gameObjectName, apiKey, observerMode);
+            instance.Launch(GameObjectName, apiKey, observerMode);
         }
 
         public static void SetDebugMode()
@@ -81,7 +87,7 @@ namespace QonversionUnity
         {
             CheckPermissionsCallback = callback;
             IQonversionWrapper instance = getFinalInstance();
-            instance.CheckPermissions();
+            instance.CheckPermissions(OnCheckPermissionsMethodName);
         }
 
         private static OnPermissionsReceived PurchaseCallback { get; set; }
@@ -90,7 +96,7 @@ namespace QonversionUnity
         {
             PurchaseCallback = callback;
             IQonversionWrapper instance = getFinalInstance();
-            instance.Purchase(productId);
+            instance.Purchase(productId, OnPurchaseMethodName);
         }
 
         private static OnPermissionsReceived RestoreCallback { get; set; }
@@ -99,7 +105,7 @@ namespace QonversionUnity
         {
             RestoreCallback = callback;
             IQonversionWrapper instance = getFinalInstance();
-            instance.Restore();
+            instance.Restore(OnRestoreMethodName);
         }
 
         private static OnPermissionsReceived UpdatePurchaseCallback { get; set; }
@@ -108,7 +114,7 @@ namespace QonversionUnity
         {
             UpdatePurchaseCallback = callback;
             IQonversionWrapper instance = getFinalInstance();
-            instance.UpdatePurchase(productId, oldProductId, prorationMode);
+            instance.UpdatePurchase(productId, oldProductId, prorationMode, OnUpdatePurchaseMethodName);
         }
 
         private static OnProductsReceived ProductsCallback { get; set; }
@@ -117,7 +123,7 @@ namespace QonversionUnity
         {
             ProductsCallback = callback;
             IQonversionWrapper instance = getFinalInstance();
-            instance.Products();
+            instance.Products(OnProductsMethodName);
         }
 
         private static OnOfferingsReceived OfferingsCallback { get; set; }
@@ -126,7 +132,7 @@ namespace QonversionUnity
         {
             OfferingsCallback = callback;
             IQonversionWrapper instance = getFinalInstance();
-            instance.Offerings();
+            instance.Offerings(OnOfferingsMethodName);
         }
 
         // Called from the native SDK - Called when permissions received from the checkPermissions() method 
@@ -143,7 +149,7 @@ namespace QonversionUnity
             }
             else
             {
-                Dictionary<string, QPermission> permissions = Mapper.PermissionsFromJson(jsonString);
+                Dictionary<string, Permission> permissions = Mapper.PermissionsFromJson(jsonString);
                 CheckPermissionsCallback(permissions, null);
             }
 
@@ -164,7 +170,7 @@ namespace QonversionUnity
             }
             else
             {
-                Dictionary<string, QPermission> permissions = Mapper.PermissionsFromJson(jsonString);
+                Dictionary<string, Permission> permissions = Mapper.PermissionsFromJson(jsonString);
                 PurchaseCallback(permissions, null);
             }
 
@@ -185,7 +191,7 @@ namespace QonversionUnity
             }
             else
             {
-                Dictionary<string, QPermission> permissions = Mapper.PermissionsFromJson(jsonString);
+                Dictionary<string, Permission> permissions = Mapper.PermissionsFromJson(jsonString);
                 RestoreCallback(permissions, null);
             }
 
@@ -206,7 +212,7 @@ namespace QonversionUnity
             }
             else
             {
-                Dictionary<string, QPermission> permissions = Mapper.PermissionsFromJson(jsonString);
+                Dictionary<string, Permission> permissions = Mapper.PermissionsFromJson(jsonString);
                 UpdatePurchaseCallback(permissions, null);
             }
 
@@ -227,7 +233,7 @@ namespace QonversionUnity
             }
             else
             {
-                Dictionary<string, QProduct> products = Mapper.ProductsFromJson(jsonString);
+                Dictionary<string, Product> products = Mapper.ProductsFromJson(jsonString);
                 ProductsCallback(products, null);
             }
 
@@ -248,7 +254,7 @@ namespace QonversionUnity
             }
             else
             {
-                QOfferings offerings = Mapper.OfferingsFromJson(jsonString);
+                Offerings offerings = Mapper.OfferingsFromJson(jsonString);
                 OfferingsCallback(offerings, null);
             }
 

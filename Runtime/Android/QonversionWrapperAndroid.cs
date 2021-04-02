@@ -64,34 +64,34 @@ namespace QonversionUnity
             }
         }
 
-        public void CheckPermissions()
+        public void CheckPermissions(string callbackName)
         {
-            CallQonversion("checkPermissions");
+            CallQonversion("checkPermissions", callbackName);
         }
 
-        public void Purchase(string productId)
+        public void Purchase(string productId, string callbackName)
         {
-            CallQonversion("purchase", productId);
+            CallQonversion("purchase", productId, callbackName);
         }
 
-        public void Restore()
+        public void Restore(string callbackName)
         {
-            CallQonversion("restore");
+            CallQonversion("restore", callbackName);
         }
 
-        public void UpdatePurchase(string productId, string oldProductId, ProrationMode prorationMode)
+        public void UpdatePurchase(string productId, string oldProductId, ProrationMode prorationMode, string callbackName)
         {
-            CallQonversion("updatePurchase", productId, oldProductId, (int)prorationMode);
+            CallQonversion("updatePurchase", productId, oldProductId, (int)prorationMode, callbackName);
         }
 
-        public void Products()
+        public void Products(string callbackName)
         {
-            CallQonversion("products");
+            CallQonversion("products", callbackName);
         }
 
-        public void Offerings()
+        public void Offerings(string callbackName)
         {
-            CallQonversion("offerings");
+            CallQonversion("offerings", callbackName);
         }
 
         private const string QonversionWrapper = "com.qonversion.unitywrapper.QonversionWrapper";

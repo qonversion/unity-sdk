@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace QonversionUnity
 {
-    public class QPermission
+    public class Permission
     {
         /// Qonversion Permission ID, like premium.
         [Tooltip("Create Permission: https://qonversion.io/docs/create-permission")]
@@ -28,7 +28,7 @@ namespace QonversionUnity
         /// Subscription could be canceled, but the user could still have a permission
         public readonly bool IsActive;
 
-        public QPermission(Dictionary<string, object> dict)
+        public Permission(Dictionary<string, object> dict)
         {
             if (dict.TryGetValue("id", out object value)) PermissionID = value as string;
             if (dict.TryGetValue("associated_product", out value)) ProductID = value as string;
