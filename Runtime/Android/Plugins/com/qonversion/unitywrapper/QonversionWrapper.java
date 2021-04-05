@@ -1,44 +1,41 @@
 package com.qonversion.unitywrapper;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.qonversion.android.sdk.QonversionOfferingsCallback;
+import com.qonversion.android.sdk.QonversionProductsCallback;
+import com.qonversion.android.sdk.dto.offerings.QOfferings;
+import com.qonversion.android.sdk.dto.products.QProduct;
 import com.unity3d.player.UnityPlayer;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONException;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executor;
-import com.fasterxml.jackson.core.JsonGenerationException;
+import java.util.List;
+
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.qonversion.android.sdk.AttributionSource;
-import com.qonversion.android.sdk.QUserProperties;
 import com.qonversion.android.sdk.Qonversion;
-import com.qonversion.android.sdk.QonversionEligibilityCallback;
 import com.qonversion.android.sdk.QonversionError;
-import com.qonversion.android.sdk.QonversionExperimentsCallback;
 import com.qonversion.android.sdk.QonversionLaunchCallback;
-import com.qonversion.android.sdk.QonversionOfferingsCallback;
 import com.qonversion.android.sdk.QonversionPermissionsCallback;
-import com.qonversion.android.sdk.QonversionProductsCallback;
 import com.qonversion.android.sdk.dto.QLaunchResult;
-import com.qonversion.android.sdk.dto.experiments.QExperimentInfo;
-import com.qonversion.android.sdk.dto.offerings.QOfferings;
 import com.qonversion.android.sdk.dto.QPermission;
-import com.qonversion.android.sdk.dto.products.QProduct;
 
 import android.os.Handler;
 
 public class QonversionWrapper {
-
     public static String TAG = "QonversionWrapper";
+
+    private static String unityListenerName;
 
     private static Executor executor;
 
@@ -46,13 +43,14 @@ public class QonversionWrapper {
 
     private static Handler mUnityMainThreadHandler;
 
-    public static synchronized void launch(String projectKey, boolean observerMode) {
+    public static synchronized void launch(String unityListener, String projectKey, boolean observerMode) {
         Log.d(TAG, "Qonversion Launch starting. Project key: " + projectKey);
+
+        unityListenerName = unityListener;
 
         Activity unityActivity = UnityPlayer.currentActivity;
 
-        Qonversion.launch(unityActivity.getApplication(), projectKey, observerMode, new QonversionLaunchCallback()
-        {
+        Qonversion.launch(unityActivity.getApplication(), projectKey, observerMode, new QonversionLaunchCallback() {
             @Override
             public void onSuccess(@NotNull QLaunchResult launchResult) {
                 Log.d(TAG, "Qonversion initialized. UID: " + launchResult.getUid());
@@ -91,7 +89,7 @@ public class QonversionWrapper {
             Qonversion.attribution(conversionInfo, source);
             Log.d(TAG, "Attribution sent");
         } catch (Exception e) {
-            Log.e(TAG, "Purchases. " + "pushAttribution error: " + e.getLocalizedMessage());
+            Log.e(TAG, "pushAttribution error: " + e.getLocalizedMessage());
         }
     }
 
@@ -99,13 +97,132 @@ public class QonversionWrapper {
         Qonversion.setUserID(value);
     }
 
-    public void runOnUnityThread(Runnable runnable) {
+    public static synchronized void checkPermissions(String unityCallbackName) {
+        Qonversion.checkPermissions(new QonversionPermissionsCallback() {
+            @Override
+            public void onSuccess(@NotNull Map<String, QPermission> permissions) {
+                handlePermissionsResponse(permissions, unityCallbackName);
+            }
+
+            @Override
+            public void onError(@NotNull QonversionError error) {
+                handleErrorResponse(error, unityCallbackName);
+            }
+        });
+    }
+
+    public static synchronized void purchase(String productId, String unityCallbackName) {
+        Qonversion.purchase(UnityPlayer.currentActivity, productId, new QonversionPermissionsCallback() {
+            @Override
+            public void onSuccess(@NotNull Map<String, QPermission> permissions) {
+                handlePermissionsResponse(permissions, unityCallbackName);
+            }
+
+            @Override
+            public void onError(@NotNull QonversionError error) {
+                handleErrorResponse(error, unityCallbackName);
+            }
+        });
+    }
+
+    public static synchronized void updatePurchase(String productId, String oldProductId, int prorationMode, String unityCallbackName) {
+        Qonversion.updatePurchase(UnityPlayer.currentActivity, productId, oldProductId, prorationMode, new QonversionPermissionsCallback() {
+            @Override
+            public void onSuccess(@NotNull Map<String, QPermission> permissions) {
+                handlePermissionsResponse(permissions, unityCallbackName);
+            }
+
+            @Override
+            public void onError(@NotNull QonversionError error) {
+                handleErrorResponse(error, unityCallbackName);
+            }
+        });
+    }
+
+    public static synchronized void restore(String unityCallbackName) {
+        Qonversion.restore(new QonversionPermissionsCallback() {
+            @Override
+            public void onSuccess(@NotNull Map<String, QPermission> permissions) {
+                handlePermissionsResponse(permissions, unityCallbackName);
+            }
+
+            @Override
+            public void onError(@NotNull QonversionError error) {
+                handleErrorResponse(error, unityCallbackName);
+            }
+        });
+    }
+
+    public static synchronized void products(String unityCallbackName) {
+        Qonversion.products(new QonversionProductsCallback() {
+            @Override
+            public void onSuccess(@NotNull Map<String, QProduct> products) {
+                List<Map<String, Object>> mappedProducts = Mapper.mapProducts(products);
+                sendMessageToUnity(mappedProducts, unityCallbackName);
+            }
+
+            @Override
+            public void onError(@NotNull QonversionError error) {
+                handleErrorResponse(error, unityCallbackName);
+            }
+        });
+    }
+
+    public static synchronized void offerings(String unityCallbackName) {
+        Qonversion.offerings(new QonversionOfferingsCallback() {
+            @Override
+            public void onSuccess(@NotNull QOfferings qOfferings) {
+                Map<String, Object> mappedOfferings = Mapper.mapOfferings(qOfferings);
+                sendMessageToUnity(mappedOfferings, unityCallbackName);
+            }
+
+            @Override
+            public void onError(@NotNull QonversionError error) {
+                handleErrorResponse(error, unityCallbackName);
+            }
+        });
+    }
+
+    private static void handlePermissionsResponse(@NotNull Map<String, QPermission> permissions, @NotNull String methodName) {
+        List<Map<String, Object>> mappedPermissions = Mapper.mapPermissions(permissions);
+        sendMessageToUnity(mappedPermissions, methodName);
+    }
+
+    private static void handleErrorResponse(@NotNull QonversionError error, @NotNull String methodName) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode rootNode = mapper.createObjectNode();
+        String message = String.format("%s. %s", error.getDescription(), error.getAdditionalMessage());
+
+        ObjectNode errorNode = mapper.createObjectNode();
+        errorNode.put("message", message);
+        errorNode.put("code", error.getCode().name());
+
+        rootNode.set("error", errorNode);
+
+        sendMessageToUnity(rootNode, methodName);
+    }
+
+    private static void sendMessageToUnity(@NotNull Object objectToConvert, @NotNull String methodName) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            String json = mapper.writeValueAsString(objectToConvert);
+            UnityPlayer.UnitySendMessage(unityListenerName, methodName, json);
+        } catch (JsonProcessingException e) {
+            handleJsonProcessingException(e);
+        }
+    }
+
+    private static void handleJsonProcessingException(JsonProcessingException e) {
+        Log.e(TAG, "An error occurred while serializing data: " + e.getLocalizedMessage());
+    }
+
+    private void runOnUnityThread(Runnable runnable) {
         if (mUnityMainThreadHandler != null && runnable != null) {
             mUnityMainThreadHandler.post(runnable);
         }
     }
 
-    public static Executor getExecutor() {
+    private static Executor getExecutor() {
         synchronized (LOCK) {
             if (QonversionWrapper.executor == null) {
                 QonversionWrapper.executor = AsyncTask.THREAD_POOL_EXECUTOR;

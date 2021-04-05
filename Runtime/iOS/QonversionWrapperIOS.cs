@@ -16,16 +16,31 @@ namespace QonversionUnity
         private static extern void _setUserID(string userID);
 
         [DllImport("__Internal")]
-        private static extern void _launchWithKey(string key);
+        private static extern void _launchWithKey(string gameObjectName, string key);
 
         [DllImport("__Internal")]
         private static extern void _addAttributionData(string conversionData, int provider);
+
+        [DllImport("__Internal")]
+        private static extern void _checkPermissions(string callbackName);
+
+        [DllImport("__Internal")]
+        private static extern void _restore(string callbackName);
+
+        [DllImport("__Internal")]
+        private static extern void _purchase(string productID, string callbackName);
+
+        [DllImport("__Internal")]
+        private static extern void _products(string callbackName);
+
+        [DllImport("__Internal")]
+        private static extern void _offerings(string callbackName);
 #endif
 
-        public void Launch(string projectKey, bool observerMode)
+        public void Launch(string gameObjectName, string projectKey, bool observerMode)
         {
 #if UNITY_IOS
-            _launchWithKey(projectKey);
+            _launchWithKey(gameObjectName, projectKey);
 #endif
         }
 
@@ -51,6 +66,45 @@ namespace QonversionUnity
         {
 #if UNITY_IOS
             _addAttributionData(conversionData, (int)source);
+#endif
+        }
+
+        public void CheckPermissions(string callbackName)
+        {
+#if UNITY_IOS
+            _checkPermissions(callbackName);
+#endif
+        }
+
+        public void Purchase(string productId, string callbackName)
+        {
+#if UNITY_IOS
+            _purchase(productId, callbackName);
+#endif
+        }
+
+        public void Restore(string callbackName)
+        {
+#if UNITY_IOS
+            _restore(callbackName);
+#endif
+        }
+
+        public void UpdatePurchase(string productId, string oldProductId, ProrationMode prorationMode, string callbackName)
+        {
+        }
+
+        public void Products(string callbackName)
+        {
+#if UNITY_IOS
+            _products(callbackName);
+#endif
+        }
+
+        public void Offerings(string callbackName)
+        {
+#if UNITY_IOS
+            _offerings(callbackName);
 #endif
         }
     }
