@@ -63,6 +63,18 @@ namespace QonversionUnity
             instance.SetUserID(userID);
         }
 
+        public static void SetUserProperty(string key, string value)
+        {
+            IQonversionWrapper instance = getFinalInstance();
+            instance.SetUserProperty(key, value);
+        }
+
+        public static void SetProperty(UserProperty key, string value)
+        {
+            IQonversionWrapper instance = getFinalInstance();
+            instance.SetProperty(key, value);
+        }
+
         public static void SyncPurchases()
         {
             IQonversionWrapper instance = getFinalInstance();

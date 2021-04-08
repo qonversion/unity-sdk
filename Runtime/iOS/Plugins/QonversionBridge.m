@@ -21,6 +21,21 @@ void _setUserID(const char* userID)
     [Qonversion setUserID:[UtilityBridge сonvertCStringToNSString:userID]];
 }
 
+void _setProperty(const int propertyIndex, const char* value)
+{
+    NSString *valueStr = [UtilityBridge сonvertCStringToNSString:value];
+
+    [Qonversion setProperty:propertyIndex value:valueStr];
+}
+
+void _setUserProperty(const char* key, const char* value)
+{
+    NSString *keyStr = [UtilityBridge сonvertCStringToNSString:key];
+    NSString *valueStr = [UtilityBridge сonvertCStringToNSString:value];
+
+    [Qonversion setUserProperty:keyStr value:valueStr];
+}
+
 void _addAttributionData(const char* conversionData, const int provider) {
     NSDictionary *conversionInfo = [UtilityBridge dictionaryFromJsonString: [UtilityBridge сonvertCStringToNSString: conversionData]];
     

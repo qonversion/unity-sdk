@@ -16,6 +16,12 @@ namespace QonversionUnity
         private static extern void _setUserID(string userID);
 
         [DllImport("__Internal")]
+        private static extern void _setProperty(int propertyIndex, string value);
+
+        [DllImport("__Internal")]
+        private static extern void _setUserProperty(string key, string value);
+
+        [DllImport("__Internal")]
         private static extern void _launchWithKey(string gameObjectName, string key);
 
         [DllImport("__Internal")]
@@ -59,6 +65,21 @@ namespace QonversionUnity
         {
 #if UNITY_IOS
             _setUserID(userID);
+#endif
+        }
+
+        public void SetUserProperty(string key, string value)
+        {
+#if UNITY_IOS
+            _setUserProperty(key, value);
+#endif
+        }
+
+        public void SetProperty(UserProperty key, string value)
+        {
+            int propertyIndex = (int)key;
+#if UNITY_IOS
+            _setProperty(propertyIndex, value);
 #endif
         }
 

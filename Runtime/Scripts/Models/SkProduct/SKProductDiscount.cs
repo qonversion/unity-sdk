@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace QonversionUnity
 {
     public class SKProductDiscount
     {
-        public readonly string Identifier;
-        public readonly SKProductDiscountType Type;
+        [CanBeNull] public readonly string Identifier;
+        [CanBeNull] public readonly SKProductDiscountType Type;
         public readonly string Price;
         public readonly string LocaleIdentifier;
         public readonly SKProductDiscountPaymentMode PaymentMode;
