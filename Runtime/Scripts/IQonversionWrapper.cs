@@ -3,6 +3,7 @@
     internal interface IQonversionWrapper
     {
         void SetDebugMode();
+        void SetAdvertisingID();
         void Launch(string gameObjectName, string projectKey, bool observerMode);
         void SetUserID(string userID);
         void SyncPurchases();
