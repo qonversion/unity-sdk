@@ -16,6 +16,10 @@ void _launchWithKey(const char* unityListener, const char* key)
     [Qonversion launchWithKey:[UtilityBridge сonvertCStringToNSString:key]];
 }
 
+void _setAdvertisingID() {
+    [Qonversion setAdvertisingID];
+}
+
 void _setUserID(const char* userID)
 {
     [Qonversion setUserID:[UtilityBridge сonvertCStringToNSString:userID]];

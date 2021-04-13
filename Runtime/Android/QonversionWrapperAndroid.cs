@@ -34,6 +34,10 @@ namespace QonversionUnity
             }
         }
 
+        public void SetAdvertisingID()
+        {
+        }
+
         public void AddAttributionData(string conversionData, AttributionSource source)
         {
             string attibutionSource;

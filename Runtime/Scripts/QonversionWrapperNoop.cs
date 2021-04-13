@@ -22,6 +22,10 @@ namespace QonversionUnity
         {
         }
 
+        public void SetAdvertisingID()
+        {
+        }
+
         public void CheckPermissions(string callbackName)
         {
         }
