@@ -6,7 +6,7 @@ namespace QonversionUnity
     internal class QonversionWrapperAndroid : IQonversionWrapper
     {
         public void Launch(string gameObjectName, string projectKey, bool observerMode)
-        {       
+        {
             CallQonversion("launch", gameObjectName, projectKey, observerMode);
         }
 
@@ -102,8 +102,10 @@ namespace QonversionUnity
 
         private static void CallQonversion(string methodName, params object[] args)
         {
-            using var qonversion = new AndroidJavaClass(QonversionWrapper);
-            qonversion.CallStatic(methodName, args);
+            using (var qonversion = new AndroidJavaClass(QonversionWrapper))
+            {
+                qonversion.CallStatic(methodName, args);
+            }
         }
     }
 }

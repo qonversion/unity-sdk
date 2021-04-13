@@ -74,17 +74,38 @@ namespace QonversionUnity
         private QProductType FormatType(object productType) =>
             (QProductType)Convert.ToInt32(productType);
 
-        private QProductDuration FormatDuration(object duration) =>
-            Convert.ToInt32(duration) switch
+        private QProductDuration FormatDuration(object duration)
+        {
+            Int32 value = Convert.ToInt32(duration);
+            var result = QProductDuration.Unknown;
+
+            switch (value)
             {
-                0 => QProductDuration.Weekly,
-                1 => QProductDuration.Monthly,
-                2 => QProductDuration.ThreeMonths,
-                3 => QProductDuration.SixMonths,
-                4 => QProductDuration.Annual,
-                5 => QProductDuration.Lifetime,
-                _ => QProductDuration.Unknown
-            };
+                case 0:
+                    result = QProductDuration.Weekly;
+                    break;
+                case 1:
+                    result = QProductDuration.Monthly;
+                    break;
+                case 2:
+                    result = QProductDuration.ThreeMonths;
+                    break;
+                case 3:
+                    result = QProductDuration.SixMonths;
+                    break;
+                case 4:
+                    result = QProductDuration.Annual;
+                    break;
+                case 5:
+                    result = QProductDuration.Lifetime;
+                    break;
+                default:
+                    result = QProductDuration.Unknown;
+                    break;
+            }
+
+            return result;
+        }
 
         private QTrialDuration FormatTrialDuration(object trialDuration) =>
             (QTrialDuration)Convert.ToInt32(trialDuration);
