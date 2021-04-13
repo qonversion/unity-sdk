@@ -13,6 +13,9 @@ namespace QonversionUnity
         private static extern void _setDebugMode();
 
         [DllImport("__Internal")]
+        private static extern void _setAdvertisingID();
+
+        [DllImport("__Internal")]
         private static extern void _setUserID(string userID);
 
         [DllImport("__Internal")]
@@ -54,6 +57,14 @@ namespace QonversionUnity
             _setDebugMode();
 #endif
         }
+
+        public void SetAdvertisingID()
+        {
+#if UNITY_IOS
+            _setAdvertisingID();
+#endif
+        }
+
 
         public void SetUserID(string userID)
         {
