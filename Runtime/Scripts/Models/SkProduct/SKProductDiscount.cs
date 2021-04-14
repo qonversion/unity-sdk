@@ -7,12 +7,12 @@ namespace QonversionUnity
     public class SKProductDiscount
     {
         [CanBeNull] public readonly string Identifier;
-        [CanBeNull] public readonly SKProductDiscountType Type;
-        public readonly string Price;
-        public readonly string LocaleIdentifier;
+        public readonly SKProductDiscountType Type;
+        [CanBeNull] public readonly string Price;
+        [CanBeNull] public readonly string LocaleIdentifier;
         public readonly SKProductDiscountPaymentMode PaymentMode;
         public readonly int NumberOfPeriods;
-        public readonly SKProductSubscriptionPeriod SubscriptionPeriod;
+        [CanBeNull] public readonly SKProductSubscriptionPeriod SubscriptionPeriod;
 
         public SKProductDiscount(Dictionary<string, object> dict)
         {
