@@ -30,14 +30,15 @@
 }
 
 + (NSNumber *)convertProperty:(NSString *)propertyStr {
-    NSDictionary *permissionDict = @{
+    NSDictionary *propertiesDict = @{
         @"Email": @(QNPropertyEmail),
         @"Name": @(QNPropertyName),
         @"AppsFlyerUserId": @(QNPropertyAppsFlyerUserID),
         @"AdjustAdId": @(QNPropertyAdjustUserID),
         @"KochavaDeviceId": @(QNPropertyKochavaDeviceID),
     };
-    NSNumber *propertyIndex = permissionDict[propertyStr];
+    
+    NSNumber *propertyIndex = propertiesDict[propertyStr];
     return propertyIndex;
 }
 
