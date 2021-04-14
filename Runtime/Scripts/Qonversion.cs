@@ -57,6 +57,12 @@ namespace QonversionUnity
             instance.SetDebugMode();
         }
 
+        public static void SetAdvertisingID()
+        {
+            IQonversionWrapper instance = getFinalInstance();
+            instance.SetAdvertisingID();
+        }
+
         public static void SetUserID(string userID)
         {
             IQonversionWrapper instance = getFinalInstance();
