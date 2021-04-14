@@ -21,11 +21,15 @@ void _setUserID(const char* userID)
     [Qonversion setUserID:[UtilityBridge сonvertCStringToNSString:userID]];
 }
 
-void _setProperty(const int propertyIndex, const char* value)
+void _setProperty(const char* propertyName, const char* value)
 {
+    NSString *propertyNameStr = [UtilityBridge сonvertCStringToNSString:propertyName];
     NSString *valueStr = [UtilityBridge сonvertCStringToNSString:value];
-
-    [Qonversion setProperty:propertyIndex value:valueStr];
+    NSNumber *propertyIndex = [UtilityBridge convertProperty:propertyNameStr];
+    
+    if (propertyIndex) {
+        [Qonversion setProperty:propertyIndex.integerValue value:valueStr];
+    }
 }
 
 void _setUserProperty(const char* key, const char* value)

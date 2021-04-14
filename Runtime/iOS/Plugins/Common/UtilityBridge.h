@@ -9,6 +9,7 @@
 + (NSString*)сonvertCStringToNSString:(const char *)string;
 + (NSDictionary*)dictionaryFromJsonString:(NSString*) jsonString;
 
++ (NSNumber *)convertProperty:(NSString *)propertyStr;
 + (NSArray *)convertPermissions:(NSArray<QNPermission *> *)permissions;
 + (NSArray *)convertProducts:(NSArray<QNProduct *> *)products;
 + (NSDictionary *)convertOfferings:(QNOfferings *)offerings;
