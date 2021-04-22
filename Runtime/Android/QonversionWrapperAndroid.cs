@@ -20,10 +20,18 @@ namespace QonversionUnity
 
         public void SetUserID(string userID)
         {
-            using (var purchases = new AndroidJavaClass("com.qonversion.unitywrapper.QonversionWrapper"))
-            {
-                purchases.CallStatic("setUserID", userID);
-            }
+            CallQonversion("setUserID", userID);
+        }
+
+        public void SetUserProperty(string key, string value)
+        {
+            CallQonversion("setUserProperty", key, value);
+        }
+
+        public void SetProperty(UserProperty key, string value)
+        {
+            string propertyName = Enum.GetName(typeof(UserProperty), key);
+            CallQonversion("setProperty", propertyName, value);
         }
 
         public void SyncPurchases()

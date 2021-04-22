@@ -14,6 +14,14 @@ namespace QonversionUnity
         {
         }
 
+        public void SetUserProperty(string key, string value)
+        {
+        }
+
+        public void SetProperty(UserProperty key, string value)
+        {
+        }
+
         public void AddAttributionData(string conversionData, AttributionSource source)
         {
         }

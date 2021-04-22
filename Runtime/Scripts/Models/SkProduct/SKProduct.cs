@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace QonversionUnity
 {
@@ -9,14 +10,14 @@ namespace QonversionUnity
         public readonly string LocalizedTitle;
         public readonly bool IsFamilyShareable;
         public readonly string Price;
-        public readonly SKProductDiscount IntroductoryPrice;
-        public readonly List<SKProductDiscount> Discounts;
-        public readonly string SubscriptionGroupIdentifier;
-        public readonly SKProductSubscriptionPeriod SubscriptionPeriod;
+        [CanBeNull] public readonly SKProductDiscount IntroductoryPrice;
+        [CanBeNull] public readonly List<SKProductDiscount> Discounts;
+        [CanBeNull] public readonly string SubscriptionGroupIdentifier;
+        [CanBeNull] public readonly SKProductSubscriptionPeriod SubscriptionPeriod;
         public readonly bool IsDownloadable;
-        public readonly List<int> DownloadContentLengths;
-        public readonly string DownloadContentVersion;
-        public readonly string CurrencyCode;
+        [CanBeNull] public readonly List<int> DownloadContentLengths;
+        [CanBeNull] public readonly string DownloadContentVersion;
+        [CanBeNull] public readonly string CurrencyCode;
 
         public SKProduct(Dictionary<string, object> dict)
         {

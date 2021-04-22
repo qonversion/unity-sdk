@@ -33,7 +33,7 @@ Just add this line to the `Packages/manifest.json` file of your Unity Project:
 
 ```json
 "dependencies": {
-    "com.qonversion.unity": "https://github.com/qonversion/unity-sdk.git#2.1.1"
+    "com.qonversion.unity": "https://github.com/qonversion/unity-sdk.git#2.1.2"
 }
 ```
 

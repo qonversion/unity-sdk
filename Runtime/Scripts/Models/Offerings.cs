@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace QonversionUnity
 {
     public class Offerings
     {
-        public readonly Offering Main;
+        [CanBeNull] public readonly Offering Main;
         public readonly List<Offering> AvailableOfferings;
 
         public Offerings(Dictionary<string, object> dict)

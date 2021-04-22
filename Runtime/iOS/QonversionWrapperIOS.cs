@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 #endif
 
+using System;
 using UnityEngine;
 
 namespace QonversionUnity
@@ -17,6 +18,12 @@ namespace QonversionUnity
 
         [DllImport("__Internal")]
         private static extern void _setUserID(string userID);
+
+        [DllImport("__Internal")]
+        private static extern void _setProperty(string propertyName, string value);
+
+        [DllImport("__Internal")]
+        private static extern void _setUserProperty(string key, string value);
 
         [DllImport("__Internal")]
         private static extern void _launchWithKey(string gameObjectName, string key);
@@ -73,7 +80,22 @@ namespace QonversionUnity
 #endif
         }
 
-        public void AddAttributionData(string conversionData, AttributionSource source)
+        public void SetUserProperty(string key, string value)
+        {
+#if UNITY_IOS
+            _setUserProperty(key, value);
+#endif
+        }
+
+        public void SetProperty(UserProperty key, string value)
+        {
+            string propertyName = Enum.GetName(typeof(UserProperty), key);
+#if UNITY_IOS
+            _setProperty(propertyName, value);
+#endif
+        }
+
+    public void AddAttributionData(string conversionData, AttributionSource source)
         {
 #if UNITY_IOS
             _addAttributionData(conversionData, (int)source);

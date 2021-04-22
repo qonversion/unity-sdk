@@ -6,6 +6,8 @@ import android.util.Log;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.qonversion.android.sdk.QUserProperties;
+
 import com.qonversion.android.sdk.QonversionOfferingsCallback;
 import com.qonversion.android.sdk.QonversionProductsCallback;
 import com.qonversion.android.sdk.dto.offerings.QOfferings;
@@ -73,6 +75,19 @@ public class QonversionWrapper {
 
     public static synchronized void setUserID(String userID) {
         Qonversion.setUserID(userID);
+    }
+
+    public static synchronized void setProperty(String key, String value) {
+        try {
+            QUserProperties enumKey = QUserProperties.valueOf(key);
+            Qonversion.setProperty(enumKey, value);
+        } catch (IllegalArgumentException e) {
+            Log.e(TAG, "Failed to map QUserProperties. " + e.getLocalizedMessage());
+        }
+    }
+
+    public static synchronized void setUserProperty(String key, String value) {
+        Qonversion.setUserProperty(key, value);
     }
 
     public static synchronized void attribution(String conversionData, String attributionSource) {

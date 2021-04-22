@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace QonversionUnity
@@ -12,7 +13,7 @@ namespace QonversionUnity
 
         /// App Store ID or Google Play ID
         [Tooltip("Create Products: (https://qonversion.io/docs/create-products")]
-        public readonly string StoreId;
+        [CanBeNull] public readonly string StoreId;
 
         /// Product type.
         [Tooltip("Products types: https://qonversion.io/docs/product-types")]
@@ -24,18 +25,18 @@ namespace QonversionUnity
         public readonly QProductDuration Duration;
 
         /// Localized price, e.g. 4.99 USD
-        public readonly string PrettyPrice;
+        [CanBeNull] public readonly string PrettyPrice;
 
         /// Trial duration of the subscription
         public readonly QTrialDuration TrialDuration;
 
         /// Associated SKProduct.
         /// Available for iOS only.
-        public readonly SKProduct SkProduct;
+        [CanBeNull] public readonly SKProduct SkProduct;
 
         /// Associated SkuDetails.
         /// Available for Android only.
-        public readonly SkuDetails SkuDetails;
+        [CanBeNull] public readonly SkuDetails SkuDetails;
 
         public Product(Dictionary<string, object> dict)
         {

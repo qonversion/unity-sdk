@@ -6,6 +6,8 @@
         void SetAdvertisingID();
         void Launch(string gameObjectName, string projectKey, bool observerMode);
         void SetUserID(string userID);
+        void SetUserProperty(string key, string value);
+        void SetProperty(UserProperty key, string value);
         void SyncPurchases();
         void AddAttributionData(string conversionData, AttributionSource source);
         void CheckPermissions(string callbackName);

@@ -29,6 +29,19 @@
     return dictionary;
 }
 
++ (NSNumber *)convertProperty:(NSString *)propertyStr {
+    NSDictionary *propertiesDict = @{
+        @"Email": @(QNPropertyEmail),
+        @"Name": @(QNPropertyName),
+        @"AppsFlyerUserId": @(QNPropertyAppsFlyerUserID),
+        @"AdjustAdId": @(QNPropertyAdjustUserID),
+        @"KochavaDeviceId": @(QNPropertyKochavaDeviceID),
+    };
+    
+    NSNumber *propertyIndex = propertiesDict[propertyStr];
+    return propertyIndex;
+}
+
 + (NSDictionary *)convertError:(NSError *)error{
     NSDictionary *errorDict = [@{
         @"code": [@(error.code) stringValue],
