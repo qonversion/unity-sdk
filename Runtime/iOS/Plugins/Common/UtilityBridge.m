@@ -210,6 +210,27 @@
     return [result copy];
 }
 
++ (NSDictionary *)convertIntroEligibility:(NSDictionary<NSString *, QNIntroEligibility *> *)introEligibilityInfo {
+    NSDictionary *statuses = @{
+        @(QNIntroEligibilityStatusNonIntroProduct): @"non_intro_or_trial_product",
+        @(QNIntroEligibilityStatusEligible): @"intro_or_trial_eligible",
+        @(QNIntroEligibilityStatusIneligible): @"intro_or_trial_ineligible"
+    };
+
+    NSMutableArray *convertedData = [NSMutableArray new];
+
+    for (NSString *key in introEligibilityInfo.allKeys) {
+        QNIntroEligibility *eligibility = introEligibilityInfo[key];
+        NSString *statusValue = statuses[@(eligibility.status)] ? : @"unknonw";
+
+        NSDictionary *eligibilityInfo = @{@"productId": key, @"status": statusValue};
+
+        [convertedData addObject:eligibilityInfo];
+    }
+
+    return [convertedData copy];
+}
+
 + (void)handlePermissionsResponse:(NSDictionary<NSString *,QNPermission *> *) result withError:( NSError *)error
                          toMethod:(NSString *) methodName
                     unityListener:(const char *)unityListenerName{

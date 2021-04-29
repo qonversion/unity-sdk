@@ -2,6 +2,7 @@
 {
     internal interface IQonversionWrapper
     {
+        void StoreSdkInfo(string version, string versionKey, string source, string sourceKey);
         void SetDebugMode();
         void SetAdvertisingID();
         void Launch(string gameObjectName, string projectKey, bool observerMode);
@@ -16,5 +17,6 @@
         void UpdatePurchase(string productId, string oldProductId, ProrationMode prorationMode, string callbackName);
         void Products(string callbackName);
         void Offerings(string callbackName);
+        void CheckTrialIntroEligibilityForProductIds(string productIdsJson, string callbackName);
     }
 }
