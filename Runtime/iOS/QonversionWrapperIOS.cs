@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 #endif
 
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace QonversionUnity
@@ -10,6 +11,9 @@ namespace QonversionUnity
     internal class QonversionWrapperIOS : IQonversionWrapper
     {
 #if UNITY_IOS
+        [DllImport("__Internal")]
+        private static extern void _storeSdkInfo(string version, string versionKey, string source, string sourceKey);
+
         [DllImport("__Internal")]
         private static extern void _setDebugMode();
 
@@ -45,7 +49,17 @@ namespace QonversionUnity
 
         [DllImport("__Internal")]
         private static extern void _offerings(string callbackName);
+
+        [DllImport("__Internal")]
+        private static extern void _checkTrialIntroEligibilityForProductIds(string productIdsJson, string callbackName);
 #endif
+
+        public void StoreSdkInfo(string version, string versionKey, string source, string sourceKey)
+        {
+#if UNITY_IOS
+            _storeSdkInfo(version, versionKey, source, sourceKey);
+#endif
+        }
 
         public void Launch(string gameObjectName, string projectKey, bool observerMode)
         {
@@ -138,6 +152,13 @@ namespace QonversionUnity
         {
 #if UNITY_IOS
             _offerings(callbackName);
+#endif
+        }
+
+        public void CheckTrialIntroEligibilityForProductIds(string productIdsJson, string callbackName)
+        {
+#if UNITY_IOS
+            _checkTrialIntroEligibilityForProductIds(productIdsJson, callbackName);
 #endif
         }
     }

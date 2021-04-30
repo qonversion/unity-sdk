@@ -2,6 +2,7 @@
 #import "Qonversion.h"
 #import <Qonversion/QNOffering.h>
 #import <Qonversion/QNOfferings.h>
+#import <Qonversion/QNIntroEligibility.h>
 
 @interface UtilityBridge : NSObject
 
@@ -13,6 +14,7 @@
 + (NSArray *)convertPermissions:(NSArray<QNPermission *> *)permissions;
 + (NSArray *)convertProducts:(NSArray<QNProduct *> *)products;
 + (NSDictionary *)convertOfferings:(QNOfferings *)offerings;
++ (NSDictionary *)convertIntroEligibility:(NSDictionary<NSString *, QNIntroEligibility *> *)introEligibilityInfo;
 + (NSDictionary *)convertError:(NSError *)error;
 
 + (void)sendUnityMessage:(NSObject *)objectToConvert toMethod:(NSString *)methodName

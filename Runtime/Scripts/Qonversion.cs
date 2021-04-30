@@ -9,6 +9,7 @@ namespace QonversionUnity
         public delegate void OnPermissionsReceived(Dictionary<string, Permission> permissions, QonversionError error);
         public delegate void OnProductsReceived(Dictionary<string, Product> products, QonversionError error);
         public delegate void OnOfferingsReceived(Offerings offerings, QonversionError error);
+        public delegate void OnEligibilitiesReceived(Dictionary<string, Eligibility> eligibilities, QonversionError error);
 
         private const string GameObjectName = "QonvesrionRuntimeGameObject";
         private const string OnCheckPermissionsMethodName = "OnCheckPermissions";
@@ -17,6 +18,10 @@ namespace QonversionUnity
         private const string OnRestoreMethodName = "OnRestore";
         private const string OnProductsMethodName = "OnProducts";
         private const string OnOfferingsMethodName = "OnOfferings";
+        private const string OnEligibilitiesMethodName = "OnEligibilities";
+
+        private const string SdkVersion = "2.1.2";
+        private const string SdkSource = "unity";
 
         private static IQonversionWrapper _Instance;
 
@@ -48,6 +53,7 @@ namespace QonversionUnity
         public static void Launch(string apiKey, bool observerMode)
         {
             IQonversionWrapper instance = getFinalInstance();
+            instance.StoreSdkInfo(SdkVersion, Constants.VersionKey, SdkSource, Constants.SourceKey);
             instance.Launch(GameObjectName, apiKey, observerMode);
         }
 
@@ -151,6 +157,17 @@ namespace QonversionUnity
             OfferingsCallback = callback;
             IQonversionWrapper instance = getFinalInstance();
             instance.Offerings(OnOfferingsMethodName);
+        }
+
+        private static OnEligibilitiesReceived EligibilitiesCallback { get; set; }
+
+        public static void CheckTrialIntroEligibilityForProductIds(IList<string> productIds, OnEligibilitiesReceived callback)
+        {
+            var productIdsJson = Json.Serialize(productIds);
+
+            EligibilitiesCallback = callback;
+            IQonversionWrapper instance = getFinalInstance();
+            instance.CheckTrialIntroEligibilityForProductIds(productIdsJson, OnEligibilitiesMethodName);
         }
 
         // Called from the native SDK - Called when permissions received from the checkPermissions() method 
@@ -277,6 +294,27 @@ namespace QonversionUnity
             }
 
             OfferingsCallback = null;
+        }
+
+        // Called from the native SDK - Called when eligibilities received from the checkTrialIntroEligibilityForProductIds() method 
+        private void OnEligibilities(string jsonString)
+        {
+            Debug.Log("OnEligibilities " + jsonString);
+
+            if (EligibilitiesCallback == null) return;
+
+            var error = Mapper.ErrorFromJson(jsonString);
+            if (error != null)
+            {
+                EligibilitiesCallback(null, error);
+            }
+            else
+            {
+                Dictionary<string, Eligibility> eligibilities = Mapper.EligibilitiesFromJson(jsonString);
+                EligibilitiesCallback(eligibilities, null);
+            }
+
+            EligibilitiesCallback = null;
         }
     }
 }

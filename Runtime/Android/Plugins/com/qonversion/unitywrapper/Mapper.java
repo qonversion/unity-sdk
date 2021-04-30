@@ -3,6 +3,8 @@ package com.qonversion.unitywrapper;
 import com.android.billingclient.api.SkuDetails;
 
 import com.qonversion.android.sdk.dto.QPermission;
+import com.qonversion.android.sdk.dto.eligibility.QEligibility;
+import com.qonversion.android.sdk.dto.eligibility.QIntroEligibilityStatus;
 import com.qonversion.android.sdk.dto.offerings.QOffering;
 import com.qonversion.android.sdk.dto.offerings.QOfferings;
 import com.qonversion.android.sdk.dto.products.QProduct;
@@ -17,7 +19,7 @@ import java.util.Map;
 
 public final class Mapper {
 
-    public static List<Map<String, Object>> mapPermissions(Map<String, QPermission> permissions) {
+    static List<Map<String, Object>> mapPermissions(Map<String, QPermission> permissions) {
         List<Map<String, Object>> result = new ArrayList<>();
 
         for (Map.Entry<String, QPermission> entry : permissions.entrySet()) {
@@ -124,7 +126,7 @@ public final class Mapper {
         return result;
     }
 
-    static Map<String, Object> mapOffering(QOffering offering) {
+    private static Map<String, Object> mapOffering(QOffering offering) {
         Map<String, Object> result = new HashMap<>();
         result.put("id", offering.getOfferingID());
 
@@ -141,6 +143,21 @@ public final class Mapper {
         }
 
         result.put("products", mappedProducts);
+
+        return result;
+    }
+
+    static List<Map<String, Object>> mapEligibilities(Map<String, QEligibility> map) {
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        for (Map.Entry<String, QEligibility> entry : map.entrySet()) {
+            Map<String, Object> mappedEligibility = new HashMap<>();
+            QEligibility eligibility = entry.getValue();
+            mappedEligibility.put("productId", entry.getKey());
+            mappedEligibility.put("status", eligibility.getStatus().getType());
+
+            result.add(mappedEligibility);
+        }
 
         return result;
     }
