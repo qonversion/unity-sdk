@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace QonversionUnity
  {
     internal class QonversionWrapperNoop : IQonversionWrapper
@@ -55,6 +57,14 @@ namespace QonversionUnity
         }
 
         public void Offerings(string callbackName)
+        {
+        }
+
+        public void StoreSdkInfo(string version, string versionKey, string source, string sourceKey)
+        {
+        }
+
+        public void CheckTrialIntroEligibilityForProductIds(string productIdsJson, string callbackName)
         {
         }
     }

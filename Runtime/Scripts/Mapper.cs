@@ -55,7 +55,28 @@ namespace QonversionUnity
 
             return new Offerings(offerings);
         }
-        
+
+        internal static Dictionary<string, Eligibility> EligibilitiesFromJson(string jsonStr)
+        {
+            var result = new Dictionary<string, Eligibility>();
+
+            if (!(Json.Deserialize(jsonStr) is List<object> elibilities))
+            {
+                Debug.LogError("Could not parse Eligibilities");
+                return result;
+            }
+
+            foreach (Dictionary<string, object> eligibilityDict in elibilities)
+            {
+                if (eligibilityDict.TryGetValue("productId", out object value))
+                {
+                    Eligibility eligibility = new Eligibility(eligibilityDict);
+                    result.Add(value as string, eligibility);
+                }
+            }
+
+            return result;
+        }
 
         internal static QonversionError ErrorFromJson(string jsonStr)
         {

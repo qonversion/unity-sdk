@@ -77,9 +77,8 @@ namespace QonversionUnity
 
         private QProductDuration FormatDuration(object duration)
         {
-            Int32 value = Convert.ToInt32(duration);
-            var result = QProductDuration.Unknown;
-
+            int value = Convert.ToInt32(duration);
+            QProductDuration result;
             switch (value)
             {
                 case 0:

@@ -5,6 +5,11 @@ namespace QonversionUnity
 {
     internal class QonversionWrapperAndroid : IQonversionWrapper
     {
+        public void StoreSdkInfo(string version, string versionKey, string source, string sourceKey)
+        {
+            CallQonversion("storeSdkInfo", version, versionKey, source, sourceKey);
+        }
+
         public void Launch(string gameObjectName, string projectKey, bool observerMode)
         {
             CallQonversion("launch", gameObjectName, projectKey, observerMode);
@@ -104,6 +109,11 @@ namespace QonversionUnity
         public void Offerings(string callbackName)
         {
             CallQonversion("offerings", callbackName);
+        }
+
+        public void CheckTrialIntroEligibilityForProductIds(string productIdsJson, string callbackName)
+        {
+            CallQonversion("checkTrialIntroEligibilityForProductIds", productIdsJson, callbackName);
         }
 
         private const string QonversionWrapper = "com.qonversion.unitywrapper.QonversionWrapper";

@@ -3,6 +3,17 @@
 
 char* unityListenerName = nil;
 
+void _storeSdkInfo(const char* version, const char* versionKey, const char* source, const char* sourceKey)
+{
+    NSString *versionStr = [UtilityBridge сonvertCStringToNSString:version];
+    NSString *versionKeyStr = [UtilityBridge сonvertCStringToNSString:versionKey];
+    NSString *sourceStr = [UtilityBridge сonvertCStringToNSString:source];
+    NSString *sourceKeyStr = [UtilityBridge сonvertCStringToNSString:sourceKey];
+    
+    [[NSUserDefaults standardUserDefaults] setValue:versionStr forKey:versionKeyStr];
+    [[NSUserDefaults standardUserDefaults] setValue:sourceStr forKey:sourceKeyStr];
+}
+
 void _setDebugMode() {
     [Qonversion setDebugMode];
 }
@@ -101,4 +112,29 @@ void _offerings(const char* unityCallbackName){
         NSDictionary *offerings = [UtilityBridge convertOfferings:result];
         [UtilityBridge sendUnityMessage:offerings toMethod:callbackName unityListener: unityListenerName];
     }];
+}
+
+void _checkTrialIntroEligibilityForProductIds(const char* productIdsJson, const char* unityCallbackName){
+    NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
+    NSString *productIdsJsonStr = [UtilityBridge сonvertCStringToNSString:productIdsJson];
+    
+    NSError *error = nil;
+    NSData *data = [productIdsJsonStr dataUsingEncoding:NSUTF8StringEncoding];
+    NSArray *products = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+    
+    if (error) {
+        NSLog(@"An error occurred while serializing data: %@", error.localizedDescription);
+        return;
+    }
+    if (products) {
+        [Qonversion checkTrialIntroEligibilityForProductIds:products completion:^(NSDictionary<NSString *,QNIntroEligibility *> * _Nonnull result, NSError * _Nullable error) {
+            if (error) {
+                [UtilityBridge handleErrorResponse:error toMethod:callbackName unityListener:unityListenerName];
+                return;
+            }
+            
+            NSDictionary *eligibilities = [UtilityBridge convertIntroEligibility:result];
+            [UtilityBridge sendUnityMessage:eligibilities toMethod:callbackName unityListener: unityListenerName];
+        }];
+    }
 }
