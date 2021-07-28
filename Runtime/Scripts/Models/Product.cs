@@ -38,6 +38,16 @@ namespace QonversionUnity
         /// Available for Android only.
         [CanBeNull] public readonly SkuDetails SkuDetails;
 
+        [CanBeNull] public readonly string StoreTitle;
+
+        [CanBeNull] public readonly string StoreDescription;
+
+        [CanBeNull] public readonly long Price;
+
+        [CanBeNull] public readonly string CurrencyCode;
+
+        [CanBeNull] public readonly string PrettyIntroductoryPrice;
+
         public Product(Dictionary<string, object> dict)
         {
             if (dict.TryGetValue("id", out object value)) QonversionId = value as string;
@@ -51,11 +61,29 @@ namespace QonversionUnity
             {
                 if (Application.platform == RuntimePlatform.Android)
                 {
-                    if (value is Dictionary<string, object> skuDetails) SkuDetails = new SkuDetails(skuDetails);
+                    if (value is Dictionary<string, object> skuDetails)
+                    {
+                        SkuDetails = new SkuDetails(skuDetails);
+
+                        Price = SkuDetails.PriceAmountMicros / 1000000;
+                        CurrencyCode = SkuDetails.PriceCurrencyCode;
+                        StoreTitle = SkuDetails.Title;
+                        StoreDescription = SkuDetails.Description;
+                        PrettyIntroductoryPrice = SkuDetails.IntroductoryPrice;
+                    }
                 }
                 else
                 {
-                    if (value is Dictionary<string, object> skProduct) SkProduct = new SKProduct(skProduct);
+                    if (value is Dictionary<string, object> skProduct)
+                    {
+                        SkProduct = new SKProduct(skProduct);
+
+                        Price = long.Parse(SkProduct.Price);
+                        CurrencyCode = SkProduct.CurrencyCode;
+                        StoreTitle = SkProduct.LocalizedTitle;
+                        StoreDescription = SkProduct.LocalizedDescription;
+                        PrettyIntroductoryPrice = SkProduct.IntroductoryPrice.CurrencySymbol + SkProduct.IntroductoryPrice.Price;
+                    }
                 }
             }
         }
@@ -69,7 +97,12 @@ namespace QonversionUnity
                    $"{nameof(TrialDuration)}: {TrialDuration}, " +
                    $"{nameof(PrettyPrice)}: {PrettyPrice}, " +
                    $"{nameof(SkProduct)}: {SkProduct}, " +
-                   $"{nameof(SkuDetails)}: {SkuDetails}";
+                   $"{nameof(SkuDetails)}: {SkuDetails}" +
+                   $"{nameof(StoreTitle)}: {StoreTitle}" +
+                   $"{nameof(StoreDescription)}: {StoreDescription}" +
+                   $"{nameof(Price)}: {Price}" +
+                   $"{nameof(CurrencyCode)}: {CurrencyCode}" +
+                   $"{nameof(PrettyIntroductoryPrice)}: {PrettyIntroductoryPrice}";
         }
 
         private QProductType FormatType(object productType) =>
