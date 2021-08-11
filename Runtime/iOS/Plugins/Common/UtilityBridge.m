@@ -43,10 +43,16 @@
 }
 
 + (NSDictionary *)convertError:(NSError *)error{
-    NSDictionary *errorDict = [@{
-        @"code": [@(error.code) stringValue],
-        @"message": [NSString stringWithFormat:@"%@. Domain: %@", error.localizedDescription, error.domain],
-    } mutableCopy];
+    NSString *errorMessage = [NSString stringWithFormat:@"%@. Domain: %@", error.localizedDescription, error.domain];
+    NSMutableDictionary *errorDict = [NSMutableDictionary new];
+    errorDict[@"code"] = @(error.code).stringValue;
+    
+    NSString *debugMessage = error.userInfo[NSDebugDescriptionErrorKey];
+    if (debugMessage.length > 0) {
+        errorMessage = [NSString stringWithFormat:@"%@\nDebugInfo:%@", errorMessage, debugMessage];
+    }
+    
+    errorDict[@"message"] = errorMessage;
     
     NSMutableDictionary *result = [NSMutableDictionary new];
     result[@"error"] = errorDict;

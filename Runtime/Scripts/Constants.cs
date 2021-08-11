@@ -5,5 +5,6 @@
         public const string KeyPrefix = "com.qonversion.keys";
         public const string SourceKey = KeyPrefix +  ".source";
         public const string VersionKey = KeyPrefix + ".sourceVersion";
+        public const int SkuDetailsPriceRatio = 1000000;
     }
 }

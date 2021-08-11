@@ -38,14 +38,19 @@ namespace QonversionUnity
         /// Available for Android only.
         [CanBeNull] public readonly SkuDetails SkuDetails;
 
+        /// Store product title
         [CanBeNull] public readonly string StoreTitle;
 
+        /// Store product description
         [CanBeNull] public readonly string StoreDescription;
 
-        [CanBeNull] public readonly long Price;
+        /// Price of the product
+        [CanBeNull] public readonly double Price;
 
+        /// Store Product currency code, such as USD
         [CanBeNull] public readonly string CurrencyCode;
 
+        /// Formatted introductory price of a subscription, including its currency sign, such as €2.99
         [CanBeNull] public readonly string PrettyIntroductoryPrice;
 
         public Product(Dictionary<string, object> dict)
@@ -65,7 +70,7 @@ namespace QonversionUnity
                     {
                         SkuDetails = new SkuDetails(skuDetails);
 
-                        Price = SkuDetails.PriceAmountMicros / 1000000;
+                        Price = (double)SkuDetails.PriceAmountMicros / Constants.SkuDetailsPriceRatio;
                         CurrencyCode = SkuDetails.PriceCurrencyCode;
                         StoreTitle = SkuDetails.Title;
                         StoreDescription = SkuDetails.Description;
@@ -78,7 +83,7 @@ namespace QonversionUnity
                     {
                         SkProduct = new SKProduct(skProduct);
 
-                        Price = long.Parse(SkProduct.Price);
+                        Price = double.Parse(SkProduct.Price);
                         CurrencyCode = SkProduct.CurrencyCode;
                         StoreTitle = SkProduct.LocalizedTitle;
                         StoreDescription = SkProduct.LocalizedDescription;

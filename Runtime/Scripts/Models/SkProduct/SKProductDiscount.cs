@@ -40,7 +40,8 @@ namespace QonversionUnity
                    $"{nameof(Price)}: {Price} , " +
                    $"{nameof(PaymentMode)}: {PaymentMode}, " +
                    $"{nameof(NumberOfPeriods)}: {NumberOfPeriods}, " +
-                   $"{nameof(SubscriptionPeriod)}: {SubscriptionPeriod}";
+                   $"{nameof(SubscriptionPeriod)}: {SubscriptionPeriod}" +
+                   $"{nameof(CurrencySymbol)}: {CurrencySymbol}";
         }
 
         private SKProductDiscountType FormatDiscountType(object discountType) =>
