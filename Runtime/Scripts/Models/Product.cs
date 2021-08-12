@@ -74,7 +74,9 @@ namespace QonversionUnity
                         CurrencyCode = SkuDetails.PriceCurrencyCode;
                         StoreTitle = SkuDetails.Title;
                         StoreDescription = SkuDetails.Description;
-                        PrettyIntroductoryPrice = SkuDetails.IntroductoryPrice;
+
+                        string introPrice = SkuDetails.IntroductoryPrice;
+                        PrettyIntroductoryPrice = (introPrice.Length != 0) ? introPrice : null;   
                     }
                 }
                 else
