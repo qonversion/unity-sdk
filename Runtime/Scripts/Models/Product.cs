@@ -38,6 +38,21 @@ namespace QonversionUnity
         /// Available for Android only.
         [CanBeNull] public readonly SkuDetails SkuDetails;
 
+        /// Store product title
+        [CanBeNull] public readonly string StoreTitle;
+
+        /// Store product description
+        [CanBeNull] public readonly string StoreDescription;
+
+        /// Price of the product
+        [CanBeNull] public readonly double Price;
+
+        /// Store Product currency code, such as USD
+        [CanBeNull] public readonly string CurrencyCode;
+
+        /// Formatted introductory price of a subscription, including its currency sign, such as €2.99
+        [CanBeNull] public readonly string PrettyIntroductoryPrice;
+
         public Product(Dictionary<string, object> dict)
         {
             if (dict.TryGetValue("id", out object value)) QonversionId = value as string;
@@ -51,11 +66,31 @@ namespace QonversionUnity
             {
                 if (Application.platform == RuntimePlatform.Android)
                 {
-                    if (value is Dictionary<string, object> skuDetails) SkuDetails = new SkuDetails(skuDetails);
+                    if (value is Dictionary<string, object> skuDetails)
+                    {
+                        SkuDetails = new SkuDetails(skuDetails);
+
+                        Price = (double)SkuDetails.PriceAmountMicros / Constants.SkuDetailsPriceRatio;
+                        CurrencyCode = SkuDetails.PriceCurrencyCode;
+                        StoreTitle = SkuDetails.Title;
+                        StoreDescription = SkuDetails.Description;
+
+                        string introPrice = SkuDetails.IntroductoryPrice;
+                        PrettyIntroductoryPrice = (introPrice.Length != 0) ? introPrice : null;   
+                    }
                 }
                 else
                 {
-                    if (value is Dictionary<string, object> skProduct) SkProduct = new SKProduct(skProduct);
+                    if (value is Dictionary<string, object> skProduct)
+                    {
+                        SkProduct = new SKProduct(skProduct);
+
+                        Price = double.Parse(SkProduct.Price);
+                        CurrencyCode = SkProduct.CurrencyCode;
+                        StoreTitle = SkProduct.LocalizedTitle;
+                        StoreDescription = SkProduct.LocalizedDescription;
+                        PrettyIntroductoryPrice = SkProduct.IntroductoryPrice.CurrencySymbol + SkProduct.IntroductoryPrice.Price;
+                    }
                 }
             }
         }
@@ -69,7 +104,12 @@ namespace QonversionUnity
                    $"{nameof(TrialDuration)}: {TrialDuration}, " +
                    $"{nameof(PrettyPrice)}: {PrettyPrice}, " +
                    $"{nameof(SkProduct)}: {SkProduct}, " +
-                   $"{nameof(SkuDetails)}: {SkuDetails}";
+                   $"{nameof(SkuDetails)}: {SkuDetails}" +
+                   $"{nameof(StoreTitle)}: {StoreTitle}" +
+                   $"{nameof(StoreDescription)}: {StoreDescription}" +
+                   $"{nameof(Price)}: {Price}" +
+                   $"{nameof(CurrencyCode)}: {CurrencyCode}" +
+                   $"{nameof(PrettyIntroductoryPrice)}: {PrettyIntroductoryPrice}";
         }
 
         private QProductType FormatType(object productType) =>
