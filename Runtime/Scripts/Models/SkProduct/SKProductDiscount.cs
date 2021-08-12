@@ -13,6 +13,7 @@ namespace QonversionUnity
         public readonly SKProductDiscountPaymentMode PaymentMode;
         public readonly int NumberOfPeriods;
         [CanBeNull] public readonly SKProductSubscriptionPeriod SubscriptionPeriod;
+        public readonly string CurrencySymbol;
 
         public SKProductDiscount(Dictionary<string, object> dict)
         {
@@ -22,6 +23,7 @@ namespace QonversionUnity
             if (dict.TryGetValue("localeIdentifier", out value)) LocaleIdentifier = value as string;
             if (dict.TryGetValue("paymentMode", out value)) PaymentMode = FormatPaymentMode(value);
             if (dict.TryGetValue("numberOfPeriods", out value)) NumberOfPeriods = Convert.ToInt32(value);
+            if (dict.TryGetValue("currencySymbol", out value)) CurrencySymbol = value as string;
 
             if (dict.TryGetValue("subscriptionPeriod", out value))
             {
@@ -38,7 +40,8 @@ namespace QonversionUnity
                    $"{nameof(Price)}: {Price} , " +
                    $"{nameof(PaymentMode)}: {PaymentMode}, " +
                    $"{nameof(NumberOfPeriods)}: {NumberOfPeriods}, " +
-                   $"{nameof(SubscriptionPeriod)}: {SubscriptionPeriod}";
+                   $"{nameof(SubscriptionPeriod)}: {SubscriptionPeriod}" +
+                   $"{nameof(CurrencySymbol)}: {CurrencySymbol}";
         }
 
         private SKProductDiscountType FormatDiscountType(object discountType) =>
