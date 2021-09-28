@@ -31,6 +31,10 @@ void _setAdvertisingID() {
     [Qonversion setAdvertisingID];
 }
 
+void _setAppleSearchAdsAttributionEnabled(const bool enable) {
+    [Qonversion setAppleSearchAdsAttributionEnabled:enable];
+}
+
 void _setProperty(const char* propertyName, const char* value)
 {
     NSString *propertyNameStr = [UtilityBridge сonvertCStringToNSString:propertyName];

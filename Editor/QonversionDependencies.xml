@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <dependencies>
     <androidPackages>
-        <androidPackage spec="io.qonversion.android.sdk:sdk:2.11.6" />
+        <androidPackage spec="io.qonversion.android.sdk:sdk:2.11.7" />
         <androidPackage spec="com.fasterxml.jackson.core:jackson-databind:2.11.1" />
         <androidPackage spec="org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.61" /> 
     </androidPackages>
     <iosPods>
-      <iosPod name="Qonversion" version="2.18.2" />
+      <iosPod name="Qonversion" version="2.18.3" />
     </iosPods>
 </dependencies>

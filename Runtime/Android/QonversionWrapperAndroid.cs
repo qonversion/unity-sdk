@@ -46,6 +46,10 @@ namespace QonversionUnity
         {
         }
 
+        public void SetAppleSearchAdsAttributionEnabled(bool enable)
+        {
+        }
+
         public void AddAttributionData(string conversionData, AttributionSource source)
         {
             string attibutionSource;
