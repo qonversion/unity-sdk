@@ -31,6 +31,10 @@ void _setAdvertisingID() {
     [Qonversion setAdvertisingID];
 }
 
+void _setAppleSearchAdsAttributionEnabled(const bool enable) {
+    [Qonversion setAppleSearchAdsAttributionEnabled:enable];
+}
+
 void _setUserID(const char* userID)
 {
     [Qonversion setUserID:[UtilityBridge сonvertCStringToNSString:userID]];
