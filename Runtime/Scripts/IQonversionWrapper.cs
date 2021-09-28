@@ -18,5 +18,6 @@
         void Products(string callbackName);
         void Offerings(string callbackName);
         void CheckTrialIntroEligibilityForProductIds(string productIdsJson, string callbackName);
+        void SetAppleSearchAdsAttributionEnabled(bool enable);
     }
 }
