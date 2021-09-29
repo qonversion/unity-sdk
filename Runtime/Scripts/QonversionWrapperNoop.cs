@@ -71,6 +71,13 @@ namespace QonversionUnity
         public void SetAppleSearchAdsAttributionEnabled(bool enable)
         {
         }
-    }
 
+        public void Identify(string userID)
+        {
+        }
+
+        public void Logout()
+        {
+        }
+    }
   }

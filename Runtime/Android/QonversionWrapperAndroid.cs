@@ -85,6 +85,16 @@ namespace QonversionUnity
             }
         }
 
+        public void Identify(string userID)
+        {
+            CallQonversion("identify", userID);
+        }
+
+        public void Logout()
+        {
+            CallQonversion("logout");
+        }
+
         public void CheckPermissions(string callbackName)
         {
             CallQonversion("checkPermissions", callbackName);

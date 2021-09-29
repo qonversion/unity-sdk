@@ -118,6 +118,14 @@ public class QonversionWrapper {
         Qonversion.setUserID(value);
     }
 
+    public static synchronized void identify(String value) {
+        Qonversion.identify(value);
+    }
+
+    public static synchronized void logout() {
+        Qonversion.logout();
+    }
+
     public static synchronized void checkPermissions(String unityCallbackName) {
         Qonversion.checkPermissions(new QonversionPermissionsCallback() {
             @Override
