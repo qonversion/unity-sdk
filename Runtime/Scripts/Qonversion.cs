@@ -105,11 +105,33 @@ namespace QonversionUnity
             instance.AddAttributionData(conversionData, attributionSource);
         }
 
-        // Enable attribution collection from Apple Search Ads. NO by default.
+        /// <summary>
+        /// Enable collecting Apple Search Ads attribution data. "false" by default.
+        /// </summary>
+        /// <param name="enable">A bool value indicating whether Qonversion should collect attribution from Apple Search Ads.</param>
         public static void SetAppleSearchAdsAttributionEnabled(bool enable)
         {
             IQonversionWrapper instance = getFinalInstance();
             instance.SetAppleSearchAdsAttributionEnabled(enable);
+        }
+
+        /// <summary>
+        /// Call this function to link a user to his unique ID in your system and share purchase data.
+        /// </summary>
+        /// <param name="userID">An unique user ID in your system.</param>
+        public static void Identify(string userID)
+        {
+            IQonversionWrapper instance = getFinalInstance();
+            instance.Identify(userID);
+        }
+
+        /// <summary>
+        /// Call this function to unlink a user from his unique ID in your system and his purchase data.
+        /// </summary>
+        public static void Logout()
+        {
+            IQonversionWrapper instance = getFinalInstance();
+            instance.Logout();
         }
 
         private static OnPermissionsReceived CheckPermissionsCallback { get; set; }

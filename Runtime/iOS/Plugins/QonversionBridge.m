@@ -66,6 +66,15 @@ void _addAttributionData(const char* conversionData, const int provider) {
                       fromProvider:(QNAttributionProvider)provider];
 }
 
+void _identify(const char* userId) {
+    NSString *userIdStr = [UtilityBridge сonvertCStringToNSString:userId];
+    [Qonversion identify:userIdStr];
+}
+
+void _logout() {
+    [Qonversion logout];
+}
+
 void _checkPermissions(const char* unityCallbackName){
     NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
     
