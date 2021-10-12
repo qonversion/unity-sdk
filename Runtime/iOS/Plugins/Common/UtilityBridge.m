@@ -88,22 +88,46 @@
     for (QNProduct *product in products) {
         NSNumber *trialDuration = product.trialDuration ? @(product.trialDuration) : @(QNTrialDurationNotAvailable);
         NSMutableDictionary *productsDict = [@{
-            @"id": product.qonversionID,
-            @"store_id": product.storeID,
-            @"type": @(product.type),
-            @"duration": @(product.duration),
-            @"prettyPrice": product.prettyPrice,
-            @"trialDuration": trialDuration
+            qonversionIdKey: product.qonversionID,
+            storeIdKey: product.storeID,
+            offeringIdKey: product.offeringID,
+            typeKey: @(product.type),
+            durationKey: @(product.duration),
+            prettyPriceKey: product.prettyPrice,
+            trialDurationKey: trialDuration
         } mutableCopy];
         
         if (product.skProduct) {
             NSDictionary *skProductInfo = [UtilityBridge convertSKProduct:product.skProduct];
-            productsDict[@"storeProduct"] = skProductInfo;
+            productsDict[storeProductKey] = skProductInfo;
         }
         [result addObject:productsDict];
     }
     
     return result;
+}
+
++ (QNProduct *)convertProductFromJson:(NSString *)productJson {
+    NSDictionary *productDict = [UtilityBridge dictionaryFromJsonString: productJson];
+
+    NSNumber *type = productDict[typeKey] != nil ? productDict[typeKey] : @(QNProductTypeUnknown);
+    NSNumber *duration = productDict[durationKey] != nil ? productDict[durationKey] : @(QNProductDurationUnknown);
+    NSNumber *trialDuration = productDict[trialDurationKey] != nil ? productDict[trialDurationKey] : @(QNTrialDurationNotAvailable);
+
+    QNProductType productType = type.integerValue;
+    QNProductDuration productDuration = duration.integerValue;
+    QNTrialDuration productTrialDuration = trialDuration.integerValue;
+
+    QNProduct *product = [QNProduct new];
+    product.qonversionID = productDict[qonversionIdKey];
+    product.storeID = productDict[storeIdKey];
+    product.offeringID = productDict[offeringIdKey];
+    product.prettyPrice = productDict[prettyPriceKey];
+    product.type = productType;
+    product.duration = productDuration;
+    product.trialDuration = productTrialDuration;
+
+    return product;
 }
 
 + (NSDictionary *)convertSKProduct:(SKProduct *)product {

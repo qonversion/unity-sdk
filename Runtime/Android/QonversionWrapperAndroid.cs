@@ -105,6 +105,11 @@ namespace QonversionUnity
             CallQonversion("purchase", productId, callbackName);
         }
 
+        public void PurchaseProduct(string productJson, string callbackName)
+        {
+            CallQonversion("purchaseProduct", productJson, callbackName);
+        }
+
         public void Restore(string callbackName)
         {
             CallQonversion("restore", callbackName);
@@ -113,6 +118,11 @@ namespace QonversionUnity
         public void UpdatePurchase(string productId, string oldProductId, ProrationMode prorationMode, string callbackName)
         {
             CallQonversion("updatePurchase", productId, oldProductId, (int)prorationMode, callbackName);
+        }
+
+        public void UpdatePurchaseWithProduct(string productJson, string oldProductId, ProrationMode prorationMode, string callbackName)
+        {
+            CallQonversion("updatePurchaseWithProduct", productJson, oldProductId, (int)prorationMode, callbackName);
         }
 
         public void Products(string callbackName)

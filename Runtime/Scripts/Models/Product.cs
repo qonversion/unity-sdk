@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using QonversionUnity.MiniJSON;
 using UnityEngine;
 
 namespace QonversionUnity
@@ -15,12 +16,14 @@ namespace QonversionUnity
         [Tooltip("Create Products: (https://qonversion.io/docs/create-products")]
         [CanBeNull] public readonly string StoreId;
 
+        /// Associated Offering Id
+        [CanBeNull] public readonly string OfferingId;
+
         /// Product type.
         [Tooltip("Products types: https://qonversion.io/docs/product-types")]
         public readonly QProductType Type;
 
         /// Product duration.
-
         [Tooltip("Products durations: https://qonversion.io/docs/product-durations")]
         public readonly QProductDuration Duration;
 
@@ -53,14 +56,19 @@ namespace QonversionUnity
         /// Formatted introductory price of a subscription, including its currency sign, such as €2.99
         [CanBeNull] public readonly string PrettyIntroductoryPrice;
 
+        internal readonly string OriginalJson;
+
         public Product(Dictionary<string, object> dict)
         {
+            OriginalJson = Json.Serialize(dict);
+
             if (dict.TryGetValue("id", out object value)) QonversionId = value as string;
             if (dict.TryGetValue("store_id", out value)) StoreId = value as string;
             if (dict.TryGetValue("type", out value)) Type = FormatType(value);
             if (dict.TryGetValue("duration", out value)) Duration = FormatDuration(value);
             if (dict.TryGetValue("trialDuration", out value)) TrialDuration = FormatTrialDuration(value);
             if (dict.TryGetValue("prettyPrice", out value)) PrettyPrice = value as string;
+            if (dict.TryGetValue("offeringId", out value)) OfferingId = value as string;
 
             if (dict.TryGetValue("storeProduct", out value))
             {
