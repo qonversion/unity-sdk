@@ -225,7 +225,7 @@ namespace QonversionUnity
         /// <param name="prorationMode">Proration Mode</param>
         /// <see href="https://developer.android.com/google/play/billing/subscriptions#proration">Proration Mode</see>
         /// <see href="https://documentation.qonversion.io/docs/making-purchases#3-update-purchases-android-only">Update Purchase</see>
-        public static void UpdatePurchaseWithProduct(Product product, string oldProductId, OnPermissionsReceived callback, ProrationMode prorationMode = ProrationMode.UnknownSubscriptionUpgradeDowngradePolicy)
+        public static void UpdatePurchaseWithProduct([NotNull] Product product, string oldProductId, OnPermissionsReceived callback, ProrationMode prorationMode = ProrationMode.UnknownSubscriptionUpgradeDowngradePolicy)
         {
             if (product == null)
             {

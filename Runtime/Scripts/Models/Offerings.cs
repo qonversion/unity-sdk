@@ -20,6 +20,7 @@ namespace QonversionUnity
             }
         }
 
+        [CanBeNull]
         public Offering OfferingForID(string id)
         {
             return AvailableOfferings.Find(offering => offering.Id == id);

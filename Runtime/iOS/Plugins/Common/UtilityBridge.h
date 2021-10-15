@@ -3,7 +3,7 @@
 #import <Qonversion/QNOffering.h>
 #import <Qonversion/QNOfferings.h>
 #import <Qonversion/QNIntroEligibility.h>
-#import <QNUConstants.h>
+#import "QNUConstants.h"
 
 @interface UtilityBridge : NSObject
 

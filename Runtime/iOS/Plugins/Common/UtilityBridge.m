@@ -14,8 +14,7 @@
 }
 
 + (NSString*)сonvertCStringToNSString:(const char *)string {
-    if (string == NULL)
-    {
+    if (string == NULL) {
         return nil;
     }
     
@@ -23,6 +22,10 @@
 }
 
 + (NSDictionary*)dictionaryFromJsonString:(NSString*) jsonString {
+    if (!jsonString) {
+        return @{};
+    }
+    
     NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:jsonData options:kNilOptions error:nil];
     
