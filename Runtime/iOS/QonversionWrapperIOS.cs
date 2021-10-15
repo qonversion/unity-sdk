@@ -27,6 +27,15 @@ namespace QonversionUnity
         private static extern void _setProperty(string propertyName, string value);
 
         [DllImport("__Internal")]
+        private static extern void _setAppleSearchAdsAttributionEnabled(bool enable);
+
+        [DllImport("__Internal")]
+        private static extern void _identify(string userID);
+
+        [DllImport("__Internal")]
+        private static extern void _logout();
+
+        [DllImport("__Internal")]
         private static extern void _setUserProperty(string key, string value);
 
         [DllImport("__Internal")]
@@ -43,6 +52,9 @@ namespace QonversionUnity
 
         [DllImport("__Internal")]
         private static extern void _purchase(string productID, string callbackName);
+
+        [DllImport("__Internal")]
+        private static extern void _purchaseProduct(string productJson, string callbackName);
 
         [DllImport("__Internal")]
         private static extern void _products(string callbackName);
@@ -86,7 +98,6 @@ namespace QonversionUnity
 #endif
         }
 
-
         public void SetUserID(string userID)
         {
 #if UNITY_IOS
@@ -109,10 +120,31 @@ namespace QonversionUnity
 #endif
         }
 
-    public void AddAttributionData(string conversionData, AttributionSource source)
+        public void AddAttributionData(string conversionData, AttributionSource source)
         {
 #if UNITY_IOS
             _addAttributionData(conversionData, (int)source);
+#endif
+        }
+
+        public void SetAppleSearchAdsAttributionEnabled(bool enable)
+        {
+#if UNITY_IOS
+            _setAppleSearchAdsAttributionEnabled(enable);
+#endif
+        }
+
+        public void Identify(string userID)
+        {
+#if UNITY_IOS
+            _identify(userID);
+#endif
+        }
+
+        public void Logout()
+        {
+#if UNITY_IOS
+            _logout();
 #endif
         }
 
@@ -130,6 +162,13 @@ namespace QonversionUnity
 #endif
         }
 
+        public void PurchaseProduct(string productJson, string callbackName)
+        {
+#if UNITY_IOS
+            _purchaseProduct(productJson, callbackName);
+#endif
+        }
+
         public void Restore(string callbackName)
         {
 #if UNITY_IOS
@@ -138,6 +177,10 @@ namespace QonversionUnity
         }
 
         public void UpdatePurchase(string productId, string oldProductId, ProrationMode prorationMode, string callbackName)
+        {
+        }
+
+        public void UpdatePurchaseWithProduct(string productJson, string oldProductId, ProrationMode prorationMode, string callbackName)
         {
         }
 

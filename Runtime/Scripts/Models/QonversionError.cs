@@ -13,6 +13,12 @@ namespace QonversionUnity
             if (dict.TryGetValue("code", out value)) Code = value as string;
         }
 
+        internal QonversionError(string code, string message)
+        {
+            Code = code;
+            Message = message;
+        }
+
         public override string ToString()
         {
             return $"{nameof(Code)}: {Code}, " +

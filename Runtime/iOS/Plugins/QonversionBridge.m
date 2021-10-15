@@ -31,6 +31,10 @@ void _setAdvertisingID() {
     [Qonversion setAdvertisingID];
 }
 
+void _setAppleSearchAdsAttributionEnabled(const bool enable) {
+    [Qonversion setAppleSearchAdsAttributionEnabled:enable];
+}
+
 void _setUserID(const char* userID)
 {
     [Qonversion setUserID:[UtilityBridge сonvertCStringToNSString:userID]];
@@ -62,6 +66,15 @@ void _addAttributionData(const char* conversionData, const int provider) {
                       fromProvider:(QNAttributionProvider)provider];
 }
 
+void _identify(const char* userId) {
+    NSString *userIdStr = [UtilityBridge сonvertCStringToNSString:userId];
+    [Qonversion identify:userIdStr];
+}
+
+void _logout() {
+    [Qonversion logout];
+}
+
 void _checkPermissions(const char* unityCallbackName){
     NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
     
@@ -82,6 +95,18 @@ void _purchase(const char* productId, const char* unityCallbackName){
     NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
 
     [Qonversion purchase:[UtilityBridge сonvertCStringToNSString:productId] completion:^(NSDictionary *result, NSError *error, BOOL cancelled) {
+        [UtilityBridge handlePermissionsResponse:result withError:error toMethod:callbackName unityListener:unityListenerName];
+    }];
+}
+
+void _purchaseProduct(const char* productJson, const char* unityCallbackName) {
+    NSString *productJsonStr = [UtilityBridge сonvertCStringToNSString:productJson];
+    NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
+
+    QNProduct *product = [UtilityBridge convertProductFromJson: productJsonStr];
+    [Qonversion purchaseProduct:product completion:^(NSDictionary<NSString *,QNPermission *> * _Nonnull result,
+                                                     NSError * _Nullable error,
+                                                     BOOL cancelled) {
         [UtilityBridge handlePermissionsResponse:result withError:error toMethod:callbackName unityListener:unityListenerName];
     }];
 }

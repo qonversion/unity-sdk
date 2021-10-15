@@ -51,6 +51,10 @@ namespace QonversionUnity
         {
         }
 
+        public void SetAppleSearchAdsAttributionEnabled(bool enable)
+        {
+        }
+
         public void AddAttributionData(string conversionData, AttributionSource source)
         {
             string attibutionSource;
@@ -81,6 +85,16 @@ namespace QonversionUnity
             }
         }
 
+        public void Identify(string userID)
+        {
+            CallQonversion("identify", userID);
+        }
+
+        public void Logout()
+        {
+            CallQonversion("logout");
+        }
+
         public void CheckPermissions(string callbackName)
         {
             CallQonversion("checkPermissions", callbackName);
@@ -91,6 +105,11 @@ namespace QonversionUnity
             CallQonversion("purchase", productId, callbackName);
         }
 
+        public void PurchaseProduct(string productJson, string callbackName)
+        {
+            CallQonversion("purchaseProduct", productJson, callbackName);
+        }
+
         public void Restore(string callbackName)
         {
             CallQonversion("restore", callbackName);
@@ -99,6 +118,11 @@ namespace QonversionUnity
         public void UpdatePurchase(string productId, string oldProductId, ProrationMode prorationMode, string callbackName)
         {
             CallQonversion("updatePurchase", productId, oldProductId, (int)prorationMode, callbackName);
+        }
+
+        public void UpdatePurchaseWithProduct(string productJson, string oldProductId, ProrationMode prorationMode, string callbackName)
+        {
+            CallQonversion("updatePurchaseWithProduct", productJson, oldProductId, (int)prorationMode, callbackName);
         }
 
         public void Products(string callbackName)
