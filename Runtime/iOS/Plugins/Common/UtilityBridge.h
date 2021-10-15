@@ -3,6 +3,7 @@
 #import <Qonversion/QNOffering.h>
 #import <Qonversion/QNOfferings.h>
 #import <Qonversion/QNIntroEligibility.h>
+#import "QNUConstants.h"
 
 @interface UtilityBridge : NSObject
 
@@ -13,6 +14,7 @@
 + (NSNumber *)convertProperty:(NSString *)propertyStr;
 + (NSArray *)convertPermissions:(NSArray<QNPermission *> *)permissions;
 + (NSArray *)convertProducts:(NSArray<QNProduct *> *)products;
++ (QNProduct *)convertProductFromJson:(NSString *)productJson;
 + (NSDictionary *)convertOfferings:(QNOfferings *)offerings;
 + (NSDictionary *)convertIntroEligibility:(NSDictionary<NSString *, QNIntroEligibility *> *)introEligibilityInfo;
 + (NSDictionary *)convertError:(NSError *)error;

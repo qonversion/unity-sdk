@@ -5,12 +5,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.qonversion.android.sdk.QUserProperties;
 
 import com.qonversion.android.sdk.QonversionEligibilityCallback;
+import com.qonversion.android.sdk.QonversionErrorCode;
 import com.qonversion.android.sdk.QonversionOfferingsCallback;
 import com.qonversion.android.sdk.QonversionProductsCallback;
 import com.qonversion.android.sdk.dto.eligibility.QEligibility;
@@ -154,6 +154,30 @@ public class QonversionWrapper {
         });
     }
 
+    public static synchronized void purchaseProduct(String productJson, String unityCallbackName) {
+        try {
+            QProduct product = Mapper.mapProductFromJson(productJson);
+            if (product == null) {
+                QonversionError error = new QonversionError(QonversionErrorCode.PurchaseInvalid, "Qonversion Product is null");
+                handleErrorResponse(error, unityCallbackName);
+                return;
+            }
+            Qonversion.purchase(UnityPlayer.currentActivity, product, new QonversionPermissionsCallback() {
+                @Override
+                public void onSuccess(@NotNull Map<String, QPermission> permissions) {
+                    handlePermissionsResponse(permissions, unityCallbackName);
+                }
+
+                @Override
+                public void onError(@NotNull QonversionError error) {
+                    handleErrorResponse(error, unityCallbackName);
+                }
+            });
+        } catch (Exception e) {
+            handleException(e);
+        }
+    }
+
     public static synchronized void updatePurchase(String productId, String oldProductId, int prorationMode, String unityCallbackName) {
         Qonversion.updatePurchase(UnityPlayer.currentActivity, productId, oldProductId, prorationMode, new QonversionPermissionsCallback() {
             @Override
@@ -166,6 +190,30 @@ public class QonversionWrapper {
                 handleErrorResponse(error, unityCallbackName);
             }
         });
+    }
+
+    public static synchronized void updatePurchaseWithProduct(String newProductJson, String oldProductId, int prorationMode, String unityCallbackName) {
+        try {
+            QProduct product = Mapper.mapProductFromJson(newProductJson);
+            if (product == null) {
+                QonversionError error = new QonversionError(QonversionErrorCode.PurchaseInvalid, "Qonversion Product is null");
+                handleErrorResponse(error, unityCallbackName);
+                return;
+            }
+            Qonversion.updatePurchase(UnityPlayer.currentActivity, product, oldProductId, prorationMode, new QonversionPermissionsCallback() {
+                @Override
+                public void onSuccess(@NotNull Map<String, QPermission> permissions) {
+                    handlePermissionsResponse(permissions, unityCallbackName);
+                }
+
+                @Override
+                public void onError(@NotNull QonversionError error) {
+                    handleErrorResponse(error, unityCallbackName);
+                }
+            });
+        } catch (Exception e) {
+            handleException(e);
+        }
     }
 
     public static synchronized void restore(String unityCallbackName) {
@@ -231,7 +279,7 @@ public class QonversionWrapper {
                 }
             });
         } catch (JsonProcessingException e) {
-            handleJsonProcessingException(e);
+            handleException(e);
         }
     }
 
@@ -260,11 +308,11 @@ public class QonversionWrapper {
             String json = mapper.writeValueAsString(objectToConvert);
             UnityPlayer.UnitySendMessage(unityListenerName, methodName, json);
         } catch (JsonProcessingException e) {
-            handleJsonProcessingException(e);
+            handleException(e);
         }
     }
 
-    private static void handleJsonProcessingException(JsonProcessingException e) {
+    private static void handleException(Exception e) {
         Log.e(TAG, "An error occurred while serializing data: " + e.getLocalizedMessage());
     }
 }

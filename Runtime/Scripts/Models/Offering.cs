@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace QonversionUnity
 {
@@ -19,6 +20,7 @@ namespace QonversionUnity
             }
         }
 
+        [CanBeNull]
         public Product ProductForID(string id)
         {
             return Products.Find(product => product.QonversionId == id);

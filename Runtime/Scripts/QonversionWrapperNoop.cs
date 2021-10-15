@@ -44,11 +44,19 @@ namespace QonversionUnity
         {
         }
 
+        public void PurchaseProduct(string productJson, string callbackName)
+        {
+        }
+
         public void Restore(string callbackName)
         {
         }
 
         public void UpdatePurchase(string productId, string oldProductId, ProrationMode prorationMode, string callbackName)
+        {
+        }
+
+        public void UpdatePurchaseWithProduct(string productJson, string oldProductId, ProrationMode prorationMode, string callbackName)
         {
         }
 

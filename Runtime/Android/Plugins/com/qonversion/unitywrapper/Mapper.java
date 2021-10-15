@@ -2,13 +2,15 @@ package com.qonversion.unitywrapper;
 
 import com.android.billingclient.api.SkuDetails;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qonversion.android.sdk.dto.QPermission;
 import com.qonversion.android.sdk.dto.eligibility.QEligibility;
-import com.qonversion.android.sdk.dto.eligibility.QIntroEligibilityStatus;
 import com.qonversion.android.sdk.dto.offerings.QOffering;
 import com.qonversion.android.sdk.dto.offerings.QOfferings;
 import com.qonversion.android.sdk.dto.products.QProduct;
 import com.qonversion.android.sdk.dto.products.QProductDuration;
+import com.qonversion.android.sdk.dto.products.QProductType;
 import com.qonversion.android.sdk.dto.products.QTrialDuration;
 
 import java.util.ArrayList;
@@ -18,6 +20,15 @@ import java.util.List;
 import java.util.Map;
 
 public final class Mapper {
+    private static final String ID = "id";
+    private static final String STORE_ID = "store_id";
+    private static final String TYPE = "type";
+    private static final String OFFERING_ID = "offeringId";
+    private static final String DURATION = "duration";
+    private static final String TRIAL_DURATION = "trialDuration";
+    private static final String STORE_PRODUCT = "storeProduct";
+    private static final String PRETTY_PRICE = "prettyPrice";
+    private static final String SKU_DETAILS_JSON = "originalJson";
 
     static List<Map<String, Object>> mapPermissions(Map<String, QPermission> permissions) {
         List<Map<String, Object>> result = new ArrayList<>();
@@ -57,28 +68,81 @@ public final class Mapper {
     static Map<String, Object> mapProduct(QProduct product) {
         Map<String, Object> result = new HashMap<>();
 
-        result.put("id", product.getQonversionID());
-        result.put("store_id", product.getStoreID());
-        result.put("type", product.getType().getType());
+        result.put(ID, product.getQonversionID());
+        result.put(STORE_ID, product.getStoreID());
+        result.put(TYPE, product.getType().getType());
+
+        String offeringId = product.getOfferingID();
+        result.put(OFFERING_ID, offeringId);
 
         QProductDuration duration = product.getDuration();
         if (duration != null) {
-            result.put("duration", duration.getType());
+            result.put(DURATION, duration.getType());
         }
 
         QTrialDuration trialDuration = product.getTrialDuration();
         if (trialDuration != null) {
-            result.put("trialDuration", trialDuration.getType());
+            result.put(TRIAL_DURATION, trialDuration.getType());
         }
 
         SkuDetails skuDetails = product.getSkuDetail();
         if (skuDetails != null) {
             Map<String, Object> mappedSkuDetails = mapSkuDetails(skuDetails);
-            result.put("storeProduct", mappedSkuDetails);
-            result.put("prettyPrice", product.getPrettyPrice());
+            result.put(STORE_PRODUCT, mappedSkuDetails);
+            result.put(PRETTY_PRICE, product.getPrettyPrice());
         }
 
         return result;
+    }
+
+    static QProduct mapProductFromJson(String productJson) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+
+        TypeReference<Map<String, Object>> typeRef = new TypeReference<Map<String, Object>>() {};
+        Map<String, Object> map = mapper.readValue(productJson, typeRef);
+
+        String id = String.valueOf(map.get(ID));
+        String storeId = String.valueOf(map.get(STORE_ID));
+        String offeringId = String.valueOf(map.get(OFFERING_ID));
+        String prettyPrice = String.valueOf(map.get(PRETTY_PRICE));
+
+        Object skuDetailsObj = map.get(STORE_PRODUCT);
+        SkuDetails skuDetails = mapSkuDetailsFromObject(skuDetailsObj);
+
+        Integer type = (Integer) map.get(TYPE);
+        if (type == null) return null;
+        QProductType qProductType = QProductType.Companion.fromType(type);
+
+        QProductDuration qProductDuration = null;
+        Integer duration = (Integer) map.get(DURATION);
+        if (duration != null) {
+            qProductDuration = QProductDuration.Companion.fromType(duration);
+        }
+
+        QTrialDuration qTrialDuration = null;
+        Integer trialDuration = (Integer) map.get(TRIAL_DURATION);
+        if (trialDuration != null) {
+            qTrialDuration = QTrialDuration.Companion.fromType(trialDuration);
+        }
+
+        QProduct product = new QProduct(id, storeId, qProductType, qProductDuration);
+        product.setOfferingID(offeringId);
+        product.setSkuDetail(skuDetails);
+        product.setPrettyPrice(prettyPrice);
+        product.setTrialDuration(qTrialDuration);
+
+        return product;
+    }
+
+    static private SkuDetails mapSkuDetailsFromObject(Object map) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        TypeReference<Map<String, Object>> typeRef = new TypeReference<Map<String, Object>>() {
+        };
+
+        Map<String, Object> skuDetailsMap = mapper.convertValue(map, typeRef);
+        String originalJson = String.valueOf(skuDetailsMap.get(SKU_DETAILS_JSON));
+
+        return new SkuDetails(originalJson);
     }
 
     static private Map<String, Object> mapSkuDetails(SkuDetails skuDetails) {
