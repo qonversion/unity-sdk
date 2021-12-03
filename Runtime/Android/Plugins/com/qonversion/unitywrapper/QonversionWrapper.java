@@ -35,7 +35,7 @@ import com.qonversion.android.sdk.QonversionPermissionsCallback;
 import com.qonversion.android.sdk.dto.QLaunchResult;
 import com.qonversion.android.sdk.dto.QPermission;
 
-import androidx.preference.PreferenceManager;
+import android.preference.PreferenceManager;
 
 public class QonversionWrapper {
     public static String TAG = "QonversionWrapper";
@@ -79,10 +79,6 @@ public class QonversionWrapper {
         Qonversion.setDebugMode();
     }
 
-    public static synchronized void setUserID(String userID) {
-        Qonversion.setUserID(userID);
-    }
-
     public static synchronized void setProperty(String key, String value) {
         try {
             QUserProperties enumKey = QUserProperties.valueOf(key);
@@ -112,10 +108,6 @@ public class QonversionWrapper {
         } catch (Exception e) {
             Log.e(TAG, "pushAttribution error: " + e.getLocalizedMessage());
         }
-    }
-
-    public static synchronized void setUserId(String value) {
-        Qonversion.setUserID(value);
     }
 
     public static synchronized void checkPermissions(String unityCallbackName) {
