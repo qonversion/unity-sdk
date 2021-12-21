@@ -35,7 +35,7 @@ import com.qonversion.android.sdk.QonversionPermissionsCallback;
 import com.qonversion.android.sdk.dto.QLaunchResult;
 import com.qonversion.android.sdk.dto.QPermission;
 
-import androidx.preference.PreferenceManager;
+import android.preference.PreferenceManager;
 
 public class QonversionWrapper {
     public static String TAG = "QonversionWrapper";
