@@ -21,9 +21,6 @@ namespace QonversionUnity
         private static extern void _setAdvertisingID();
 
         [DllImport("__Internal")]
-        private static extern void _setUserID(string userID);
-
-        [DllImport("__Internal")]
         private static extern void _setProperty(string propertyName, string value);
 
         [DllImport("__Internal")]
@@ -95,13 +92,6 @@ namespace QonversionUnity
         {
 #if UNITY_IOS
             _setAdvertisingID();
-#endif
-        }
-
-        public void SetUserID(string userID)
-        {
-#if UNITY_IOS
-            _setUserID(userID);
 #endif
         }
 

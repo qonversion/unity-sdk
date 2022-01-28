@@ -79,10 +79,6 @@ public class QonversionWrapper {
         Qonversion.setDebugMode();
     }
 
-    public static synchronized void setUserID(String userID) {
-        Qonversion.setUserID(userID);
-    }
-
     public static synchronized void setProperty(String key, String value) {
         try {
             QUserProperties enumKey = QUserProperties.valueOf(key);
@@ -114,6 +110,7 @@ public class QonversionWrapper {
         }
     }
 
+<<<<<<< HEAD
     public static synchronized void setUserId(String value) {
         Qonversion.setUserID(value);
     }
@@ -126,6 +123,8 @@ public class QonversionWrapper {
         Qonversion.logout();
     }
 
+=======
+>>>>>>> 47edbe9... Deprecated setUserId method
     public static synchronized void checkPermissions(String unityCallbackName) {
         Qonversion.checkPermissions(new QonversionPermissionsCallback() {
             @Override
