@@ -110,11 +110,6 @@ public class QonversionWrapper {
         }
     }
 
-<<<<<<< HEAD
-    public static synchronized void setUserId(String value) {
-        Qonversion.setUserID(value);
-    }
-
     public static synchronized void identify(String value) {
         Qonversion.identify(value);
     }
@@ -123,8 +118,7 @@ public class QonversionWrapper {
         Qonversion.logout();
     }
 
-=======
->>>>>>> 47edbe9... Deprecated setUserId method
+
     public static synchronized void checkPermissions(String unityCallbackName) {
         Qonversion.checkPermissions(new QonversionPermissionsCallback() {
             @Override
