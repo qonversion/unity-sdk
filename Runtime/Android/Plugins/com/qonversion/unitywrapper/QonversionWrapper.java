@@ -118,7 +118,6 @@ public class QonversionWrapper {
         Qonversion.logout();
     }
 
-
     public static synchronized void checkPermissions(String unityCallbackName) {
         Qonversion.checkPermissions(new QonversionPermissionsCallback() {
             @Override
