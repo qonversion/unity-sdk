@@ -1,8 +1,6 @@
 #import <Foundation/Foundation.h>
-#import "Qonversion.h"
-#import <Qonversion/QNOffering.h>
-#import <Qonversion/QNOfferings.h>
-#import <Qonversion/QNIntroEligibility.h>
+#import <Qonversion/Qonversion.h>
+#import "QNUConstants.h"
 
 @interface UtilityBridge : NSObject
 
