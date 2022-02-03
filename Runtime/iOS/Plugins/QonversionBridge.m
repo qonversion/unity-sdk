@@ -1,4 +1,4 @@
-#import "Qonversion.h"
+#import <Qonversion/Qonversion.h>
 #import "UtilityBridge.h"
 
 char* unityListenerName = nil;
@@ -33,11 +33,6 @@ void _setAdvertisingID() {
 
 void _setAppleSearchAdsAttributionEnabled(const bool enable) {
     [Qonversion setAppleSearchAdsAttributionEnabled:enable];
-}
-
-void _setUserID(const char* userID)
-{
-    [Qonversion setUserID:[UtilityBridge сonvertCStringToNSString:userID]];
 }
 
 void _setProperty(const char* propertyName, const char* value)
