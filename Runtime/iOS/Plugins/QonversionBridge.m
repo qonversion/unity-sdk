@@ -31,11 +31,6 @@ void _setAdvertisingID() {
     [Qonversion setAdvertisingID];
 }
 
-void _setUserID(const char* userID)
-{
-    [Qonversion setUserID:[UtilityBridge сonvertCStringToNSString:userID]];
-}
-
 void _setProperty(const char* propertyName, const char* value)
 {
     NSString *propertyNameStr = [UtilityBridge сonvertCStringToNSString:propertyName];

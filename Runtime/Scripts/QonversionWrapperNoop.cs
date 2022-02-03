@@ -12,10 +12,6 @@ namespace QonversionUnity
         {
         }
 
-        public void SetUserID(string userID)
-        {
-        }
-
         public void SetUserProperty(string key, string value)
         {
         }

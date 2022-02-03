@@ -1,4 +1,5 @@
 ﻿using QonversionUnity.MiniJSON;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -69,10 +70,11 @@ namespace QonversionUnity
             instance.SetAdvertisingID();
         }
 
+        [Obsolete("Deprecated. Will be removed in a future major release. Use setProperty(UserProperty.CustomUserId, value) instead.")]
         public static void SetUserID(string userID)
         {
             IQonversionWrapper instance = getFinalInstance();
-            instance.SetUserID(userID);
+            instance.SetProperty(UserProperty.CustomUserId, userID);
         }
 
         public static void SetUserProperty(string key, string value)
