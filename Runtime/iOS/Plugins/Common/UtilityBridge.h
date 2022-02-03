@@ -1,6 +1,5 @@
 #import <Foundation/Foundation.h>
 #import <Qonversion/Qonversion.h>
-#import "QNUConstants.h"
 
 @interface UtilityBridge : NSObject
 
