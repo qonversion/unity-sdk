@@ -21,7 +21,7 @@ namespace QonversionUnity
         private const string OnOfferingsMethodName = "OnOfferings";
         private const string OnEligibilitiesMethodName = "OnEligibilities";
 
-        private const string SdkVersion = "2.2.1";
+        private const string SdkVersion = "2.2.2";
         private const string SdkSource = "unity";
 
         private static IQonversionWrapper _Instance;
