@@ -39,6 +39,7 @@
         @"AppsFlyerUserId": @(QNPropertyAppsFlyerUserID),
         @"AdjustAdId": @(QNPropertyAdjustUserID),
         @"KochavaDeviceId": @(QNPropertyKochavaDeviceID),
+        @"CustomUserId": @(QNPropertyUserID),
     };
     
     NSNumber *propertyIndex = propertiesDict[propertyStr];

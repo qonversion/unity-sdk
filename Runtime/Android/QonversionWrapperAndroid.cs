@@ -23,11 +23,6 @@ namespace QonversionUnity
             }
         }
 
-        public void SetUserID(string userID)
-        {
-            CallQonversion("setUserID", userID);
-        }
-
         public void SetUserProperty(string key, string value)
         {
             CallQonversion("setUserProperty", key, value);
