@@ -63,6 +63,10 @@ namespace QonversionUnity
         public void CheckTrialIntroEligibilityForProductIds(string productIdsJson, string callbackName)
         {
         }
+
+        public void SetAppleSearchAdsAttributionEnabled(bool enable)
+        {
+        }
     }
 
   }

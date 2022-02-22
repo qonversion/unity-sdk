@@ -107,6 +107,13 @@ namespace QonversionUnity
             instance.AddAttributionData(conversionData, attributionSource);
         }
 
+        // Enable attribution collection from Apple Search Ads. NO by default.
+        public static void SetAppleSearchAdsAttributionEnabled(bool enable)
+        {
+            IQonversionWrapper instance = getFinalInstance();
+            instance.SetAppleSearchAdsAttributionEnabled(enable);
+        }
+
         private static OnPermissionsReceived CheckPermissionsCallback { get; set; }
 
         public static void CheckPermissions(OnPermissionsReceived callback)

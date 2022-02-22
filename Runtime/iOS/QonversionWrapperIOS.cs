@@ -24,6 +24,9 @@ namespace QonversionUnity
         private static extern void _setProperty(string propertyName, string value);
 
         [DllImport("__Internal")]
+        private static extern void _setAppleSearchAdsAttributionEnabled(bool enable);
+
+        [DllImport("__Internal")]
         private static extern void _setUserProperty(string key, string value);
 
         [DllImport("__Internal")]
@@ -98,10 +101,17 @@ namespace QonversionUnity
 #endif
         }
 
-    public void AddAttributionData(string conversionData, AttributionSource source)
+        public void AddAttributionData(string conversionData, AttributionSource source)
         {
 #if UNITY_IOS
             _addAttributionData(conversionData, (int)source);
+#endif
+        }
+
+        public void SetAppleSearchAdsAttributionEnabled(bool enable)
+        {
+#if UNITY_IOS
+            _setAppleSearchAdsAttributionEnabled(enable);
 #endif
         }
 
