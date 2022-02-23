@@ -13,6 +13,11 @@ namespace QonversionUnity
         public delegate void OnOfferingsReceived(Offerings offerings, QonversionError error);
         public delegate void OnEligibilitiesReceived(Dictionary<string, Eligibility> eligibilities, QonversionError error);
 
+        /// <summary>
+        /// Delegate fires each time a deferred transaction happens
+        /// </summary>
+        public delegate void OnUpdatedPurchasesReceived(Dictionary<string, Permission> permissions);
+     
         private const string GameObjectName = "QonvesrionRuntimeGameObject";
         private const string OnCheckPermissionsMethodName = "OnCheckPermissions";
         private const string OnPurchaseMethodName = "OnPurchase";
@@ -53,6 +58,12 @@ namespace QonversionUnity
 
             return _Instance;
         }
+
+        /// <summary>
+        /// The 'UpdatedPurchasesOccurred' event will be fired each time a deferred transaction happens.
+        /// </summary>
+        public static event OnUpdatedPurchasesReceived UpdatedPurchasesOccurred;
+    
 
         public static void Launch(string apiKey, bool observerMode)
         {
@@ -380,6 +391,20 @@ namespace QonversionUnity
             }
 
             EligibilitiesCallback = null;
+        }
+
+        // Called from the native SDK - Called when deferred or pending purchase occured
+        private void OnUpdatedPurchases(string jsonString)
+        {
+            OnUpdatedPurchasesReceived purchasesListener = UpdatedPurchasesOccurred;
+            if (purchasesListener == null)
+            {
+                return;
+            }
+
+            Debug.Log("OnUpdatedPurchases " + jsonString);
+            Dictionary<string, Permission> permissions = Mapper.PermissionsFromJson(jsonString);
+            purchasesListener(permissions);
         }
 
         private void HandlePermissions(OnPermissionsReceived callback, string jsonString)

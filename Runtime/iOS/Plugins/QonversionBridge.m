@@ -3,6 +3,20 @@
 
 char* unityListenerName = nil;
 
+@interface PurchasesDelegateWrapper : NSObject<QNPurchasesDelegate>
+- (void)qonversionDidReceiveUpdatedPermissions:(NSDictionary<NSString *, QNPermission *>  * _Nonnull)permissions;
+@end
+
+@implementation PurchasesDelegateWrapper
+
+- (void)qonversionDidReceiveUpdatedPermissions:(NSDictionary<NSString *, QNPermission *>  * _Nonnull)permissions {
+    NSArray *permissionsArray = [UtilityBridge convertPermissions:permissions.allValues];
+    [UtilityBridge sendUnityMessage:permissionsArray toMethod:@"OnUpdatedPurchases" unityListener: unityListenerName];
+}
+@end
+
+static PurchasesDelegateWrapper* purchasesDelegate;
+
 void _storeSdkInfo(const char* version, const char* versionKey, const char* source, const char* sourceKey)
 {
     NSString *versionStr = [UtilityBridge сonvertCStringToNSString:version];
@@ -25,6 +39,11 @@ void _launchWithKey(const char* unityListener, const char* key)
     strcpy(unityListenerName, unityListener);
     
     [Qonversion launchWithKey:[UtilityBridge сonvertCStringToNSString:key]];
+
+    if (!purchasesDelegate) {
+        purchasesDelegate = [PurchasesDelegateWrapper alloc];
+    }
+    [Qonversion setPurchasesDelegate:purchasesDelegate];
 }
 
 void _setAdvertisingID() {
