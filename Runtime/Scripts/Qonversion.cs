@@ -95,7 +95,7 @@ namespace QonversionUnity
         /// third-party integrations.
         /// </summary>
         /// <param name="userID">Your database user ID.</param>
-        /// <see href="https://documentation.qonversion.io/docs/user-identifiers">Documentation</see>
+        /// <see href="https://documentation.qonversion.io/docs/user-identifiers">User Identifiers</see>
         [Obsolete("Deprecated. Will be removed in a future major release. Use setProperty(UserProperty.CustomUserId, value) instead.")]
         public static void SetUserID(string userID)
         {
