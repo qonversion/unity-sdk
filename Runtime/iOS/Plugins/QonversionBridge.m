@@ -15,7 +15,7 @@ char* unityListenerName = nil;
 }
 @end
 
-static PurchasesDelegateWrapper* purchasesDelegate;
+static PurchasesDelegateWrapper *purchasesDelegate;
 
 void _storeSdkInfo(const char* version, const char* versionKey, const char* source, const char* sourceKey)
 {
