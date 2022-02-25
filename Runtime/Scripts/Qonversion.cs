@@ -128,7 +128,7 @@ namespace QonversionUnity
         /// </summary>
         /// <param name="key">Defined enum key that will be transformed to string.</param>
         /// <param name="value">Property value.</param>
-        /// <see href="https://documentation.qonversion.io/docs/user-properties">Documentation</see>
+        /// <see href="https://documentation.qonversion.io/docs/user-properties">User Properties</see>
         public static void SetProperty(UserProperty key, string value)
         {
             IQonversionWrapper instance = getFinalInstance();
