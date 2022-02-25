@@ -393,7 +393,7 @@ namespace QonversionUnity
             EligibilitiesCallback = null;
         }
 
-        // Called from the native SDK - Called when deferred or pending purchase occured
+        // Called from the native SDK - Called when deferred or pending purchase occurred
         private void OnUpdatedPurchases(string jsonString)
         {
             OnUpdatedPurchasesReceived purchasesListener = UpdatedPurchasesOccurred;
