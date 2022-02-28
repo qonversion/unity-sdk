@@ -13,9 +13,29 @@ namespace QonversionUnity
         public delegate void OnOfferingsReceived(Offerings offerings, QonversionError error);
         public delegate void OnEligibilitiesReceived(Dictionary<string, Eligibility> eligibilities, QonversionError error);
 
+        /// <summary>
+        /// Delegate fires each time a promo purchase from the App Store happens.
+        /// Be sure you define a delegate for the event <see cref="PromoPurchaseReceived"/>. 
+        /// </summary>
+        /// <param name="productId">StoreKit product identifier</param>
+        /// <param name="purchaseDelegate">A delegate that will start a promo purchase flow.
+        /// <see cref="StartPromoPurchase"/>
+        /// </param>
+        public delegate void OnPromoPurchaseReceived(string productId, StartPromoPurchase purchaseDelegate);
+
+        /// <summary>
+        /// Call the function if your app can handle a promo purchase at the current time.
+        /// Or you can cache the delegate, and call it when the app is ready to make the purchase.
+        /// </summary>
+        /// <param name="callback">Callback that will be called when response is received. Returns permissions or potentially a QonversionError.
+        /// <see cref="OnPermissionsReceived"/>
+        /// </param>
+        public delegate void StartPromoPurchase(OnPermissionsReceived callback);
+
         private const string GameObjectName = "QonvesrionRuntimeGameObject";
         private const string OnCheckPermissionsMethodName = "OnCheckPermissions";
         private const string OnPurchaseMethodName = "OnPurchase";
+        private const string OnPromoPurchaseMethodName = "OnPromoPurchase";
         private const string OnPurchaseProductMethodName = "OnPurchaseProduct";
         private const string OnUpdatePurchaseMethodName = "OnUpdatePurchase";
         private const string OnUpdatePurchaseWithProductMethodName = "OnUpdatePurchaseWithProduct";
@@ -28,6 +48,9 @@ namespace QonversionUnity
         private const string SdkSource = "unity";
 
         private static IQonversionWrapper _Instance;
+
+        private static OnPromoPurchaseReceived _onPromoPurchaseReceived;
+        private static string _storedPromoProductId = null;
 
         private static IQonversionWrapper getFinalInstance()
         {
@@ -52,6 +75,35 @@ namespace QonversionUnity
             DontDestroyOnLoad(go);
 
             return _Instance;
+        }
+
+        /// <summary>
+        /// This event will be fired when a user initiates a promotional in-app purchase from the App Store.
+        /// Declare a delegate <see cref="OnPromoPurchaseReceived"/> for the event.
+        /// If you are not using PromoPurchaseReceived event promo purchases will proceed automatically.
+        /// </summary>
+        public static event OnPromoPurchaseReceived PromoPurchaseReceived
+        {
+            add
+            {
+                _onPromoPurchaseReceived += value;
+
+                if (_onPromoPurchaseReceived.GetInvocationList().Length == 1)
+                {
+                    IQonversionWrapper instance = getFinalInstance();
+                    instance.AddPromoPurchaseDelegate();
+                }
+            }
+            remove
+            {
+                _onPromoPurchaseReceived -= value;
+               
+                if (_onPromoPurchaseReceived == null)
+                {
+                    IQonversionWrapper instance = getFinalInstance();
+                    instance.RemovePromoPurchaseDelegate();
+                }
+            }
         }
 
         public static void Launch(string apiKey, bool observerMode)
@@ -319,6 +371,15 @@ namespace QonversionUnity
             UpdatePurchaseWithProductCallback = null;
         }
 
+        // Called from the native SDK - Called when permissions received from the promoPurchase() method 
+        private void OnPromoPurchase(string jsonString)
+        {
+            Debug.Log("OnPromoPurchase callback " + jsonString);
+            HandlePermissions(PromoPurchaseCallback, jsonString);
+            PromoPurchaseCallback = null;
+            _storedPromoProductId = null;
+        }
+
         // Called from the native SDK - Called when products received from the products() method 
         private void OnProducts(string jsonString)
         {
@@ -380,6 +441,28 @@ namespace QonversionUnity
             }
 
             EligibilitiesCallback = null;
+        }
+
+        // Called from the native SDK - Called when a promo purchase occurred
+        private void OnReceivePromoPurchase(string storeProductId)
+        {
+            if (_onPromoPurchaseReceived == null)
+            {
+                return;
+            }
+
+            Debug.Log("OnReceivePromoPurchase " + storeProductId);
+            _storedPromoProductId = storeProductId;
+            _onPromoPurchaseReceived(storeProductId, PromoPurchase);
+        }
+
+        private static OnPermissionsReceived PromoPurchaseCallback { get; set; }
+
+        private void PromoPurchase(OnPermissionsReceived callback)
+        {
+            PromoPurchaseCallback = callback;
+            IQonversionWrapper instance = getFinalInstance();
+            instance.PromoPurchase(_storedPromoProductId, OnPromoPurchaseMethodName);
         }
 
         private void HandlePermissions(OnPermissionsReceived callback, string jsonString)

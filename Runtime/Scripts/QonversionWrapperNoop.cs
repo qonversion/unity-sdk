@@ -83,5 +83,17 @@ namespace QonversionUnity
         public void Logout()
         {
         }
+
+        public void PromoPurchase(string storeProductId, string callbackName)
+        { 
+        }
+
+        public void AddPromoPurchaseDelegate()
+        {  
+        }
+
+        public void RemovePromoPurchaseDelegate()
+        {
+        }
     }
   }

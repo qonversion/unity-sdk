@@ -3,6 +3,28 @@
 
 char* unityListenerName = nil;
 
+@interface PurchasesDelegateWrapper : NSObject<QNPromoPurchasesDelegate>
+
+- (void)shouldPurchasePromoProductWithIdentifier:(NSString *)productID executionBlock:(QNPromoPurchaseCompletionHandler)executionBlock;
+
+@property (nonatomic) NSMutableDictionary *promoPurchasesExecutionBlocks;
+
+@end
+
+@implementation PurchasesDelegateWrapper
+
+- (void)shouldPurchasePromoProductWithIdentifier:(NSString *)productID executionBlock:(QNPromoPurchaseCompletionHandler)executionBlock {
+    if (!_promoPurchasesExecutionBlocks) {
+        _promoPurchasesExecutionBlocks = [[NSMutableDictionary alloc] init];
+    }
+    [_promoPurchasesExecutionBlocks setObject:executionBlock forKey:productID];
+
+    UnitySendMessage(unityListenerName, "OnReceivePromoPurchase", productID.UTF8String);
+}
+@end
+
+static PurchasesDelegateWrapper *purchasesDelegate;
+
 void _storeSdkInfo(const char* version, const char* versionKey, const char* source, const char* sourceKey)
 {
     NSString *versionStr = [UtilityBridge сonvertCStringToNSString:version];
@@ -157,4 +179,32 @@ void _checkTrialIntroEligibilityForProductIds(const char* productIdsJson, const 
             [UtilityBridge sendUnityMessage:eligibilities toMethod:callbackName unityListener: unityListenerName];
         }];
     }
+}
+
+void _promoPurchase (const char* storeProductId, const char* unityCallbackName){
+    NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
+    NSString *storeProductIdStr = [UtilityBridge сonvertCStringToNSString:storeProductId];
+    QNPromoPurchaseCompletionHandler executionBlock = [purchasesDelegate.promoPurchasesExecutionBlocks objectForKey:storeProductIdStr];
+    if(executionBlock) {
+        [purchasesDelegate.promoPurchasesExecutionBlocks removeObjectForKey:storeProductIdStr];
+        QNPurchaseCompletionHandler completion = ^(NSDictionary<NSString *, QNPermission*> *result, NSError  *_Nullable error, BOOL cancelled) {
+            [UtilityBridge handlePermissionsResponse:result withError:error toMethod:callbackName unityListener:unityListenerName];
+        };
+
+        executionBlock(completion);
+    } else {
+        NSError *error = [NSError errorWithDomain:keyQNErrorDomain code:QNErrorProductNotFound userInfo:nil];
+        [UtilityBridge handleErrorResponse:error toMethod:callbackName unityListener:unityListenerName];
+    }
+}
+
+void _addPromoPurchaseDelegate (){
+    if (!purchasesDelegate) {
+        purchasesDelegate = [[PurchasesDelegateWrapper alloc] init];
+    }
+    [Qonversion setPromoPurchasesDelegate:purchasesDelegate];
+}
+
+void _removePromoPurchaseDelegate (){
+    purchasesDelegate = nil;
 }
