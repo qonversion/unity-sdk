@@ -3,19 +3,21 @@
 
 char* unityListenerName = nil;
 
-@interface PurchasesDelegateWrapper : NSObject<QNPurchasesDelegate>
-- (void)qonversionDidReceiveUpdatedPermissions:(NSDictionary<NSString *, QNPermission *>  * _Nonnull)permissions;
+@interface PurchasesDelegateWrapper : NSObject <QNPurchasesDelegate>
+
+- (void)qonversionDidReceiveUpdatedPermissions:(NSDictionary<NSString *, QNPermission *>  *_Nonnull)permissions;
+
 @end
 
 @implementation PurchasesDelegateWrapper
 
-- (void)qonversionDidReceiveUpdatedPermissions:(NSDictionary<NSString *, QNPermission *>  * _Nonnull)permissions {
+- (void)qonversionDidReceiveUpdatedPermissions:(NSDictionary<NSString *, QNPermission *>  *_Nonnull)permissions {
     NSArray *permissionsArray = [UtilityBridge convertPermissions:permissions.allValues];
     [UtilityBridge sendUnityMessage:permissionsArray toMethod:@"OnReceiveUpdatedPurchases" unityListener: unityListenerName];
 }
 @end
 
-static PurchasesDelegateWrapper* purchasesDelegate;
+static PurchasesDelegateWrapper *purchasesDelegate;
 
 void _storeSdkInfo(const char* version, const char* versionKey, const char* source, const char* sourceKey)
 {
