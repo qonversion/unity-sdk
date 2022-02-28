@@ -11,7 +11,7 @@ char* unityListenerName = nil;
 
 - (void)qonversionDidReceiveUpdatedPermissions:(NSDictionary<NSString *, QNPermission *>  * _Nonnull)permissions {
     NSArray *permissionsArray = [UtilityBridge convertPermissions:permissions.allValues];
-    [UtilityBridge sendUnityMessage:permissionsArray toMethod:@"OnUpdatedPurchases" unityListener: unityListenerName];
+    [UtilityBridge sendUnityMessage:permissionsArray toMethod:@"OnReceiveUpdatedPurchases" unityListener: unityListenerName];
 }
 @end
 
@@ -39,11 +39,6 @@ void _launchWithKey(const char* unityListener, const char* key)
     strcpy(unityListenerName, unityListener);
     
     [Qonversion launchWithKey:[UtilityBridge сonvertCStringToNSString:key]];
-
-    if (!purchasesDelegate) {
-        purchasesDelegate = [PurchasesDelegateWrapper alloc];
-    }
-    [Qonversion setPurchasesDelegate:purchasesDelegate];
 }
 
 void _setAdvertisingID() {
@@ -176,4 +171,15 @@ void _checkTrialIntroEligibilityForProductIds(const char* productIdsJson, const 
             [UtilityBridge sendUnityMessage:eligibilities toMethod:callbackName unityListener: unityListenerName];
         }];
     }
+}
+
+void _addUpdatedPurchasesDelegate (){
+    if (!purchasesDelegate) {
+        purchasesDelegate = [PurchasesDelegateWrapper alloc];
+    }
+    [Qonversion setPurchasesDelegate:purchasesDelegate];
+}
+
+void _removeUpdatedPurchasesDelegate (){
+    purchasesDelegate = nil;
 }

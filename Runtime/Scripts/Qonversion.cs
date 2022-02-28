@@ -33,6 +33,7 @@ namespace QonversionUnity
         private const string SdkSource = "unity";
 
         private static IQonversionWrapper _Instance;
+        private static OnUpdatedPurchasesReceived _onUpdatedPurchasesReceived;
 
         private static IQonversionWrapper getFinalInstance()
         {
@@ -60,9 +61,31 @@ namespace QonversionUnity
         }
 
         /// <summary>
-        /// The 'UpdatedPurchasesOccurred' event will be fired each time a deferred transaction happens.
+        /// This event will be fired each time a deferred transaction happens.
         /// </summary>
-        public static event OnUpdatedPurchasesReceived UpdatedPurchasesOccurred;
+        public static event OnUpdatedPurchasesReceived UpdatedPurchasesReceived
+        {
+            add
+            {
+                _onUpdatedPurchasesReceived += value;
+
+                if (_onUpdatedPurchasesReceived.GetInvocationList().Length == 1)
+                {
+                    IQonversionWrapper instance = getFinalInstance();
+                    instance.AddUpdatedPurchasesDelegate();
+                }
+            }
+            remove
+            {
+                _onUpdatedPurchasesReceived -= value;
+
+                if (_onUpdatedPurchasesReceived == null)
+                {
+                    IQonversionWrapper instance = getFinalInstance();
+                    instance.RemoveUpdatedPurchasesDelegate();
+                }
+            }
+        }
     
 
         public static void Launch(string apiKey, bool observerMode)
@@ -394,17 +417,16 @@ namespace QonversionUnity
         }
 
         // Called from the native SDK - Called when deferred or pending purchase occured
-        private void OnUpdatedPurchases(string jsonString)
+        private void OnReceiveUpdatedPurchases(string jsonString)
         {
-            OnUpdatedPurchasesReceived purchasesListener = UpdatedPurchasesOccurred;
-            if (purchasesListener == null)
+            if (_onUpdatedPurchasesReceived == null)
             {
                 return;
             }
 
-            Debug.Log("OnUpdatedPurchases " + jsonString);
+            Debug.Log("OnReceiveUpdatedPurchases " + jsonString);
             Dictionary<string, Permission> permissions = Mapper.PermissionsFromJson(jsonString);
-            purchasesListener(permissions);
+            _onUpdatedPurchasesReceived(permissions);
         }
 
         private void HandlePermissions(OnPermissionsReceived callback, string jsonString)

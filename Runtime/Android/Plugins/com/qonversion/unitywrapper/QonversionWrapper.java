@@ -42,10 +42,10 @@ import androidx.annotation.NonNull;
 
 public class QonversionWrapper {
     public static String TAG = "QonversionWrapper";
+    public static String ON_UPDATED_PURCHASES_LISTENER = "OnReceiveUpdatedPurchases";
 
     private static String unityListenerName;
-    private static UpdatedPurchasesListener updatedPurchasesListener =
-            permissions -> handlePermissionsResponse(permissions, "OnUpdatedPurchases");
+    private static UpdatedPurchasesListener updatedPurchasesListener = null;
 
     public static synchronized void storeSdkInfo(String version, String versionKey, String source, String sourceKey) {
         Context context = UnityPlayer.currentActivity.getApplicationContext();
@@ -74,7 +74,6 @@ public class QonversionWrapper {
                 Log.d(TAG, "Qonversion initializing error: " + qonversionError.getCode() + ", " + qonversionError.getDescription() + ", " + qonversionError.getAdditionalMessage());
             }
         });
-        Qonversion.setUpdatedPurchasesListener(updatedPurchasesListener);
     }
 
     public static synchronized void syncPurchases() {
@@ -279,6 +278,15 @@ public class QonversionWrapper {
         } catch (JsonProcessingException e) {
             handleException(e);
         }
+    }
+
+    public static synchronized void addUpdatedPurchasesDelegate() {
+        updatedPurchasesListener = permissions -> handlePermissionsResponse(permissions, ON_UPDATED_PURCHASES_LISTENER);
+        Qonversion.setUpdatedPurchasesListener(updatedPurchasesListener);
+    }
+
+    public static synchronized void removeUpdatedPurchasesDelegate() {
+        updatedPurchasesListener = null;
     }
 
     private static void handlePermissionsResponse(@NotNull Map<String, QPermission> permissions, @NotNull String methodName) {
