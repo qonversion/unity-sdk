@@ -198,13 +198,13 @@ void _promoPurchase (const char* storeProductId, const char* unityCallbackName){
     }
 }
 
-void _addPromoPurchaseDelegate (){
+void _addPromoPurchasesDelegate (){
     if (!purchasesDelegate) {
-        purchasesDelegate = [[PurchasesDelegateWrapper alloc] init];
+        purchasesDelegate = [PurchasesDelegateWrapper alloc];
     }
     [Qonversion setPromoPurchasesDelegate:purchasesDelegate];
 }
 
-void _removePromoPurchaseDelegate (){
+void _removePromoPurchasesDelegate (){
     purchasesDelegate = nil;
 }

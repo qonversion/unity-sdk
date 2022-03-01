@@ -15,13 +15,13 @@ namespace QonversionUnity
 
         /// <summary>
         /// Delegate fires each time a promo purchase from the App Store happens.
-        /// Be sure you define a delegate for the event <see cref="PromoPurchaseReceived"/>. 
+        /// Be sure you define a delegate for the event <see cref="PromoPurchasesReceived"/>. 
         /// </summary>
         /// <param name="productId">StoreKit product identifier</param>
         /// <param name="purchaseDelegate">A delegate that will start a promo purchase flow.
         /// <see cref="StartPromoPurchase"/>
         /// </param>
-        public delegate void OnPromoPurchaseReceived(string productId, StartPromoPurchase purchaseDelegate);
+        public delegate void OnPromoPurchasesReceived(string productId, StartPromoPurchase purchaseDelegate);
 
         /// <summary>
         /// Call the function if your app can handle a promo purchase at the current time.
@@ -49,7 +49,7 @@ namespace QonversionUnity
 
         private static IQonversionWrapper _Instance;
 
-        private static OnPromoPurchaseReceived _onPromoPurchaseReceived;
+        private static OnPromoPurchasesReceived _onPromoPurchasesReceived;
         private static string _storedPromoProductId = null;
 
         private static IQonversionWrapper getFinalInstance()
@@ -79,29 +79,29 @@ namespace QonversionUnity
 
         /// <summary>
         /// This event will be fired when a user initiates a promotional in-app purchase from the App Store.
-        /// Declare a delegate <see cref="OnPromoPurchaseReceived"/> for the event.
-        /// If you are not using PromoPurchaseReceived event promo purchases will proceed automatically.
+        /// Declare a delegate <see cref="OnPromoPurchasesReceived"/> for the event.
+        /// If you are not using PromoPurchasesReceived event promo purchases will proceed automatically.
         /// </summary>
-        public static event OnPromoPurchaseReceived PromoPurchaseReceived
+        public static event OnPromoPurchasesReceived PromoPurchasesReceived
         {
             add
             {
-                _onPromoPurchaseReceived += value;
+                _onPromoPurchasesReceived += value;
 
-                if (_onPromoPurchaseReceived.GetInvocationList().Length == 1)
+                if (_onPromoPurchasesReceived.GetInvocationList().Length == 1)
                 {
                     IQonversionWrapper instance = getFinalInstance();
-                    instance.AddPromoPurchaseDelegate();
+                    instance.AddPromoPurchasesDelegate();
                 }
             }
             remove
             {
-                _onPromoPurchaseReceived -= value;
+                _onPromoPurchasesReceived -= value;
                
-                if (_onPromoPurchaseReceived == null)
+                if (_onPromoPurchasesReceived == null)
                 {
                     IQonversionWrapper instance = getFinalInstance();
-                    instance.RemovePromoPurchaseDelegate();
+                    instance.RemovePromoPurchasesDelegate();
                 }
             }
         }
@@ -446,14 +446,14 @@ namespace QonversionUnity
         // Called from the native SDK - Called when a promo purchase occurred
         private void OnReceivePromoPurchase(string storeProductId)
         {
-            if (_onPromoPurchaseReceived == null)
+            if (_onPromoPurchasesReceived == null)
             {
                 return;
             }
 
             Debug.Log("OnReceivePromoPurchase " + storeProductId);
             _storedPromoProductId = storeProductId;
-            _onPromoPurchaseReceived(storeProductId, PromoPurchase);
+            _onPromoPurchasesReceived(storeProductId, PromoPurchase);
         }
 
         private static OnPermissionsReceived PromoPurchaseCallback { get; set; }

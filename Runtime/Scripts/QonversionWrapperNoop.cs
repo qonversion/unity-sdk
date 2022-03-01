@@ -88,11 +88,11 @@ namespace QonversionUnity
         { 
         }
 
-        public void AddPromoPurchaseDelegate()
+        public void AddPromoPurchasesDelegate()
         {  
         }
 
-        public void RemovePromoPurchaseDelegate()
+        public void RemovePromoPurchasesDelegate()
         {
         }
     }

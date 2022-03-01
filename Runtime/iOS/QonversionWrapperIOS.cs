@@ -66,10 +66,10 @@ namespace QonversionUnity
         private static extern void _promoPurchase(string storeProductId, string callbackName);
 
         [DllImport("__Internal")]
-        private static extern void _addPromoPurchaseDelegate();
+        private static extern void _addPromoPurchasesDelegate();
 
         [DllImport("__Internal")]
-        private static extern void _removePromoPurchaseDelegate();
+        private static extern void _removePromoPurchasesDelegate();
 #endif
 
         public void StoreSdkInfo(string version, string versionKey, string source, string sourceKey)
@@ -211,17 +211,17 @@ namespace QonversionUnity
 #endif
         }
 
-        public void AddPromoPurchaseDelegate()
+        public void AddPromoPurchasesDelegate()
         {
 #if UNITY_IOS
-            _addPromoPurchaseDelegate();
+            _addPromoPurchasesDelegate();
 #endif
         }
 
-        public void RemovePromoPurchaseDelegate()
+        public void RemovePromoPurchasesDelegate()
         {
 #if UNITY_IOS
-            _removePromoPurchaseDelegate();
+            _removePromoPurchasesDelegate();
 #endif
         }
     }

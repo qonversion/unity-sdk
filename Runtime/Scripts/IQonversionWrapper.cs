@@ -23,7 +23,7 @@
         void Identify(string userID);
         void Logout();
         void PromoPurchase(string storeProductId, string callbackName);
-        void AddPromoPurchaseDelegate();
-        void RemovePromoPurchaseDelegate();
+        void AddPromoPurchasesDelegate();
+        void RemovePromoPurchasesDelegate();
     }
 }
