@@ -80,7 +80,7 @@ namespace QonversionUnity
         /// <summary>
         /// This event will be fired when a user initiates a promotional in-app purchase from the App Store.
         /// Declare a delegate <see cref="OnPromoPurchasesReceived"/> for the event.
-        /// If you are not using PromoPurchasesReceived event promo purchases will proceed automatically.
+        /// If you are not using the PromoPurchasesReceived event promo purchases will proceed automatically.
         /// </summary>
         public static event OnPromoPurchasesReceived PromoPurchasesReceived
         {
