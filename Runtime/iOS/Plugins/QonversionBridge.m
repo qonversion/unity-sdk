@@ -3,8 +3,9 @@
 
 char* unityListenerName = nil;
 
-@interface PurchasesDelegateWrapper : NSObject<QNPromoPurchasesDelegate>
+@interface PurchasesDelegateWrapper : NSObject <QNPurchasesDelegate>
 
+- (void)qonversionDidReceiveUpdatedPermissions:(NSDictionary<NSString *, QNPermission *>  *_Nonnull)permissions;
 - (void)shouldPurchasePromoProductWithIdentifier:(NSString *)productID executionBlock:(QNPromoPurchaseCompletionHandler)executionBlock;
 
 @property (nonatomic) NSMutableDictionary *promoPurchasesExecutionBlocks;
@@ -21,9 +22,15 @@ char* unityListenerName = nil;
 
     UnitySendMessage(unityListenerName, "OnReceivePromoPurchase", productID.UTF8String);
 }
+
+- (void)qonversionDidReceiveUpdatedPermissions:(NSDictionary<NSString *, QNPermission *>  *_Nonnull)permissions {
+    NSArray *permissionsArray = [UtilityBridge convertPermissions:permissions.allValues];
+    [UtilityBridge sendUnityMessage:permissionsArray toMethod:@"OnReceiveUpdatedPurchases" unityListener: unityListenerName];
+}
 @end
 
 static PurchasesDelegateWrapper *purchasesDelegate;
+static PurchasesDelegateWrapper *promoPurchasesDelegate;
 
 void _storeSdkInfo(const char* version, const char* versionKey, const char* source, const char* sourceKey)
 {
@@ -199,12 +206,23 @@ void _promoPurchase (const char* storeProductId, const char* unityCallbackName){
 }
 
 void _addPromoPurchasesDelegate (){
-    if (!purchasesDelegate) {
-        purchasesDelegate = [PurchasesDelegateWrapper alloc];
+    if (!promoPurchasesDelegate) {
+        promoPurchasesDelegate = [PurchasesDelegateWrapper alloc];
     }
-    [Qonversion setPromoPurchasesDelegate:purchasesDelegate];
+    [Qonversion setPromoPurchasesDelegate:promoPurchasesDelegate];
 }
 
 void _removePromoPurchasesDelegate (){
+    promoPurchasesDelegate = nil;
+ }
+
+void _addUpdatedPurchasesDelegate (){
+    if (!purchasesDelegate) {
+        purchasesDelegate = [PurchasesDelegateWrapper alloc];
+    }
+    [Qonversion setPurchasesDelegate:purchasesDelegate];
+}
+
+void _removeUpdatedPurchasesDelegate (){
     purchasesDelegate = nil;
 }

@@ -25,5 +25,7 @@
         void PromoPurchase(string storeProductId, string callbackName);
         void AddPromoPurchasesDelegate();
         void RemovePromoPurchasesDelegate();
+        void AddUpdatedPurchasesDelegate();
+        void RemoveUpdatedPurchasesDelegate();
     }
 }

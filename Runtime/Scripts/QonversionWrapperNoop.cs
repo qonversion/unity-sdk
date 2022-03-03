@@ -95,5 +95,12 @@ namespace QonversionUnity
         public void RemovePromoPurchasesDelegate()
         {
         }
+        public void AddUpdatedPurchasesDelegate()
+        {
+        }
+
+        public void RemoveUpdatedPurchasesDelegate()
+        {
+        }
     }
   }
