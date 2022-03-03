@@ -34,6 +34,7 @@ namespace QonversionUnity
         /// </param>
         public delegate void StartPromoPurchase(OnPermissionsReceived callback);
 
+        /// <summary>
         /// Delegate fires each time a deferred transaction happens
         /// </summary>
         public delegate void OnUpdatedPurchasesReceived(Dictionary<string, Permission> permissions);
@@ -84,7 +85,7 @@ namespace QonversionUnity
             return _Instance;
         }
 
-        /// <summary>
+         /// <summary>
          /// This event will be fired when a user initiates a promotional in-app purchase from the App Store.
          /// Declare a delegate <see cref="OnPromoPurchasesReceived"/> for the event.
          /// If you are not using the PromoPurchasesReceived event promo purchases will proceed automatically.
