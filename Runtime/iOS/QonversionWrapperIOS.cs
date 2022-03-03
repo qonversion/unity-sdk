@@ -228,6 +228,7 @@ namespace QonversionUnity
         {
 #if UNITY_IOS
             _removePromoPurchasesDelegate();
+#endif
         }
 
         public void AddUpdatedPurchasesDelegate()
