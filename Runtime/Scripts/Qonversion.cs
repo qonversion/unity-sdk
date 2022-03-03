@@ -16,6 +16,8 @@ namespace QonversionUnity
         /// <summary>
         /// Delegate fires each time a promo purchase from the App Store happens.
         /// Be sure you define a delegate for the event <see cref="PromoPurchasesReceived"/>. 
+        /// Call StartPromoPurchase in case of your app is ready to start promo purchase. 
+        /// Or cache that delegate and call later when you need.
         /// </summary>
         /// <param name="productId">StoreKit product identifier</param>
         /// <param name="purchaseDelegate">A delegate that will start a promo purchase flow.
