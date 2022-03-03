@@ -13,6 +13,7 @@ import com.qonversion.android.sdk.QonversionEligibilityCallback;
 import com.qonversion.android.sdk.QonversionErrorCode;
 import com.qonversion.android.sdk.QonversionOfferingsCallback;
 import com.qonversion.android.sdk.QonversionProductsCallback;
+import com.qonversion.android.sdk.UpdatedPurchasesListener;
 import com.qonversion.android.sdk.dto.eligibility.QEligibility;
 import com.qonversion.android.sdk.dto.offerings.QOfferings;
 import com.qonversion.android.sdk.dto.products.QProduct;
@@ -37,10 +38,14 @@ import com.qonversion.android.sdk.dto.QPermission;
 
 import android.preference.PreferenceManager;
 
+import androidx.annotation.NonNull;
+
 public class QonversionWrapper {
     public static String TAG = "QonversionWrapper";
+    public static String ON_UPDATED_PURCHASES_LISTENER = "OnReceiveUpdatedPurchases";
 
     private static String unityListenerName;
+    private static UpdatedPurchasesListener updatedPurchasesListener = null;
 
     public static synchronized void storeSdkInfo(String version, String versionKey, String source, String sourceKey) {
         Context context = UnityPlayer.currentActivity.getApplicationContext();
@@ -273,6 +278,15 @@ public class QonversionWrapper {
         } catch (JsonProcessingException e) {
             handleException(e);
         }
+    }
+
+    public static synchronized void addUpdatedPurchasesDelegate() {
+        updatedPurchasesListener = permissions -> handlePermissionsResponse(permissions, ON_UPDATED_PURCHASES_LISTENER);
+        Qonversion.setUpdatedPurchasesListener(updatedPurchasesListener);
+    }
+
+    public static synchronized void removeUpdatedPurchasesDelegate() {
+        updatedPurchasesListener = null;
     }
 
     private static void handlePermissionsResponse(@NotNull Map<String, QPermission> permissions, @NotNull String methodName) {

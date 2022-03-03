@@ -22,5 +22,7 @@
         void SetAppleSearchAdsAttributionEnabled(bool enable);
         void Identify(string userID);
         void Logout();
+        void AddUpdatedPurchasesDelegate();
+        void RemoveUpdatedPurchasesDelegate();
     }
 }

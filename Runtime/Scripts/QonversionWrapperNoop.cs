@@ -83,5 +83,13 @@ namespace QonversionUnity
         public void Logout()
         {
         }
+
+        public void AddUpdatedPurchasesDelegate()
+        {
+        }
+
+        public void RemoveUpdatedPurchasesDelegate()
+        {
+        }
     }
   }
