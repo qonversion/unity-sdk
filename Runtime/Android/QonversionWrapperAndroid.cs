@@ -145,6 +145,11 @@ namespace QonversionUnity
             CallQonversion("removeUpdatedPurchasesDelegate");
         }
 
+        public void SetNotificationsToken(string token)
+        {
+            CallQonversion("setNotificationsToken", token);
+        }
+
         private const string QonversionWrapper = "com.qonversion.unitywrapper.QonversionWrapper";
 
         private static void CallQonversion(string methodName, params object[] args)

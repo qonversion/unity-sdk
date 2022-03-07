@@ -67,6 +67,9 @@ namespace QonversionUnity
 
          [DllImport("__Internal")]
          private static extern void _removeUpdatedPurchasesDelegate();
+
+         [DllImport("__Internal")]
+         private static extern void _setNotificationsToken(string token);
 #endif
 
         public void StoreSdkInfo(string version, string versionKey, string source, string sourceKey)
@@ -212,6 +215,13 @@ namespace QonversionUnity
         {
 #if UNITY_IOS
              _removeUpdatedPurchasesDelegate();
+#endif
+        }
+
+        public void SetNotificationsToken(string token)
+        {
+#if UNITY_IOS
+             _setNotificationsToken(token);
 #endif
         }
     }

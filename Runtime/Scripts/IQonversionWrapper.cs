@@ -24,5 +24,6 @@
         void Logout();
         void AddUpdatedPurchasesDelegate();
         void RemoveUpdatedPurchasesDelegate();
+        void SetNotificationsToken(string token);
     }
 }

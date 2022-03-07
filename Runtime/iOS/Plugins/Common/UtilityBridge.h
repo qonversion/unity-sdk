@@ -25,4 +25,6 @@
 
 + (void)handleErrorResponse:(NSError *)error toMethod:(NSString *) methodName
               unityListener:(const char *)unityListenerName;
+
++ (NSData *)convertHexToData:(NSString *)hex;
 @end
