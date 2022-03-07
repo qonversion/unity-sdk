@@ -198,6 +198,12 @@ namespace QonversionUnity
 
         private static OnPermissionsReceived PurchaseCallback { get; set; }
 
+        /// <summary>
+        /// Make a purchase and validate that through server-to-server using Qonversion's Backend.
+        /// </summary>
+        /// <param name="productId">Qonversion product identifier for purchase.</param>
+        /// <param name="callback">Callback that will be called when response is received.</param>
+        /// <see href="https://documentation.qonversion.io/docs/making-purchases#1-make-a-purchase"/>
         public static void Purchase(string productId, OnPermissionsReceived callback)
         {
             PurchaseCallback = callback;
@@ -221,6 +227,15 @@ namespace QonversionUnity
 
         private static OnPermissionsReceived UpdatePurchaseCallback { get; set; }
 
+        /// <summary>
+        /// Update (upgrade/downgrade) subscription and validate that through server-to-server using Qonversion's Backend.
+        /// </summary>
+        /// <param name="productId">Qonversion product identifier for purchase</param>
+        /// <param name="oldProductId">Qonversion product identifier from which the upgrade/downgrade will be initialized</param>
+        /// <param name="callback">Callback that will be called when response is received</param>
+        /// <param name="prorationMode">Proration Mode</param>
+        /// <see href="https://developer.android.com/google/play/billing/subscriptions#proration">Proration Mode</see>
+        /// <see href="https://documentation.qonversion.io/docs/making-purchases#3-update-purchases-android-only">Update Purchase</see>
         public static void UpdatePurchase(string productId, string oldProductId, OnPermissionsReceived callback, ProrationMode prorationMode = ProrationMode.UnknownSubscriptionUpgradeDowngradePolicy)
         {
             UpdatePurchaseCallback = callback;
