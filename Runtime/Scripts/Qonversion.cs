@@ -13,6 +13,11 @@ namespace QonversionUnity
         public delegate void OnOfferingsReceived(Offerings offerings, QonversionError error);
         public delegate void OnEligibilitiesReceived(Dictionary<string, Eligibility> eligibilities, QonversionError error);
 
+        /// <summary>
+        /// Delegate fires each time a deferred transaction happens
+        /// </summary>
+        public delegate void OnUpdatedPurchasesReceived(Dictionary<string, Permission> permissions);
+     
         private const string GameObjectName = "QonvesrionRuntimeGameObject";
         private const string OnCheckPermissionsMethodName = "OnCheckPermissions";
         private const string OnPurchaseMethodName = "OnPurchase";
@@ -28,6 +33,7 @@ namespace QonversionUnity
         private const string SdkSource = "unity";
 
         private static IQonversionWrapper _Instance;
+        private static OnUpdatedPurchasesReceived _onUpdatedPurchasesReceived;
 
         private static IQonversionWrapper getFinalInstance()
         {
@@ -54,6 +60,33 @@ namespace QonversionUnity
             return _Instance;
         }
 
+        /// <summary>
+        /// This event will be fired each time a deferred transaction happens.
+        /// </summary>
+        public static event OnUpdatedPurchasesReceived UpdatedPurchasesReceived
+        {
+            add
+            {
+                _onUpdatedPurchasesReceived += value;
+
+                if (_onUpdatedPurchasesReceived.GetInvocationList().Length == 1)
+                {
+                    IQonversionWrapper instance = getFinalInstance();
+                    instance.AddUpdatedPurchasesDelegate();
+                }
+            }
+            remove
+            {
+                _onUpdatedPurchasesReceived -= value;
+
+                if (_onUpdatedPurchasesReceived == null)
+                {
+                    IQonversionWrapper instance = getFinalInstance();
+                    instance.RemoveUpdatedPurchasesDelegate();
+                }
+            }
+        }
+    
         /// <summary>
         /// Initializes Qonversion SDK with the given API key.
         /// You can get one in your account on https://dash.qonversion.io.
@@ -479,6 +512,19 @@ namespace QonversionUnity
             }
 
             EligibilitiesCallback = null;
+        }
+
+        // Called from the native SDK - Called when deferred or pending purchase occured
+        private void OnReceiveUpdatedPurchases(string jsonString)
+        {
+            if (_onUpdatedPurchasesReceived == null)
+            {
+                return;
+            }
+
+            Debug.Log("OnReceiveUpdatedPurchases " + jsonString);
+            Dictionary<string, Permission> permissions = Mapper.PermissionsFromJson(jsonString);
+            _onUpdatedPurchasesReceived(permissions);
         }
 
         private void HandlePermissions(OnPermissionsReceived callback, string jsonString)

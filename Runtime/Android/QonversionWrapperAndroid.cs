@@ -135,6 +135,16 @@ namespace QonversionUnity
             CallQonversion("checkTrialIntroEligibilityForProductIds", productIdsJson, callbackName);
         }
 
+        public void AddUpdatedPurchasesDelegate()
+        {
+            CallQonversion("addUpdatedPurchasesDelegate");
+        }
+
+        public void RemoveUpdatedPurchasesDelegate()
+        {
+            CallQonversion("removeUpdatedPurchasesDelegate");
+        }
+
         private const string QonversionWrapper = "com.qonversion.unitywrapper.QonversionWrapper";
 
         private static void CallQonversion(string methodName, params object[] args)
