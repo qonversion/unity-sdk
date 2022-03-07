@@ -51,6 +51,14 @@ namespace QonversionUnity
             return _Instance;
         }
 
+        /// <summary>
+        /// Initializes Qonversion SDK with the given API key.
+        /// You can get one in your account on https://dash.qonversion.io.
+        /// </summary>
+        /// <param name="apiKey">Project key to setup the SDK.</param>
+        /// <param name="observerMode">Set true if you are using observer mode only.</param>
+        /// <see href="https://documentation.qonversion.io/docs/how-qonversion-works">Observer mode</see>
+        /// <see href="https://qonversion.io/docs/google">Installing the Android SDK</see>
         public static void Launch(string apiKey, bool observerMode)
         {
             IQonversionWrapper instance = getFinalInstance();
@@ -58,48 +66,103 @@ namespace QonversionUnity
             instance.Launch(GameObjectName, apiKey, observerMode);
         }
 
+        /// <summary>
+        /// You can set the flag to distinguish sandbox and production users.
+        /// To see the sandbox users turn on the Viewing test Data toggle on Qonversion Dashboard
+        /// </summary>
         public static void SetDebugMode()
         {
             IQonversionWrapper instance = getFinalInstance();
             instance.SetDebugMode();
         }
 
+        /// <summary>
+        /// iOS only. Returns `null` if called on Android.
+        /// On iOS 14.5+, after requesting the app tracking permission using ATT, you need to notify Qonversion if tracking
+        /// is allowed and IDFA is available.
+        /// </summary>
         public static void SetAdvertisingID()
         {
             IQonversionWrapper instance = getFinalInstance();
             instance.SetAdvertisingID();
         }
 
-        [Obsolete("Deprecated. Will be removed in a future major release. Use setProperty(UserProperty.CustomUserId, value) instead.")]
+        /// <summary>
+        /// Qonversion SDK provides an asynchronous method to set your side User ID that can be used to match users in
+        /// third-party integrations.
+        /// </summary>
+        /// <param name="userID">Your database user ID.</param>
+        /// <see href="https://documentation.qonversion.io/docs/user-identifiers">User Identifiers</see>
+        [Obsolete("Deprecated. Will be removed in a future major release. Use SetProperty(UserProperty.CustomUserId, value) instead.")]
         public static void SetUserID(string userID)
         {
             IQonversionWrapper instance = getFinalInstance();
             instance.SetProperty(UserProperty.CustomUserId, userID);
         }
 
+        /// <summary>
+        /// Adds custom user property.
+        ///
+        /// User properties are attributes you can set on a user level.
+        /// You can send user properties to third party platforms as well as use them in Qonversion for customer segmentation
+        /// and analytics.
+        /// </summary>
+        /// <param name="key">Custom user property key.</param>
+        /// <param name="value">Property value.</param>
+        /// <see href="https://documentation.qonversion.io/docs/user-properties">User Properties</see>
         public static void SetUserProperty(string key, string value)
         {
             IQonversionWrapper instance = getFinalInstance();
             instance.SetUserProperty(key, value);
         }
-
+  
+        /// <summary>
+        /// Sets user property for pre-defined case property.
+        ///
+        /// User properties are attributes you can set on a user level.
+        /// You can send user properties to third party platforms as well as use them in Qonversion for customer segmentation
+        /// and analytics.
+        /// </summary>
+        /// <param name="key">Defined enum key that will be transformed to string.</param>
+        /// <param name="value">Property value.</param>
+        /// <see href="https://documentation.qonversion.io/docs/user-properties">User Properties</see>
         public static void SetProperty(UserProperty key, string value)
         {
             IQonversionWrapper instance = getFinalInstance();
             instance.SetProperty(key, value);
         }
 
+        /// <summary>
+        /// This method will send all purchases to the Qonversion backend. Call this every time when purchase is handled
+        /// by your own implementation.
+        ///
+        /// //////Warning!//////
+        ///
+        /// This method works for Android only.
+        /// It should only be called if you're using Qonversion SDK in observer mode.
+        /// </summary>
+        /// <see href="https://documentation.qonversion.io/docs/observer-mode#android-sdk">Observer mode for Android SDK</see>
         public static void SyncPurchases()
         {
             IQonversionWrapper instance = getFinalInstance();
             instance.SyncPurchases();
         }
 
+        /// <summary>
+        /// Sends your attribution data to the attribution source.
+        /// </summary>
+        /// <param name="conversionData">An object containing your attribution data.</param>
+        /// <param name="attributionSource">The attribution source to which the data will be sent.</param>
         public static void AddAttributionData(Dictionary<string, object> conversionData, AttributionSource attributionSource)
         {
             AddAttributionData(conversionData.toJson(), attributionSource);
         }
 
+        /// <summary>
+        /// Sends your attribution data to the attribution source.
+        /// </summary>
+        /// <param name="conversionData">A json string containing your attribution data.</param>
+        /// <param name="attributionSource">The attribution source to which the data will be sent.</param>
         public static void AddAttributionData(string conversionData, AttributionSource attributionSource)
         {
             IQonversionWrapper instance = getFinalInstance();
@@ -116,6 +179,16 @@ namespace QonversionUnity
 
         private static OnPermissionsReceived CheckPermissionsCallback { get; set; }
 
+        /// <summary>
+        /// You need to call the CheckPermissions method at the start of your app to check if a user has the required
+        /// permission.
+        ///
+        /// This method will check the user receipt and will return the current permissions.
+        ///
+        /// If Apple or Google servers are not responding at the time of the request, Qonversion provides the latest
+        /// permissions data from its database.
+        /// </summary>
+        /// <param name="callback">Callback that will be called when response is received</param>
         public static void CheckPermissions(OnPermissionsReceived callback)
         {
             CheckPermissionsCallback = callback;
@@ -125,6 +198,12 @@ namespace QonversionUnity
 
         private static OnPermissionsReceived PurchaseCallback { get; set; }
 
+        /// <summary>
+        /// Make a purchase and validate that through server-to-server using Qonversion's Backend.
+        /// </summary>
+        /// <param name="productId">Qonversion product identifier for purchase.</param>
+        /// <param name="callback">Callback that will be called when response is received.</param>
+        /// <see href="https://documentation.qonversion.io/docs/making-purchases#1-make-a-purchase"/>
         public static void Purchase(string productId, OnPermissionsReceived callback)
         {
             PurchaseCallback = callback;
@@ -134,6 +213,11 @@ namespace QonversionUnity
 
         private static OnPermissionsReceived RestoreCallback { get; set; }
 
+        /// <summary>
+        /// Restoring purchases restores users purchases in your app, to maintain access to purchased content.
+        /// Users sometimes need to restore purchased content, such as when they upgrade to a new phone.
+        /// </summary>
+        /// <param name="callback">Callback that will be called when response is received</param>
         public static void Restore(OnPermissionsReceived callback)
         {
             RestoreCallback = callback;
@@ -143,6 +227,15 @@ namespace QonversionUnity
 
         private static OnPermissionsReceived UpdatePurchaseCallback { get; set; }
 
+        /// <summary>
+        /// Update (upgrade/downgrade) subscription and validate that through server-to-server using Qonversion's Backend.
+        /// </summary>
+        /// <param name="productId">Qonversion product identifier for purchase</param>
+        /// <param name="oldProductId">Qonversion product identifier from which the upgrade/downgrade will be initialized</param>
+        /// <param name="callback">Callback that will be called when response is received</param>
+        /// <param name="prorationMode">Proration Mode</param>
+        /// <see href="https://developer.android.com/google/play/billing/subscriptions#proration">Proration Mode</see>
+        /// <see href="https://documentation.qonversion.io/docs/making-purchases#3-update-purchases-android-only">Update Purchase</see>
         public static void UpdatePurchase(string productId, string oldProductId, OnPermissionsReceived callback, ProrationMode prorationMode = ProrationMode.UnknownSubscriptionUpgradeDowngradePolicy)
         {
             UpdatePurchaseCallback = callback;
@@ -151,7 +244,12 @@ namespace QonversionUnity
         }
 
         private static OnProductsReceived ProductsCallback { get; set; }
-
+  
+        /// <summary>
+        /// Returns Qonversion products in association with Apple and Google Play Store Products.
+        /// </summary>
+        /// <param name="callback">Callback that will be called when response is received.</param>
+        /// <see href="https://qonversion.io/docs/product-center">Product Center</see>
         public static void Products(OnProductsReceived callback)
         {
             ProductsCallback = callback;
@@ -161,6 +259,16 @@ namespace QonversionUnity
 
         private static OnOfferingsReceived OfferingsCallback { get; set; }
 
+        /// <summary>
+        /// Return Qonversion Offerings Object.
+        ///
+        /// An offering is a group of products that you can offer to a user on a given paywall based on your business logic.
+        /// For example, you can offer one set of products on a paywall immediately after onboarding and another
+        /// set of products with discounts later on if a user has not converted.
+        /// Offerings allow changing the products offered remotely without releasing app updates.
+        /// </summary>
+        /// <see href="https://qonversion.io/docs/offerings">Offerings</see>
+        /// <see href="https://qonversion.io/docs/product-center">Product Center</see>
         public static void Offerings(OnOfferingsReceived callback)
         {
             OfferingsCallback = callback;
@@ -170,6 +278,12 @@ namespace QonversionUnity
 
         private static OnEligibilitiesReceived EligibilitiesCallback { get; set; }
 
+        /// <summary>
+        /// You can check if a user is eligible for an introductory offer, including a free trial.
+        /// You can show only a regular price for users who are not eligible for an introductory offer.
+        /// </summary>
+        /// <param name="productIds">Products identifiers that must be checked.</param>
+        /// <param name="callback">Callback that will be called when response is received</param>
         public static void CheckTrialIntroEligibilityForProductIds(IList<string> productIds, OnEligibilitiesReceived callback)
         {
             var productIdsJson = Json.Serialize(productIds);
