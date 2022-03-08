@@ -289,6 +289,10 @@ public class QonversionWrapper {
         updatedPurchasesListener = null;
     }
 
+    public static synchronized void setNotificationsToken(String token) {
+        Qonversion.setNotificationsToken(token);
+    }
+
     private static void handlePermissionsResponse(@NotNull Map<String, QPermission> permissions, @NotNull String methodName) {
         List<Map<String, Object>> mappedPermissions = Mapper.mapPermissions(permissions);
         sendMessageToUnity(mappedPermissions, methodName);

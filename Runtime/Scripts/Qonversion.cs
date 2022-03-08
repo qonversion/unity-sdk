@@ -403,6 +403,16 @@ namespace QonversionUnity
             instance.CheckTrialIntroEligibilityForProductIds(productIdsJson, OnEligibilitiesMethodName);
         }
 
+        /// <summary>
+        /// Set push token to Qonversion to enable Qonversion push notifications
+        /// </summary>
+        /// <param name="token">Firebase device token on Android. APNs device token on iOS.</param>
+        public static void SetNotificationsToken(string token)
+        {
+            IQonversionWrapper instance = getFinalInstance();
+            instance.SetNotificationsToken(token);
+        }
+
         // Called from the native SDK - Called when permissions received from the checkPermissions() method 
         private void OnCheckPermissions(string jsonString)
         {

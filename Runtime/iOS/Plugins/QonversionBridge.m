@@ -185,3 +185,10 @@ void _addUpdatedPurchasesDelegate (){
 void _removeUpdatedPurchasesDelegate (){
     purchasesDelegate = nil;
 }
+
+void _setNotificationsToken(const char* token) {
+    NSString *hexString = [UtilityBridge сonvertCStringToNSString:token];
+    NSData *tokenData = [UtilityBridge convertHexToData:hexString];
+    
+    [Qonversion setNotificationsToken:tokenData];
+}

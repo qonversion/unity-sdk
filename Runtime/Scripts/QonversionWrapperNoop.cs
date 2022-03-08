@@ -91,5 +91,9 @@ namespace QonversionUnity
         public void RemoveUpdatedPurchasesDelegate()
         {
         }
+
+        public void SetNotificationsToken(string token)
+        {
+        }
     }
   }
