@@ -110,12 +110,15 @@
         NSMutableDictionary *productsDict = [@{
             qonversionIdKey: product.qonversionID,
             storeIdKey: product.storeID,
-            offeringIdKey: product.offeringID,
             typeKey: @(product.type),
             durationKey: @(product.duration),
             prettyPriceKey: product.prettyPrice,
             trialDurationKey: trialDuration
         } mutableCopy];
+        
+        if (product.offeringID.length > 0) {
+            productsDict[offeringIdKey] = product.offeringID;
+        }
         
         if (product.skProduct) {
             NSDictionary *skProductInfo = [UtilityBridge convertSKProduct:product.skProduct];

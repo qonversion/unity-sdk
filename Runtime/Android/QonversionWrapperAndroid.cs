@@ -150,7 +150,20 @@ namespace QonversionUnity
             CallQonversion("setNotificationsToken", token);
         }
 
+        public bool HandleNotification(string notification)
+        {
+            return CallQonversionBool("handleNotification", notification);
+        }
+
         private const string QonversionWrapper = "com.qonversion.unitywrapper.QonversionWrapper";
+
+        private static bool CallQonversionBool(string methodName, params object[] args)
+        {
+            using (var qonversion = new AndroidJavaClass(QonversionWrapper))
+            {
+                return qonversion.CallStatic<bool>(methodName, args);
+            }
+        }
 
         private static void CallQonversion(string methodName, params object[] args)
         {
