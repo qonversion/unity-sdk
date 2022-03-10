@@ -27,4 +27,8 @@
               unityListener:(const char *)unityListenerName;
 
 + (NSData *)convertHexToData:(NSString *)hex;
++ (NSDictionary *)convertActionResult:(QONActionResult *)actionResult;
++ (NSDictionary *)convertError:(NSError *)error;
++ (NSDictionary *)convertAutomationsEvent:(QONAutomationsEvent *)event;
+
 @end
