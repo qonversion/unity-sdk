@@ -11,8 +11,8 @@ namespace QonversionUnity
         public AutomationsEvent(Dictionary<string, object> dict)
         {
 
-            if (dict.TryGetValue("timestamp", out value)) Date = Utils.FormatDate((long)time);
-            if (dict.TryGetValue("type", out eventType)) Type = FormatAutomationsEventType(eventType);
+            if (dict.TryGetValue("timestamp", out object time)) Date = Utils.FormatDate((long)time);
+            if (dict.TryGetValue("type", out object eventType)) Type = FormatAutomationsEventType(eventType);
 
         }
 
