@@ -16,6 +16,12 @@ namespace QonversionUnity
 
         }
 
+        public override string ToString()
+        {
+            return $"{nameof(Type)}: {Type}, " +
+                   $"{nameof(Date)}: {Date}";
+        }
+
         private AutomationsEventType FormatAutomationsEventType(object type) {
             string value = type as string;
             AutomationsEventType result;
