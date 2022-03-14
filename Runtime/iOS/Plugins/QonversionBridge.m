@@ -192,3 +192,11 @@ void _setNotificationsToken(const char* token) {
     
     [Qonversion setNotificationsToken:tokenData];
 }
+
+bool _handleNotification(const char* notification) {
+    NSDictionary *notificationInfo = [UtilityBridge dictionaryFromJsonString: [UtilityBridge сonvertCStringToNSString: notification]];
+    
+    BOOL result = [Qonversion handleNotification:notificationInfo];
+    
+    return result;
+}

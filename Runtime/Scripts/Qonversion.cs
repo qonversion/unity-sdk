@@ -413,6 +413,12 @@ namespace QonversionUnity
             instance.SetNotificationsToken(token);
         }
 
+        public static bool HandleNotification(Dictionary<string, object> notification)
+        {
+            IQonversionWrapper instance = getFinalInstance();
+            return instance.HandleNotification(notification.toJson());
+        }
+
         // Called from the native SDK - Called when permissions received from the checkPermissions() method 
         private void OnCheckPermissions(string jsonString)
         {

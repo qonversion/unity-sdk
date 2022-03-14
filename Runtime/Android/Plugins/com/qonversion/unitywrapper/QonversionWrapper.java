@@ -293,6 +293,23 @@ public class QonversionWrapper {
         Qonversion.setNotificationsToken(token);
     }
 
+    public static synchronized boolean handleNotification(String notification) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+
+            TypeReference<HashMap<String, String>> typeRef
+                    = new TypeReference<HashMap<String, String>>() {
+            };
+            Map<String, String> notificationInfo = mapper.readValue(notification, typeRef);
+
+            boolean result =  Qonversion.handleNotification(notificationInfo);
+
+            return result;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     private static void handlePermissionsResponse(@NotNull Map<String, QPermission> permissions, @NotNull String methodName) {
         List<Map<String, Object>> mappedPermissions = Mapper.mapPermissions(permissions);
         sendMessageToUnity(mappedPermissions, methodName);
