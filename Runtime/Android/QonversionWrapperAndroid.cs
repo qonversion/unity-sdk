@@ -152,16 +152,16 @@ namespace QonversionUnity
 
         public bool HandleNotification(string notification)
         {
-            return CallQonversionBool("handleNotification", notification);
+            return CallQonversion<bool>("handleNotification", notification);
         }
 
         private const string QonversionWrapper = "com.qonversion.unitywrapper.QonversionWrapper";
 
-        private static bool CallQonversionBool(string methodName, params object[] args)
+        private static T CallQonversion<T>(string methodName, params object[] args)
         {
             using (var qonversion = new AndroidJavaClass(QonversionWrapper))
             {
-                return qonversion.CallStatic<bool>(methodName, args);
+                return qonversion.CallStatic<T>(methodName, args);
             }
         }
 
