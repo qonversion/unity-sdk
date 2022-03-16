@@ -75,7 +75,7 @@ namespace QonversionUnity
                 return null;
             }
 
-            return screenResult.GetString("screenId", "");
+            return screenResult.GetString("screenID", "");
         }
 
         internal static Dictionary<string, Eligibility> EligibilitiesFromJson(string jsonStr)

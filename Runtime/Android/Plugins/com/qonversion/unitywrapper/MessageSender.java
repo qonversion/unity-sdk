@@ -14,8 +14,8 @@ public class MessageSender {
     }
 
     void sendMessageToUnity(@NotNull Object objectToConvert, @NotNull String methodName) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        String json = mapper.writeValueAsString(objectToConvert);
+        final ObjectMapper mapper = new ObjectMapper();
+        final String json = mapper.writeValueAsString(objectToConvert);
         UnityPlayer.UnitySendMessage(unityListenerName, methodName, json);
     }
 }

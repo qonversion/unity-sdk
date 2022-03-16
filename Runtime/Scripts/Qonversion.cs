@@ -35,7 +35,7 @@ namespace QonversionUnity
         private static IQonversionWrapper _Instance;
         private static OnUpdatedPurchasesReceived _onUpdatedPurchasesReceived;
 
-        private static Automations.AutomationsDelegate _automationsDelegate;
+        private static AutomationsDelegate _automationsDelegate;
 
         private static IQonversionWrapper getFinalInstance()
         {
@@ -62,7 +62,7 @@ namespace QonversionUnity
             return _Instance;
         }
 
-        internal static void SetAutomationsDelegate(Automations.AutomationsDelegate automationsDelegate)
+        internal static void SetAutomationsDelegate(AutomationsDelegate automationsDelegate)
         {
             _automationsDelegate = automationsDelegate;
         }
