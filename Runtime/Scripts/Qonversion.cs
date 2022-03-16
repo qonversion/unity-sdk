@@ -35,6 +35,8 @@ namespace QonversionUnity
         private static IQonversionWrapper _Instance;
         private static OnUpdatedPurchasesReceived _onUpdatedPurchasesReceived;
 
+        private static Automations.AutomationsDelegate _automationsDelegate;
+
         private static IQonversionWrapper getFinalInstance()
         {
             if (_Instance == null)
@@ -58,6 +60,11 @@ namespace QonversionUnity
             DontDestroyOnLoad(go);
 
             return _Instance;
+        }
+
+        internal static void SetAutomationsDelegate(Automations.AutomationsDelegate automationsDelegate)
+        {
+            _automationsDelegate = automationsDelegate;
         }
 
         /// <summary>
@@ -557,6 +564,36 @@ namespace QonversionUnity
                 Dictionary<string, Permission> permissions = Mapper.PermissionsFromJson(jsonString);
                 callback(permissions, null);
             }
+        }
+
+        private void OnAutomationsScreenShown(string jsonString)
+        {
+            string screenId = Mapper.ScreenIdFromJson(jsonString);
+            _automationsDelegate.OnAutomationsScreenShown(screenId);
+        }
+
+        private void OnAutomationsActionStarted(string jsonString)
+        {
+            ActionResult actionResult = Mapper.ActionResultFromJson(jsonString);
+            _automationsDelegate.OnAutomationsActionStarted(actionResult);
+        }
+
+        private void OnAutomationsActionFailed(string jsonString)
+        {
+            ActionResult actionResult = Mapper.ActionResultFromJson(jsonString);
+            _automationsDelegate.OnAutomationsActionFailed(actionResult);
+        }
+
+        
+        private void OnAutomationsActionFinished(string jsonString)
+        {
+            ActionResult actionResult = Mapper.ActionResultFromJson(jsonString);
+            _automationsDelegate.OnAutomationsActionFinished(actionResult);
+        }
+
+        private void OnAutomationsFinished(string jsonString)
+        {
+            _automationsDelegate.OnAutomationsFinished();
         }
     }
 }

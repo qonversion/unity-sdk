@@ -56,6 +56,28 @@ namespace QonversionUnity
             return new Offerings(offerings);
         }
 
+        internal static ActionResult ActionResultFromJson(string jsonStr)
+        {
+            if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> actionResult))
+            {
+                Debug.LogError("Could not parse Automations ActionResult");
+                return null;
+            }
+
+            return new ActionResult(actionResult);
+        }
+
+        internal static string ScreenIdFromJson(string jsonStr)
+        {
+            if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> screenResult))
+            {
+                Debug.LogError("Could not parse Automations screen id");
+                return null;
+            }
+
+            return screenResult.GetString("screenId", "");
+        }
+
         internal static Dictionary<string, Eligibility> EligibilitiesFromJson(string jsonStr)
         {
             var result = new Dictionary<string, Eligibility>();
