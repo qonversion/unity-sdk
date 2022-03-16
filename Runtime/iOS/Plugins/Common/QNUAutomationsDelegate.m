@@ -14,15 +14,15 @@ static NSString *const kEventActionFailed = @"OnAutomationsActionFailed";
 static NSString *const kEventActionFinished = @"OnAutomationsActionFinished";
 static NSString *const kEventAutomationsFinished = @"OnAutomationsFinished";
 
-char* unityListenerName = nil;
+char* listenerName = nil;
 
 @implementation QNUAutomationsDelegate
 
-- (instancetype)initWithListenerName:(char *)listenerName {
+- (instancetype)initWithListenerName:(char *)unityListenerName {
     self = [super init];
     
     if (self) {
-        unityListenerName = listenerName;
+        listenerName = unityListenerName;
         [QONAutomations setDelegate:self];
     }
     
@@ -30,26 +30,26 @@ char* unityListenerName = nil;
 }
 
 - (void)automationsDidShowScreen:(NSString * _Nonnull)screenID {
-    [UtilityBridge sendUnityMessage:@{@"screenID": screenID} toMethod:kEventScreenShown unityListener: unityListenerName];
+    [UtilityBridge sendUnityMessage:@{@"screenID": screenID} toMethod:kEventScreenShown unityListener: listenerName];
 }
 
 - (void)automationsDidStartExecutingActionResult:(QONActionResult * _Nonnull)actionResult {
     NSDictionary *actionResultDict = [UtilityBridge convertActionResult:actionResult];
-    [UtilityBridge sendUnityMessage:actionResultDict toMethod:kEventActionStarted unityListener: unityListenerName];
+    [UtilityBridge sendUnityMessage:actionResultDict toMethod:kEventActionStarted unityListener: listenerName];
 }
 
 - (void)automationsDidFailExecutingActionResult:(QONActionResult * _Nonnull)actionResult {
     NSDictionary *actionResultDict = [UtilityBridge convertActionResult:actionResult];
-    [UtilityBridge sendUnityMessage:actionResultDict toMethod:kEventActionFailed unityListener: unityListenerName];
+    [UtilityBridge sendUnityMessage:actionResultDict toMethod:kEventActionFailed unityListener: listenerName];
 }
 
 - (void)automationsDidFinishExecutingActionResult:(QONActionResult * _Nonnull)actionResult {
     NSDictionary *actionResultDict = [UtilityBridge convertActionResult:actionResult];
-    [UtilityBridge sendUnityMessage:actionResultDict toMethod:kEventActionFinished unityListener: unityListenerName];
+    [UtilityBridge sendUnityMessage:actionResultDict toMethod:kEventActionFinished unityListener: listenerName];
 }
 
 - (void)automationsFinished {
-    [UtilityBridge sendUnityMessage:@{} toMethod:kEventAutomationsFinished unityListener: unityListenerName];
+    [UtilityBridge sendUnityMessage:@{} toMethod:kEventAutomationsFinished unityListener: listenerName];
 }
 
 @end

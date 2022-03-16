@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface QNUAutomationsDelegate : NSObject <QONAutomationsDelegate>
 
-- (instancetype)initWithListenerName:(char *)listenerName;
+- (instancetype)initWithListenerName:(char *)unityListenerName;
 
 @end
 
