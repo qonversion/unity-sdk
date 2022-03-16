@@ -13,7 +13,7 @@ namespace QonversionUnity
         {
             if (dict.TryGetValue("error", out object rawError)) Error = new QonversionError((Dictionary<string, object>)rawError);
             if (dict.TryGetValue("value", out object rawParams)) Parameters = (Dictionary<string, object>)rawParams;
-            if (dict.TryGetValue("type", out object ActionType)) Type = FormatActionResultType(ActionType);
+            if (dict.TryGetValue("type", out object actionType)) Type = FormatActionResultType(actionType);
         }
 
         public override string ToString()
@@ -23,7 +23,8 @@ namespace QonversionUnity
                    $"{nameof(Error)}: {Error}";
         }
 
-        private ActionResultType FormatActionResultType(object type) {
+        private ActionResultType FormatActionResultType(object type)
+        {
             string value = type as string;
             ActionResultType result;
             switch (value)
