@@ -107,6 +107,7 @@ namespace QonversionUnity
             IQonversionWrapper instance = getFinalInstance();
             instance.StoreSdkInfo(SdkVersion, Constants.VersionKey, SdkSource, Constants.SourceKey);
             instance.Launch(GameObjectName, apiKey, observerMode);
+            instance.AddAutomationsDelegate();
         }
 
         /// <summary>
@@ -568,18 +569,35 @@ namespace QonversionUnity
 
         private void OnAutomationsScreenShown(string jsonString)
         {
+            if (_automationsDelegate == null)
+            {
+                return;
+            }
+
             string screenId = Mapper.ScreenIdFromJson(jsonString);
+
+            Debug.Log(screenId);
             _automationsDelegate.OnAutomationsScreenShown(screenId);
         }
 
         private void OnAutomationsActionStarted(string jsonString)
         {
+            if (_automationsDelegate == null)
+            {
+                return;
+            }
+
             ActionResult actionResult = Mapper.ActionResultFromJson(jsonString);
             _automationsDelegate.OnAutomationsActionStarted(actionResult);
         }
 
         private void OnAutomationsActionFailed(string jsonString)
         {
+            if (_automationsDelegate == null)
+            {
+                return;
+            }
+
             ActionResult actionResult = Mapper.ActionResultFromJson(jsonString);
             _automationsDelegate.OnAutomationsActionFailed(actionResult);
         }
@@ -587,12 +605,22 @@ namespace QonversionUnity
         
         private void OnAutomationsActionFinished(string jsonString)
         {
+            if (_automationsDelegate == null)
+            {
+                return;
+            }
+
             ActionResult actionResult = Mapper.ActionResultFromJson(jsonString);
             _automationsDelegate.OnAutomationsActionFinished(actionResult);
         }
 
         private void OnAutomationsFinished(string jsonString)
         {
+            if (_automationsDelegate == null)
+            {
+                return;
+            }
+
             _automationsDelegate.OnAutomationsFinished();
         }
     }

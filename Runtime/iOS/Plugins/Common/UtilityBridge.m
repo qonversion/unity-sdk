@@ -62,7 +62,16 @@
     return propertyIndex;
 }
 
-+ (NSDictionary *)convertError:(NSError *)error{
++ (NSDictionary *)convertError:(NSError *)error {
+    NSDictionary *errorDict = [UtilityBridge convertPlainError:error];
+    
+    NSMutableDictionary *result = [NSMutableDictionary new];
+    result[@"error"] = errorDict;
+    
+    return [result copy];
+}
+
++ (NSDictionary *)convertPlainError:(NSError *)error {
     NSString *errorMessage = [NSString stringWithFormat:@"%@. Domain: %@", error.localizedDescription, error.domain];
     NSMutableDictionary *errorDict = [NSMutableDictionary new];
     errorDict[@"code"] = @(error.code).stringValue;
@@ -74,10 +83,7 @@
     
     errorDict[@"message"] = errorMessage;
     
-    NSMutableDictionary *result = [NSMutableDictionary new];
-    result[@"error"] = errorDict;
-    
-    return result;
+    return [errorDict copy];
 }
 
 + (NSArray *)convertPermissions:(NSArray<QNPermission *> *)permissions {
@@ -333,7 +339,7 @@
      result[@"type"] = types[@(actionResult.type)] ? : @"unknown";
      result[@"value"] = actionResult.parameters;
      if (actionResult.error) {
-         result[@"error"] = [UtilityBridge convertError:actionResult.error];
+         result[@"error"] = [UtilityBridge convertPlainError:actionResult.error];
      }
 
      return [result copy];

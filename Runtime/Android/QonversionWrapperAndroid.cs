@@ -155,6 +155,11 @@ namespace QonversionUnity
             return CallQonversion<bool>("handleNotification", notification);
         }
 
+        public void AddAutomationsDelegate()
+        {
+            CallQonversion("subscribeAutomationsDelegate");
+        }
+
         private const string QonversionWrapper = "com.qonversion.unitywrapper.QonversionWrapper";
 
         private static T CallQonversion<T>(string methodName, params object[] args)

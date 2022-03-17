@@ -15,6 +15,7 @@
 + (NSDictionary *)convertOfferings:(QNOfferings *)offerings;
 + (NSDictionary *)convertIntroEligibility:(NSDictionary<NSString *, QNIntroEligibility *> *)introEligibilityInfo;
 + (NSDictionary *)convertError:(NSError *)error;
++ (NSDictionary *)convertPlainError:(NSError *)error;
 
 + (void)sendUnityMessage:(NSObject *)objectToConvert toMethod:(NSString *)methodName
            unityListener:(const char *)unityListenerName;

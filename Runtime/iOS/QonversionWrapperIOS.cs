@@ -73,6 +73,9 @@ namespace QonversionUnity
 
         [DllImport("__Internal")]
         private static extern bool _handleNotification(string notification);
+
+        [DllImport("__Internal")]
+        private static extern void _subscribeAutomationsDelegate();
 #endif
 
         public void StoreSdkInfo(string version, string versionKey, string source, string sourceKey)
@@ -234,6 +237,13 @@ namespace QonversionUnity
              return _handleNotification(notification);
 #else
             return false;
+#endif
+        }
+
+        public void AddAutomationsDelegate()
+        {
+#if UNITY_IOS
+            _subscribeAutomationsDelegate();
 #endif
         }
     }
