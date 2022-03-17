@@ -65,6 +65,9 @@ namespace QonversionUnity
         internal static void SetAutomationsDelegate(AutomationsDelegate automationsDelegate)
         {
             _automationsDelegate = automationsDelegate;
+
+            IQonversionWrapper instance = getFinalInstance();
+            instance.AddAutomationsDelegate();
         }
 
         /// <summary>
@@ -107,7 +110,6 @@ namespace QonversionUnity
             IQonversionWrapper instance = getFinalInstance();
             instance.StoreSdkInfo(SdkVersion, Constants.VersionKey, SdkSource, Constants.SourceKey);
             instance.Launch(GameObjectName, apiKey, observerMode);
-            instance.AddAutomationsDelegate();
         }
 
         /// <summary>
