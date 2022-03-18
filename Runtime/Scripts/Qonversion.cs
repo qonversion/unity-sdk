@@ -604,7 +604,7 @@ namespace QonversionUnity
 
         // Called from the native SDK - Called when deferred or pending purchase occured
         private void OnReceiveUpdatedPurchases(string jsonString)
-         {
+        {
              if (_onUpdatedPurchasesReceived == null)
              {
                  return;
@@ -613,10 +613,10 @@ namespace QonversionUnity
              Debug.Log("OnReceiveUpdatedPurchases " + jsonString);
              Dictionary<string, Permission> permissions = Mapper.PermissionsFromJson(jsonString);
              _onUpdatedPurchasesReceived(permissions);
-         }
+        }
 
         private void OnReceivePromoPurchase(string storeProductId)
-         {
+        {
              if (_onPromoPurchasesReceived == null)
              {
                  return;
@@ -625,16 +625,16 @@ namespace QonversionUnity
              Debug.Log("OnReceivePromoPurchase " + storeProductId);
              _storedPromoProductId = storeProductId;
              _onPromoPurchasesReceived(storeProductId, PromoPurchase);
-         }
+        }
 
-         private static OnPermissionsReceived PromoPurchaseCallback { get; set; }
+        private static OnPermissionsReceived PromoPurchaseCallback { get; set; }
 
-         private void PromoPurchase(OnPermissionsReceived callback)
-         {
-             PromoPurchaseCallback = callback;
-             IQonversionWrapper instance = getFinalInstance();
-             instance.PromoPurchase(_storedPromoProductId, OnPromoPurchaseMethodName);
-         }
+        private void PromoPurchase(OnPermissionsReceived callback)
+        {
+            PromoPurchaseCallback = callback;
+            IQonversionWrapper instance = getFinalInstance();
+            instance.PromoPurchase(_storedPromoProductId, OnPromoPurchaseMethodName);
+        }
 
         private void HandlePermissions(OnPermissionsReceived callback, string jsonString)
         {
