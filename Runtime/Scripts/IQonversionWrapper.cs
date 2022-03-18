@@ -24,5 +24,8 @@
         void Logout();
         void AddUpdatedPurchasesDelegate();
         void RemoveUpdatedPurchasesDelegate();
+        void SetNotificationsToken(string token);
+        bool HandleNotification(string notification);
+        void AddAutomationsDelegate();
     }
 }

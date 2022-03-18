@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace QonversionUnity
  {
     internal class QonversionWrapperNoop : IQonversionWrapper
@@ -90,6 +88,20 @@ namespace QonversionUnity
 
         public void RemoveUpdatedPurchasesDelegate()
         {
+        }
+
+        public void SetNotificationsToken(string token)
+        {
+        }
+
+        public bool HandleNotification(string notification)
+        {
+            return false;
+        }
+
+        public void AddAutomationsDelegate()
+        {
+
         }
     }
   }

@@ -62,11 +62,20 @@ namespace QonversionUnity
         [DllImport("__Internal")]
         private static extern void _checkTrialIntroEligibilityForProductIds(string productIdsJson, string callbackName);
 
-         [DllImport("__Internal")]
-         private static extern void _addUpdatedPurchasesDelegate();
+        [DllImport("__Internal")]
+        private static extern void _addUpdatedPurchasesDelegate();
 
-         [DllImport("__Internal")]
-         private static extern void _removeUpdatedPurchasesDelegate();
+        [DllImport("__Internal")]
+        private static extern void _removeUpdatedPurchasesDelegate();
+
+        [DllImport("__Internal")]
+        private static extern void _setNotificationsToken(string token);
+
+        [DllImport("__Internal")]
+        private static extern bool _handleNotification(string notification);
+
+        [DllImport("__Internal")]
+        private static extern void _subscribeAutomationsDelegate();
 #endif
 
         public void StoreSdkInfo(string version, string versionKey, string source, string sourceKey)
@@ -212,6 +221,29 @@ namespace QonversionUnity
         {
 #if UNITY_IOS
              _removeUpdatedPurchasesDelegate();
+#endif
+        }
+
+        public void SetNotificationsToken(string token)
+        {
+#if UNITY_IOS
+             _setNotificationsToken(token);
+#endif
+        }
+
+        public bool HandleNotification(string notification)
+        {
+#if UNITY_IOS
+             return _handleNotification(notification);
+#else
+            return false;
+#endif
+        }
+
+        public void AddAutomationsDelegate()
+        {
+#if UNITY_IOS
+            _subscribeAutomationsDelegate();
 #endif
         }
     }
