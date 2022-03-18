@@ -35,6 +35,8 @@ namespace QonversionUnity
         private static IQonversionWrapper _Instance;
         private static OnUpdatedPurchasesReceived _onUpdatedPurchasesReceived;
 
+        private static AutomationsDelegate _automationsDelegate;
+
         private static IQonversionWrapper getFinalInstance()
         {
             if (_Instance == null)
@@ -58,6 +60,14 @@ namespace QonversionUnity
             DontDestroyOnLoad(go);
 
             return _Instance;
+        }
+
+        internal static void SetAutomationsDelegate(AutomationsDelegate automationsDelegate)
+        {
+            _automationsDelegate = automationsDelegate;
+
+            IQonversionWrapper instance = getFinalInstance();
+            instance.AddAutomationsDelegate();
         }
 
         /// <summary>
@@ -557,6 +567,63 @@ namespace QonversionUnity
                 Dictionary<string, Permission> permissions = Mapper.PermissionsFromJson(jsonString);
                 callback(permissions, null);
             }
+        }
+
+        private void OnAutomationsScreenShown(string jsonString)
+        {
+            if (_automationsDelegate == null)
+            {
+                return;
+            }
+
+            string screenId = Mapper.ScreenIdFromJson(jsonString);
+
+            Debug.Log(screenId);
+            _automationsDelegate.OnAutomationsScreenShown(screenId);
+        }
+
+        private void OnAutomationsActionStarted(string jsonString)
+        {
+            if (_automationsDelegate == null)
+            {
+                return;
+            }
+
+            ActionResult actionResult = Mapper.ActionResultFromJson(jsonString);
+            _automationsDelegate.OnAutomationsActionStarted(actionResult);
+        }
+
+        private void OnAutomationsActionFailed(string jsonString)
+        {
+            if (_automationsDelegate == null)
+            {
+                return;
+            }
+
+            ActionResult actionResult = Mapper.ActionResultFromJson(jsonString);
+            _automationsDelegate.OnAutomationsActionFailed(actionResult);
+        }
+
+        
+        private void OnAutomationsActionFinished(string jsonString)
+        {
+            if (_automationsDelegate == null)
+            {
+                return;
+            }
+
+            ActionResult actionResult = Mapper.ActionResultFromJson(jsonString);
+            _automationsDelegate.OnAutomationsActionFinished(actionResult);
+        }
+
+        private void OnAutomationsFinished(string jsonString)
+        {
+            if (_automationsDelegate == null)
+            {
+                return;
+            }
+
+            _automationsDelegate.OnAutomationsFinished();
         }
     }
 }

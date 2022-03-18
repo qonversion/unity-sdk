@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace QonversionUnity
 {
     public class ActionResult
     {
         public readonly ActionResultType Type;
-        public readonly Dictionary<string, object> Parameters;
-        public readonly QonversionError Error;
+        [CanBeNull] public readonly Dictionary<string, object> Parameters;
+        [CanBeNull] public readonly QonversionError Error;
 
         public ActionResult(Dictionary<string, object> dict)
         {
-            if (dict.TryGetValue("error", out object rawError)) Error = new QonversionError((Dictionary<string, object>)rawError);
-            if (dict.TryGetValue("value", out object rawParams)) Parameters = (Dictionary<string, object>)rawParams;
+            if (dict.TryGetValue("error", out object rawError ) && rawError != null) Error = new QonversionError((Dictionary<string, object>)rawError);
+            if (dict.TryGetValue("value", out object rawParams) && rawParams != null) Parameters = (Dictionary<string, object>)rawParams;
             if (dict.TryGetValue("type", out object actionType)) Type = FormatActionResultType(actionType);
         }
 

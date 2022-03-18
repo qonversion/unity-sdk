@@ -38,14 +38,13 @@ import com.qonversion.android.sdk.dto.QPermission;
 
 import android.preference.PreferenceManager;
 
-import androidx.annotation.NonNull;
-
 public class QonversionWrapper {
     public static String TAG = "QonversionWrapper";
     public static String ON_UPDATED_PURCHASES_LISTENER = "OnReceiveUpdatedPurchases";
 
-    private static String unityListenerName;
     private static UpdatedPurchasesListener updatedPurchasesListener = null;
+    private static MessageSender messageSender;
+    private static AutomationsDelegate automationsDelegate = null;
 
     public static synchronized void storeSdkInfo(String version, String versionKey, String source, String sourceKey) {
         Context context = UnityPlayer.currentActivity.getApplicationContext();
@@ -59,7 +58,7 @@ public class QonversionWrapper {
     public static synchronized void launch(String unityListener, String projectKey, boolean observerMode) {
         Log.d(TAG, "Qonversion Launch starting. Project key: " + projectKey);
 
-        unityListenerName = unityListener;
+        messageSender = new MessageSender(unityListener);
 
         Activity unityActivity = UnityPlayer.currentActivity;
 
@@ -310,6 +309,10 @@ public class QonversionWrapper {
         }
     }
 
+    public static synchronized void subscribeAutomationsDelegate() {
+        automationsDelegate = new AutomationsDelegate(messageSender);
+    }
+
     private static void handlePermissionsResponse(@NotNull Map<String, QPermission> permissions, @NotNull String methodName) {
         List<Map<String, Object>> mappedPermissions = Mapper.mapPermissions(permissions);
         sendMessageToUnity(mappedPermissions, methodName);
@@ -331,9 +334,7 @@ public class QonversionWrapper {
 
     private static void sendMessageToUnity(@NotNull Object objectToConvert, @NotNull String methodName) {
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            String json = mapper.writeValueAsString(objectToConvert);
-            UnityPlayer.UnitySendMessage(unityListenerName, methodName, json);
+            messageSender.sendMessageToUnity(objectToConvert, methodName);
         } catch (JsonProcessingException e) {
             handleException(e);
         }

@@ -98,5 +98,10 @@ namespace QonversionUnity
         {
             return false;
         }
+
+        public void AddAutomationsDelegate()
+        {
+
+        }
     }
   }
