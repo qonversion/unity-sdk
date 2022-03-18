@@ -1,5 +1,6 @@
 #import <Qonversion/Qonversion.h>
 #import "UtilityBridge.h"
+#import "QNUAutomationsDelegate.h"
 
 char* unityListenerName = nil;
 
@@ -27,10 +28,12 @@ char* unityListenerName = nil;
     NSArray *permissionsArray = [UtilityBridge convertPermissions:permissions.allValues];
     [UtilityBridge sendUnityMessage:permissionsArray toMethod:@"OnReceiveUpdatedPurchases" unityListener: unityListenerName];
 }
+
 @end
 
 static PurchasesDelegateWrapper *purchasesDelegate;
 static PurchasesDelegateWrapper *promoPurchasesDelegate;
+static QNUAutomationsDelegate *automationsDelegate;
 
 void _storeSdkInfo(const char* version, const char* versionKey, const char* source, const char* sourceKey) {
     NSString *versionStr = [UtilityBridge сonvertCStringToNSString:version];
@@ -221,4 +224,23 @@ void _addUpdatedPurchasesDelegate() {
 
 void _removeUpdatedPurchasesDelegate() {
     purchasesDelegate = nil;
+}
+
+void _setNotificationsToken(const char* token) {
+    NSString *hexString = [UtilityBridge сonvertCStringToNSString:token];
+    NSData *tokenData = [UtilityBridge convertHexToData:hexString];
+    
+    [Qonversion setNotificationsToken:tokenData];
+}
+
+bool _handleNotification(const char* notification) {
+    NSDictionary *notificationInfo = [UtilityBridge dictionaryFromJsonString: [UtilityBridge сonvertCStringToNSString: notification]];
+    
+    BOOL result = [Qonversion handleNotification:notificationInfo];
+    
+    return result;
+}
+
+void _subscribeAutomationsDelegate() {
+    automationsDelegate = [[QNUAutomationsDelegate alloc] initWithListenerName:unityListenerName];
 }

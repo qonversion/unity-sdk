@@ -145,7 +145,30 @@ namespace QonversionUnity
             CallQonversion("removeUpdatedPurchasesDelegate");
         }
 
+        public void SetNotificationsToken(string token)
+        {
+            CallQonversion("setNotificationsToken", token);
+        }
+
+        public bool HandleNotification(string notification)
+        {
+            return CallQonversion<bool>("handleNotification", notification);
+        }
+
+        public void AddAutomationsDelegate()
+        {
+            CallQonversion("subscribeAutomationsDelegate");
+        }
+
         private const string QonversionWrapper = "com.qonversion.unitywrapper.QonversionWrapper";
+
+        private static T CallQonversion<T>(string methodName, params object[] args)
+        {
+            using (var qonversion = new AndroidJavaClass(QonversionWrapper))
+            {
+                return qonversion.CallStatic<T>(methodName, args);
+            }
+        }
 
         private static void CallQonversion(string methodName, params object[] args)
         {

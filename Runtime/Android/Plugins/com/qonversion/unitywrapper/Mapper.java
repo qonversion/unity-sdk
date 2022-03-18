@@ -1,9 +1,14 @@
 package com.qonversion.unitywrapper;
 
+import androidx.annotation.Nullable;
+
 import com.android.billingclient.api.SkuDetails;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.qonversion.android.sdk.QonversionError;
+import com.qonversion.android.sdk.automations.AutomationsEvent;
+import com.qonversion.android.sdk.automations.QActionResult;
 import com.qonversion.android.sdk.dto.QPermission;
 import com.qonversion.android.sdk.dto.eligibility.QEligibility;
 import com.qonversion.android.sdk.dto.offerings.QOffering;
@@ -221,6 +226,49 @@ public final class Mapper {
             mappedEligibility.put("status", eligibility.getStatus().getType());
 
             result.add(mappedEligibility);
+        }
+
+        return result;
+    }
+
+    static Map<String, Object> mapActionResult(QActionResult actionResult) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("type", actionResult.getType().getType());
+        result.put("error", Mapper.mapQonversionError(actionResult.getError()));
+        result.put("value", mapStringsMap(actionResult.getValue()));
+
+        return result;
+    }
+
+    static Map<String, Object> mapAutomationsEvent(AutomationsEvent automationsEvent) {
+        Map<String, Object> result = new HashMap<>();
+
+        result.put("type", automationsEvent.getType().getType());
+        result.put("timestamp", (double)automationsEvent.getDate().getTime());
+        return result;
+    }
+
+    static Map<String, Object> mapQonversionError(@Nullable QonversionError error) {
+        if (error == null) {
+            return null;
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("code", error.getCode().toString());
+        result.put("description", error.getDescription());
+        result.put("additionalMessage", error.getAdditionalMessage());
+
+        return result;
+    }
+
+    static Map<String, Object> mapStringsMap(@Nullable Map<String, String> map) {
+        if (map == null) {
+            return null;
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            result.put(entry.getKey(), entry.getValue());
         }
 
         return result;
