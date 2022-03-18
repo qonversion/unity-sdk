@@ -22,6 +22,9 @@
         void SetAppleSearchAdsAttributionEnabled(bool enable);
         void Identify(string userID);
         void Logout();
+        void PromoPurchase(string storeProductId, string callbackName);
+        void AddPromoPurchasesDelegate();
+        void RemovePromoPurchasesDelegate();
         void AddUpdatedPurchasesDelegate();
         void RemoveUpdatedPurchasesDelegate();
         void SetNotificationsToken(string token);

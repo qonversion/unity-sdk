@@ -177,5 +177,17 @@ namespace QonversionUnity
                 qonversion.CallStatic(methodName, args);
             }
         }
+
+        public void PromoPurchase(string storeProductId, string callbackName)
+        {
+        }
+
+        public void AddPromoPurchasesDelegate()
+        {
+        }
+
+        public void RemovePromoPurchasesDelegate()
+        {
+        }
     }
 }

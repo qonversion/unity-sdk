@@ -63,6 +63,15 @@ namespace QonversionUnity
         private static extern void _checkTrialIntroEligibilityForProductIds(string productIdsJson, string callbackName);
 
         [DllImport("__Internal")]
+        private static extern void _promoPurchase(string storeProductId, string callbackName);
+
+        [DllImport("__Internal")]
+        private static extern void _addPromoPurchasesDelegate();
+
+        [DllImport("__Internal")]
+        private static extern void _removePromoPurchasesDelegate();
+
+        [DllImport("__Internal")]
         private static extern void _addUpdatedPurchasesDelegate();
 
         [DllImport("__Internal")]
@@ -207,6 +216,27 @@ namespace QonversionUnity
         {
 #if UNITY_IOS
             _checkTrialIntroEligibilityForProductIds(productIdsJson, callbackName);
+#endif
+        }
+
+        public void PromoPurchase(string storeProductId, string callbackName)
+        {
+#if UNITY_IOS
+            _promoPurchase(storeProductId, callbackName);
+#endif
+        }
+
+        public void AddPromoPurchasesDelegate()
+        {
+#if UNITY_IOS
+            _addPromoPurchasesDelegate();
+#endif
+        }
+
+        public void RemovePromoPurchasesDelegate()
+        {
+#if UNITY_IOS
+            _removePromoPurchasesDelegate();
 #endif
         }
 

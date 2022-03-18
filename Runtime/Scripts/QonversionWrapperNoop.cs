@@ -82,6 +82,17 @@ namespace QonversionUnity
         {
         }
 
+        public void PromoPurchase(string storeProductId, string callbackName)
+        { 
+        }
+
+        public void AddPromoPurchasesDelegate()
+        {  
+        }
+
+        public void RemovePromoPurchasesDelegate()
+        {
+        }
         public void AddUpdatedPurchasesDelegate()
         {
         }

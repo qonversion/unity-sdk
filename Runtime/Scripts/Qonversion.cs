@@ -14,6 +14,27 @@ namespace QonversionUnity
         public delegate void OnEligibilitiesReceived(Dictionary<string, Eligibility> eligibilities, QonversionError error);
 
         /// <summary>
+        /// Delegate fires each time a promo purchase from the App Store happens.
+        /// Be sure you define a delegate for the event <see cref="PromoPurchasesReceived"/>. 
+        /// Call StartPromoPurchase in case of your app is ready to start promo purchase. 
+        /// Or cache that delegate and call later when you need.
+        /// </summary>
+        /// <param name="productId">StoreKit product identifier</param>
+        /// <param name="purchaseDelegate">A delegate that will start a promo purchase flow.
+        /// <see cref="StartPromoPurchase"/>
+        /// </param>
+        public delegate void OnPromoPurchasesReceived(string productId, StartPromoPurchase purchaseDelegate);
+
+        /// <summary>
+        /// Call the function if your app can handle a promo purchase at the current time.
+        /// Or you can cache the delegate, and call it when the app is ready to make the purchase.
+        /// </summary>
+        /// <param name="callback">Callback that will be called when response is received. Returns permissions or potentially a QonversionError.
+        /// <see cref="OnPermissionsReceived"/>
+        /// </param>
+        public delegate void StartPromoPurchase(OnPermissionsReceived callback);
+
+        /// <summary>
         /// Delegate fires each time a deferred transaction happens
         /// </summary>
         public delegate void OnUpdatedPurchasesReceived(Dictionary<string, Permission> permissions);
@@ -21,6 +42,7 @@ namespace QonversionUnity
         private const string GameObjectName = "QonvesrionRuntimeGameObject";
         private const string OnCheckPermissionsMethodName = "OnCheckPermissions";
         private const string OnPurchaseMethodName = "OnPurchase";
+        private const string OnPromoPurchaseMethodName = "OnPromoPurchase";
         private const string OnPurchaseProductMethodName = "OnPurchaseProduct";
         private const string OnUpdatePurchaseMethodName = "OnUpdatePurchase";
         private const string OnUpdatePurchaseWithProductMethodName = "OnUpdatePurchaseWithProduct";
@@ -35,6 +57,8 @@ namespace QonversionUnity
         private static IQonversionWrapper _Instance;
         private static OnUpdatedPurchasesReceived _onUpdatedPurchasesReceived;
 
+        private static OnPromoPurchasesReceived _onPromoPurchasesReceived;
+        private static string _storedPromoProductId = null;
         private static AutomationsDelegate _automationsDelegate;
 
         private static IQonversionWrapper getFinalInstance()
@@ -62,39 +86,68 @@ namespace QonversionUnity
             return _Instance;
         }
 
+         /// <summary>
+         /// This event will be fired when a user initiates a promotional in-app purchase from the App Store.
+         /// Declare a delegate <see cref="OnPromoPurchasesReceived"/> for the event.
+         /// If you are not using the PromoPurchasesReceived event promo purchases will proceed automatically.
+         /// </summary>
+         public static event OnPromoPurchasesReceived PromoPurchasesReceived
+         {
+             add
+             {
+                 _onPromoPurchasesReceived += value;
+
+                 if (_onPromoPurchasesReceived.GetInvocationList().Length == 1)
+                 {
+                     IQonversionWrapper instance = getFinalInstance();
+                     instance.AddPromoPurchasesDelegate();
+                 }
+             }
+             remove
+             {
+                 _onPromoPurchasesReceived -= value;
+
+                 if (_onPromoPurchasesReceived == null)
+                 {
+                     IQonversionWrapper instance = getFinalInstance();
+                     instance.RemovePromoPurchasesDelegate();
+                 }
+             }
+         }
+         
+         /// <summary>
+         /// This event will be fired each time a deferred transaction happens.
+         /// </summary>
+         public static event OnUpdatedPurchasesReceived UpdatedPurchasesReceived
+         {
+             add
+             {
+                 _onUpdatedPurchasesReceived += value;
+
+                 if (_onUpdatedPurchasesReceived.GetInvocationList().Length == 1)
+                 {
+                     IQonversionWrapper instance = getFinalInstance();
+                     instance.AddUpdatedPurchasesDelegate();
+                 }
+             }
+             remove
+             {
+                 _onUpdatedPurchasesReceived -= value;
+
+                 if (_onUpdatedPurchasesReceived == null)
+                 {
+                     IQonversionWrapper instance = getFinalInstance();
+                     instance.RemoveUpdatedPurchasesDelegate();
+                 }
+             }
+         }
+
         internal static void SetAutomationsDelegate(AutomationsDelegate automationsDelegate)
         {
             _automationsDelegate = automationsDelegate;
 
             IQonversionWrapper instance = getFinalInstance();
             instance.AddAutomationsDelegate();
-        }
-
-        /// <summary>
-        /// This event will be fired each time a deferred transaction happens.
-        /// </summary>
-        public static event OnUpdatedPurchasesReceived UpdatedPurchasesReceived
-        {
-            add
-            {
-                _onUpdatedPurchasesReceived += value;
-
-                if (_onUpdatedPurchasesReceived.GetInvocationList().Length == 1)
-                {
-                    IQonversionWrapper instance = getFinalInstance();
-                    instance.AddUpdatedPurchasesDelegate();
-                }
-            }
-            remove
-            {
-                _onUpdatedPurchasesReceived -= value;
-
-                if (_onUpdatedPurchasesReceived == null)
-                {
-                    IQonversionWrapper instance = getFinalInstance();
-                    instance.RemoveUpdatedPurchasesDelegate();
-                }
-            }
         }
     
         /// <summary>
@@ -477,6 +530,15 @@ namespace QonversionUnity
             UpdatePurchaseWithProductCallback = null;
         }
 
+        // Called from the native SDK - Called when permissions received from the promoPurchase() method 
+        private void OnPromoPurchase(string jsonString)
+        {
+            Debug.Log("OnPromoPurchase callback " + jsonString);
+            HandlePermissions(PromoPurchaseCallback, jsonString);
+            PromoPurchaseCallback = null;
+            _storedPromoProductId = null;
+        }
+
         // Called from the native SDK - Called when products received from the products() method 
         private void OnProducts(string jsonString)
         {
@@ -543,14 +605,35 @@ namespace QonversionUnity
         // Called from the native SDK - Called when deferred or pending purchase occured
         private void OnReceiveUpdatedPurchases(string jsonString)
         {
-            if (_onUpdatedPurchasesReceived == null)
-            {
-                return;
-            }
+             if (_onUpdatedPurchasesReceived == null)
+             {
+                 return;
+             }
 
-            Debug.Log("OnReceiveUpdatedPurchases " + jsonString);
-            Dictionary<string, Permission> permissions = Mapper.PermissionsFromJson(jsonString);
-            _onUpdatedPurchasesReceived(permissions);
+             Debug.Log("OnReceiveUpdatedPurchases " + jsonString);
+             Dictionary<string, Permission> permissions = Mapper.PermissionsFromJson(jsonString);
+             _onUpdatedPurchasesReceived(permissions);
+        }
+
+        private void OnReceivePromoPurchase(string storeProductId)
+        {
+             if (_onPromoPurchasesReceived == null)
+             {
+                 return;
+             }
+
+             Debug.Log("OnReceivePromoPurchase " + storeProductId);
+             _storedPromoProductId = storeProductId;
+             _onPromoPurchasesReceived(storeProductId, PromoPurchase);
+        }
+
+        private static OnPermissionsReceived PromoPurchaseCallback { get; set; }
+
+        private void PromoPurchase(OnPermissionsReceived callback)
+        {
+            PromoPurchaseCallback = callback;
+            IQonversionWrapper instance = getFinalInstance();
+            instance.PromoPurchase(_storedPromoProductId, OnPromoPurchaseMethodName);
         }
 
         private void HandlePermissions(OnPermissionsReceived callback, string jsonString)
