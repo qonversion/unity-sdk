@@ -3,12 +3,12 @@
 
 char* unityListenerName = nil;
 
-@interface PurchasesDelegateWrapper : NSObject <QNPurchasesDelegate>
+@interface PurchasesDelegateWrapper : NSObject <QNPurchasesDelegate, QNPromoPurchasesDelegate>
 
 - (void)qonversionDidReceiveUpdatedPermissions:(NSDictionary<NSString *, QNPermission *>  *_Nonnull)permissions;
 - (void)shouldPurchasePromoProductWithIdentifier:(NSString *)productID executionBlock:(QNPromoPurchaseCompletionHandler)executionBlock;
 
-@property (nonatomic) NSMutableDictionary *promoPurchasesExecutionBlocks;
+@property (nonatomic, strong) NSMutableDictionary *promoPurchasesExecutionBlocks;
 
 @end
 
@@ -32,8 +32,7 @@ char* unityListenerName = nil;
 static PurchasesDelegateWrapper *purchasesDelegate;
 static PurchasesDelegateWrapper *promoPurchasesDelegate;
 
-void _storeSdkInfo(const char* version, const char* versionKey, const char* source, const char* sourceKey)
-{
+void _storeSdkInfo(const char* version, const char* versionKey, const char* source, const char* sourceKey) {
     NSString *versionStr = [UtilityBridge сonvertCStringToNSString:version];
     NSString *versionKeyStr = [UtilityBridge сonvertCStringToNSString:versionKey];
     NSString *sourceStr = [UtilityBridge сonvertCStringToNSString:source];
@@ -47,8 +46,7 @@ void _setDebugMode() {
     [Qonversion setDebugMode];
 }
 
-void _launchWithKey(const char* unityListener, const char* key)
-{
+void _launchWithKey(const char* unityListener, const char* key) {
     unsigned long len = strlen(unityListener);
     unityListenerName = malloc(len + 1);
     strcpy(unityListenerName, unityListener);
@@ -64,8 +62,7 @@ void _setAppleSearchAdsAttributionEnabled(const bool enable) {
     [Qonversion setAppleSearchAdsAttributionEnabled:enable];
 }
 
-void _setProperty(const char* propertyName, const char* value)
-{
+void _setProperty(const char* propertyName, const char* value) {
     NSString *propertyNameStr = [UtilityBridge сonvertCStringToNSString:propertyName];
     NSString *valueStr = [UtilityBridge сonvertCStringToNSString:value];
     NSNumber *propertyIndex = [UtilityBridge convertProperty:propertyNameStr];
@@ -75,8 +72,7 @@ void _setProperty(const char* propertyName, const char* value)
     }
 }
 
-void _setUserProperty(const char* key, const char* value)
-{
+void _setUserProperty(const char* key, const char* value) {
     NSString *keyStr = [UtilityBridge сonvertCStringToNSString:key];
     NSString *valueStr = [UtilityBridge сonvertCStringToNSString:value];
 
@@ -99,7 +95,7 @@ void _logout() {
     [Qonversion logout];
 }
 
-void _checkPermissions(const char* unityCallbackName){
+void _checkPermissions(const char* unityCallbackName) {
     NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
     
     [Qonversion checkPermissions:^(NSDictionary<NSString *,QNPermission *> *result, NSError *error) {
@@ -107,7 +103,7 @@ void _checkPermissions(const char* unityCallbackName){
     }];
 }
 
-void _restore(const char* unityCallbackName){
+void _restore(const char* unityCallbackName) {
     NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
 
     [Qonversion restoreWithCompletion:^(NSDictionary *result, NSError *error) {
@@ -115,7 +111,7 @@ void _restore(const char* unityCallbackName){
     }];
 }
 
-void _purchase(const char* productId, const char* unityCallbackName){
+void _purchase(const char* productId, const char* unityCallbackName) {
     NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
 
     [Qonversion purchase:[UtilityBridge сonvertCStringToNSString:productId] completion:^(NSDictionary *result, NSError *error, BOOL cancelled) {
@@ -135,7 +131,7 @@ void _purchaseProduct(const char* productJson, const char* unityCallbackName) {
     }];
 }
 
-void _products(const char* unityCallbackName){
+void _products(const char* unityCallbackName) {
     NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
 
     [Qonversion products:^(NSDictionary *result, NSError *error) {
@@ -149,7 +145,7 @@ void _products(const char* unityCallbackName){
     }];
 }
 
-void _offerings(const char* unityCallbackName){
+void _offerings(const char* unityCallbackName) {
     NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
 
     [Qonversion offerings:^(QNOfferings * _Nullable result, NSError * _Nullable error) {
@@ -163,7 +159,7 @@ void _offerings(const char* unityCallbackName){
     }];
 }
 
-void _checkTrialIntroEligibilityForProductIds(const char* productIdsJson, const char* unityCallbackName){
+void _checkTrialIntroEligibilityForProductIds(const char* productIdsJson, const char* unityCallbackName) {
     NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
     NSString *productIdsJsonStr = [UtilityBridge сonvertCStringToNSString:productIdsJson];
     
@@ -188,7 +184,7 @@ void _checkTrialIntroEligibilityForProductIds(const char* productIdsJson, const 
     }
 }
 
-void _promoPurchase (const char* storeProductId, const char* unityCallbackName){
+void _promoPurchase(const char* storeProductId, const char* unityCallbackName) {
     NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
     NSString *storeProductIdStr = [UtilityBridge сonvertCStringToNSString:storeProductId];
     QNPromoPurchaseCompletionHandler executionBlock = [purchasesDelegate.promoPurchasesExecutionBlocks objectForKey:storeProductIdStr];
@@ -205,24 +201,24 @@ void _promoPurchase (const char* storeProductId, const char* unityCallbackName){
     }
 }
 
-void _addPromoPurchasesDelegate (){
+void _addPromoPurchasesDelegate() {
     if (!promoPurchasesDelegate) {
         promoPurchasesDelegate = [PurchasesDelegateWrapper alloc];
     }
     [Qonversion setPromoPurchasesDelegate:promoPurchasesDelegate];
 }
 
-void _removePromoPurchasesDelegate (){
+void _removePromoPurchasesDelegate() {
     promoPurchasesDelegate = nil;
  }
 
-void _addUpdatedPurchasesDelegate (){
+void _addUpdatedPurchasesDelegate() {
     if (!purchasesDelegate) {
         purchasesDelegate = [PurchasesDelegateWrapper alloc];
     }
     [Qonversion setPurchasesDelegate:purchasesDelegate];
 }
 
-void _removeUpdatedPurchasesDelegate (){
+void _removeUpdatedPurchasesDelegate() {
     purchasesDelegate = nil;
 }
