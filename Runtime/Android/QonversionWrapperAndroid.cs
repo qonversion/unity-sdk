@@ -135,7 +135,40 @@ namespace QonversionUnity
             CallQonversion("checkTrialIntroEligibilityForProductIds", productIdsJson, callbackName);
         }
 
+        public void AddUpdatedPurchasesDelegate()
+        {
+            CallQonversion("addUpdatedPurchasesDelegate");
+        }
+
+        public void RemoveUpdatedPurchasesDelegate()
+        {
+            CallQonversion("removeUpdatedPurchasesDelegate");
+        }
+
+        public void SetNotificationsToken(string token)
+        {
+            CallQonversion("setNotificationsToken", token);
+        }
+
+        public bool HandleNotification(string notification)
+        {
+            return CallQonversion<bool>("handleNotification", notification);
+        }
+
+        public void AddAutomationsDelegate()
+        {
+            CallQonversion("subscribeAutomationsDelegate");
+        }
+
         private const string QonversionWrapper = "com.qonversion.unitywrapper.QonversionWrapper";
+
+        private static T CallQonversion<T>(string methodName, params object[] args)
+        {
+            using (var qonversion = new AndroidJavaClass(QonversionWrapper))
+            {
+                return qonversion.CallStatic<T>(methodName, args);
+            }
+        }
 
         private static void CallQonversion(string methodName, params object[] args)
         {
@@ -143,6 +176,18 @@ namespace QonversionUnity
             {
                 qonversion.CallStatic(methodName, args);
             }
+        }
+
+        public void PromoPurchase(string storeProductId, string callbackName)
+        {
+        }
+
+        public void AddPromoPurchasesDelegate()
+        {
+        }
+
+        public void RemovePromoPurchasesDelegate()
+        {
         }
     }
 }

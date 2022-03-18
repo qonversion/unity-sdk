@@ -21,6 +21,22 @@
     return [NSString stringWithUTF8String:string];
 }
 
++ (NSData *)convertHexToData:(NSString *)hex {
+    NSString *token = [hex stringByReplacingOccurrencesOfString:@" " withString:@""];
+    NSMutableData *data = [[NSMutableData alloc] init];
+    unsigned char whole_byte;
+    char byte_chars[3] = {'\0','\0','\0'};
+    int i;
+    for (i=0; i < [token length] / 2; i++) {
+        byte_chars[0] = [token characterAtIndex:i * 2];
+        byte_chars[1] = [token characterAtIndex:i * 2 + 1];
+        whole_byte = strtol(byte_chars, NULL, 16);
+        [data appendBytes:&whole_byte length:1];
+    }
+    
+    return [data copy];
+}
+
 + (NSDictionary*)dictionaryFromJsonString:(NSString*) jsonString {
     if (!jsonString) {
         return @{};
@@ -46,7 +62,16 @@
     return propertyIndex;
 }
 
-+ (NSDictionary *)convertError:(NSError *)error{
++ (NSDictionary *)convertError:(NSError *)error {
+    NSDictionary *errorDict = [UtilityBridge convertPlainError:error];
+    
+    NSMutableDictionary *result = [NSMutableDictionary new];
+    result[@"error"] = errorDict;
+    
+    return [result copy];
+}
+
++ (NSDictionary *)convertPlainError:(NSError *)error {
     NSString *errorMessage = [NSString stringWithFormat:@"%@. Domain: %@", error.localizedDescription, error.domain];
     NSMutableDictionary *errorDict = [NSMutableDictionary new];
     errorDict[@"code"] = @(error.code).stringValue;
@@ -58,10 +83,7 @@
     
     errorDict[@"message"] = errorMessage;
     
-    NSMutableDictionary *result = [NSMutableDictionary new];
-    result[@"error"] = errorDict;
-    
-    return result;
+    return [errorDict copy];
 }
 
 + (NSArray *)convertPermissions:(NSArray<QNPermission *> *)permissions {
@@ -94,12 +116,15 @@
         NSMutableDictionary *productsDict = [@{
             qonversionIdKey: product.qonversionID,
             storeIdKey: product.storeID,
-            offeringIdKey: product.offeringID,
             typeKey: @(product.type),
             durationKey: @(product.duration),
             prettyPriceKey: product.prettyPrice,
             trialDurationKey: trialDuration
         } mutableCopy];
+        
+        if (product.offeringID.length > 0) {
+            productsDict[offeringIdKey] = product.offeringID;
+        }
         
         if (product.skProduct) {
             NSDictionary *skProductInfo = [UtilityBridge convertSKProduct:product.skProduct];
@@ -298,5 +323,54 @@
         UnitySendMessage(unityListenerName, methodName.UTF8String, json.UTF8String);
     }
 }
+
++ (NSDictionary *)convertActionResult:(QONActionResult *)actionResult {
+     NSMutableDictionary *result = [NSMutableDictionary new];
+
+     NSDictionary *types = @{
+         @(QONActionResultTypeURL): @"url",
+         @(QONActionResultTypeDeeplink): @"deeplink",
+         @(QONActionResultTypeNavigation): @"navigate",
+         @(QONActionResultTypePurchase): @"purchase",
+         @(QONActionResultTypeRestore): @"restore",
+         @(QONActionResultTypeClose): @"close"
+     };
+
+     result[@"type"] = types[@(actionResult.type)] ? : @"unknown";
+     result[@"value"] = actionResult.parameters;
+     if (actionResult.error) {
+         result[@"error"] = [UtilityBridge convertPlainError:actionResult.error];
+     }
+
+     return [result copy];
+ }
+
+ + (NSDictionary *)convertAutomationsEvent:(QONAutomationsEvent *)event {
+     NSMutableDictionary *result = [NSMutableDictionary new];
+
+     NSDictionary *types = @{
+         @(QONAutomationsEventTypeTrialStarted): @"trial_started",
+         @(QONAutomationsEventTypeTrialConverted): @"trial_converted",
+         @(QONAutomationsEventTypeTrialCanceled): @"trial_canceled",
+         @(QONAutomationsEventTypeTrialBillingRetry): @"trial_billing_retry_entered",
+         @(QONAutomationsEventTypeSubscriptionStarted): @"subscription_started",
+         @(QONAutomationsEventTypeSubscriptionRenewed): @"subscription_renewed",
+         @(QONAutomationsEventTypeSubscriptionRefunded): @"subscription_refunded",
+         @(QONAutomationsEventTypeSubscriptionCanceled): @"subscription_canceled",
+         @(QONAutomationsEventTypeSubscriptionBillingRetry): @"subscription_billing_retry_entered",
+         @(QONAutomationsEventTypeInAppPurchase): @"in_app_purchase",
+         @(QONAutomationsEventTypeSubscriptionUpgraded): @"subscription_upgraded",
+         @(QONAutomationsEventTypeTrialStillActive): @"trial_still_active",
+         @(QONAutomationsEventTypeTrialExpired): @"trial_expired",
+         @(QONAutomationsEventTypeSubscriptionExpired): @"subscription_expired",
+         @(QONAutomationsEventTypeSubscriptionDowngraded): @"subscription_downgraded",
+         @(QONAutomationsEventTypeSubscriptionProductChanged): @"subscription_product_changed"
+     };
+
+     result[@"type"] = types[@(event.type)] ? : @"unknown";
+     result[@"timestamp"] = @(event.date.timeIntervalSince1970 * 1000);
+
+     return [result copy];
+ }
 
 @end
