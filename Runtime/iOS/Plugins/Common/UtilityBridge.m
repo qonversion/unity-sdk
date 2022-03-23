@@ -90,12 +90,15 @@
         NSNumber *trialDuration = product.trialDuration ? @(product.trialDuration) : @(QNTrialDurationNotAvailable);
         NSMutableDictionary *productsDict = [@{
             @"id": product.qonversionID,
-            @"store_id": product.storeID,
             @"type": @(product.type),
             @"duration": @(product.duration),
             @"prettyPrice": product.prettyPrice,
             @"trialDuration": trialDuration
         } mutableCopy];
+        
+        if (product.storeID.length > 0) {
+            productsDict[@"store_id"] = product.storeID;
+        }
         
         if (product.skProduct) {
             NSDictionary *skProductInfo = [UtilityBridge convertSKProduct:product.skProduct];
