@@ -190,8 +190,8 @@ void _checkTrialIntroEligibilityForProductIds(const char* productIdsJson, const 
 void _promoPurchase(const char* storeProductId, const char* unityCallbackName) {
     NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
     NSString *storeProductIdStr = [UtilityBridge сonvertCStringToNSString:storeProductId];
-    QNPromoPurchaseCompletionHandler executionBlock = [purchasesDelegate.promoPurchasesExecutionBlocks objectForKey:storeProductIdStr];
-    if(executionBlock) {
+    QNPromoPurchaseCompletionHandler executionBlock = [promoPurchasesDelegate.promoPurchasesExecutionBlocks objectForKey:storeProductIdStr];
+    if (executionBlock) {
         [purchasesDelegate.promoPurchasesExecutionBlocks removeObjectForKey:storeProductIdStr];
         QNPurchaseCompletionHandler completion = ^(NSDictionary<NSString *, QNPermission*> *result, NSError  *_Nullable error, BOOL cancelled) {
             [UtilityBridge handlePermissionsResponse:result withError:error toMethod:callbackName unityListener:unityListenerName];
