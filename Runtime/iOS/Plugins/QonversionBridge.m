@@ -192,7 +192,7 @@ void _promoPurchase(const char* storeProductId, const char* unityCallbackName) {
     NSString *storeProductIdStr = [UtilityBridge сonvertCStringToNSString:storeProductId];
     QNPromoPurchaseCompletionHandler executionBlock = [promoPurchasesDelegate.promoPurchasesExecutionBlocks objectForKey:storeProductIdStr];
     if (executionBlock) {
-        [purchasesDelegate.promoPurchasesExecutionBlocks removeObjectForKey:storeProductIdStr];
+        [promoPurchasesDelegate.promoPurchasesExecutionBlocks removeObjectForKey:storeProductIdStr];
         QNPurchaseCompletionHandler completion = ^(NSDictionary<NSString *, QNPermission*> *result, NSError  *_Nullable error, BOOL cancelled) {
             [UtilityBridge handlePermissionsResponse:result withError:error toMethod:callbackName unityListener:unityListenerName];
         };
