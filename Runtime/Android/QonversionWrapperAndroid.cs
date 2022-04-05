@@ -46,6 +46,10 @@ namespace QonversionUnity
         {
         }
 
+        public void PresentCodeRedemptionSheet()
+        {
+        }
+
         public void SetAppleSearchAdsAttributionEnabled(bool enable)
         {
         }

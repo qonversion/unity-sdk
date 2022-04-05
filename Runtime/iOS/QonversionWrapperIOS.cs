@@ -85,6 +85,9 @@ namespace QonversionUnity
 
         [DllImport("__Internal")]
         private static extern void _subscribeAutomationsDelegate();
+
+        [DllImport("__Internal")]
+        private static extern void _presentCodeRedemptionSheet();
 #endif
 
         public void StoreSdkInfo(string version, string versionKey, string source, string sourceKey)
@@ -159,6 +162,13 @@ namespace QonversionUnity
         {
 #if UNITY_IOS
             _logout();
+#endif
+        }
+
+        public void PresentCodeRedemptionSheet()
+        {
+#if UNITY_IOS
+            _presentCodeRedemptionSheet();
 #endif
         }
 

@@ -61,6 +61,12 @@ void _setAdvertisingID() {
     [Qonversion setAdvertisingID];
 }
 
+void _presentCodeRedemptionSheet() {
+    if (@available(iOS 14.0, *)) {
+        [Qonversion presentCodeRedemptionSheet];
+    }
+}
+
 void _setAppleSearchAdsAttributionEnabled(const bool enable) {
     [Qonversion setAppleSearchAdsAttributionEnabled:enable];
 }

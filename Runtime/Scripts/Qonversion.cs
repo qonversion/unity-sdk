@@ -176,7 +176,7 @@ namespace QonversionUnity
         }
 
         /// <summary>
-        /// iOS only. Returns `null` if called on Android.
+        /// iOS only.
         /// On iOS 14.5+, after requesting the app tracking permission using ATT, you need to notify Qonversion if tracking
         /// is allowed and IDFA is available.
         /// </summary>
@@ -245,6 +245,16 @@ namespace QonversionUnity
         {
             IQonversionWrapper instance = getFinalInstance();
             instance.SyncPurchases();
+        }
+
+        /// <summary>
+        /// iOS only.
+        /// On iOS 14.0+ shows up a sheet for users to redeem AppStore offer codes.
+        /// </summary>
+        public static void PresentCodeRedemptionSheet()
+        {
+            IQonversionWrapper instance = getFinalInstance();
+            instance.PresentCodeRedemptionSheet();
         }
 
         /// <summary>
