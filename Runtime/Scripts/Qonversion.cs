@@ -51,7 +51,7 @@ namespace QonversionUnity
         private const string OnOfferingsMethodName = "OnOfferings";
         private const string OnEligibilitiesMethodName = "OnEligibilities";
 
-        private const string SdkVersion = "3.3.1";
+        private const string SdkVersion = "3.4.0";
         private const string SdkSource = "unity";
 
         private static IQonversionWrapper _Instance;
@@ -176,7 +176,7 @@ namespace QonversionUnity
         }
 
         /// <summary>
-        /// iOS only. Returns `null` if called on Android.
+        /// iOS only.
         /// On iOS 14.5+, after requesting the app tracking permission using ATT, you need to notify Qonversion if tracking
         /// is allowed and IDFA is available.
         /// </summary>
@@ -245,6 +245,16 @@ namespace QonversionUnity
         {
             IQonversionWrapper instance = getFinalInstance();
             instance.SyncPurchases();
+        }
+
+        /// <summary>
+        /// iOS only.
+        /// On iOS 14.0+ shows up a sheet for users to redeem AppStore offer codes.
+        /// </summary>
+        public static void PresentCodeRedemptionSheet()
+        {
+            IQonversionWrapper instance = getFinalInstance();
+            instance.PresentCodeRedemptionSheet();
         }
 
         /// <summary>

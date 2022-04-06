@@ -30,5 +30,6 @@
         void SetNotificationsToken(string token);
         bool HandleNotification(string notification);
         void AddAutomationsDelegate();
+        void PresentCodeRedemptionSheet();
     }
 }
