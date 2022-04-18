@@ -31,11 +31,11 @@ namespace QonversionUnity
         public Permission(Dictionary<string, object> dict)
         {
             if (dict.TryGetValue("id", out object value)) PermissionID = value as string;
-            if (dict.TryGetValue("associated_product", out value)) ProductID = value as string;
-            if (dict.TryGetValue("renew_state", out value)) RenewState = FormatRenewState(value);
+            if (dict.TryGetValue("associatedProduct", out value)) ProductID = value as string;
+            if (dict.TryGetValue("renewState", out value)) RenewState = FormatRenewState(value);
             if (dict.TryGetValue("active", out value)) IsActive = (bool)value;
-            if (dict.TryGetValue("started_timestamp", out value)) StartedDate = FormatDate(value);
-            if (dict.TryGetValue("expiration_timestamp", out value)) ExpirationDate = FormatDate(value);
+            if (dict.TryGetValue("startedTimestamp", out value)) StartedDate = FormatDate(value);
+            if (dict.TryGetValue("expirationTimestamp", out value)) ExpirationDate = FormatDate(value);
         }
 
         public override string ToString()

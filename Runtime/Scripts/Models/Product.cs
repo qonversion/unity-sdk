@@ -56,49 +56,42 @@ namespace QonversionUnity
         /// Formatted introductory price of a subscription, including its currency sign, such as €2.99
         [CanBeNull] public readonly string PrettyIntroductoryPrice;
 
-        internal readonly string OriginalJson;
-
         public Product(Dictionary<string, object> dict)
         {
-            OriginalJson = Json.Serialize(dict);
-
             if (dict.TryGetValue("id", out object value)) QonversionId = value as string;
-            if (dict.TryGetValue("store_id", out value)) StoreId = value as string;
+            if (dict.TryGetValue("storeId", out value)) StoreId = value as string;
             if (dict.TryGetValue("type", out value)) Type = FormatType(value);
             if (dict.TryGetValue("duration", out value)) Duration = FormatDuration(value);
             if (dict.TryGetValue("trialDuration", out value)) TrialDuration = FormatTrialDuration(value);
             if (dict.TryGetValue("prettyPrice", out value)) PrettyPrice = value as string;
             if (dict.TryGetValue("offeringId", out value)) OfferingId = value as string;
 
-            if (dict.TryGetValue("storeProduct", out value))
+            if (Application.platform == RuntimePlatform.Android && dict.TryGetValue("skuDetails", out value))
             {
-                if (Application.platform == RuntimePlatform.Android)
+                if (value is Dictionary<string, object> skuDetails)
                 {
-                    if (value is Dictionary<string, object> skuDetails)
-                    {
-                        SkuDetails = new SkuDetails(skuDetails);
+                    SkuDetails = new SkuDetails(skuDetails);
 
-                        Price = (double)SkuDetails.PriceAmountMicros / Constants.SkuDetailsPriceRatio;
-                        CurrencyCode = SkuDetails.PriceCurrencyCode;
-                        StoreTitle = SkuDetails.Title;
-                        StoreDescription = SkuDetails.Description;
+                    Price = (double) SkuDetails.PriceAmountMicros / Constants.SkuDetailsPriceRatio;
+                    CurrencyCode = SkuDetails.PriceCurrencyCode;
+                    StoreTitle = SkuDetails.Title;
+                    StoreDescription = SkuDetails.Description;
 
-                        string introPrice = SkuDetails.IntroductoryPrice;
-                        PrettyIntroductoryPrice = (introPrice.Length != 0) ? introPrice : null;   
-                    }
+                    string introPrice = SkuDetails.IntroductoryPrice;
+                    PrettyIntroductoryPrice = (introPrice.Length != 0) ? introPrice : null;
                 }
-                else
+            }
+            else if (Application.platform == RuntimePlatform.IPhonePlayer && dict.TryGetValue("skProduct", out value))
+            {
+                if (value is Dictionary<string, object> skProduct)
                 {
-                    if (value is Dictionary<string, object> skProduct)
-                    {
-                        SkProduct = new SKProduct(skProduct);
+                    SkProduct = new SKProduct(skProduct);
 
-                        Price = double.Parse(SkProduct.Price);
-                        CurrencyCode = SkProduct.CurrencyCode;
-                        StoreTitle = SkProduct.LocalizedTitle;
-                        StoreDescription = SkProduct.LocalizedDescription;
-                        PrettyIntroductoryPrice = SkProduct.IntroductoryPrice.CurrencySymbol + SkProduct.IntroductoryPrice.Price;
-                    }
+                    Price = double.Parse(SkProduct.Price);
+                    CurrencyCode = SkProduct.CurrencyCode;
+                    StoreTitle = SkProduct.LocalizedTitle;
+                    StoreDescription = SkProduct.LocalizedDescription;
+                    PrettyIntroductoryPrice = SkProduct.IntroductoryPrice.CurrencySymbol + SkProduct.IntroductoryPrice.Price;
                 }
             }
         }

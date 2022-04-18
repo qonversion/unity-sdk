@@ -11,16 +11,16 @@ namespace QonversionUnity
         {
             var result = new Dictionary<string, Permission>();
 
-            if (!(Json.Deserialize(jsonStr) is List<object> permissions))
+            if (!(Json.Deserialize(jsonStr) is Dictionary<string, Dictionary<string, object>> permissions))
             {
                 Debug.LogError("Could not parse QPermissions");
                 return result;
             }
 
-            foreach (Dictionary<string, object> permissionDict in permissions)
+            foreach (KeyValuePair<string, Dictionary<string, object>> permissionPair in permissions)
             {
-                Permission permission = new Permission(permissionDict);
-                result.Add(permission.PermissionID, permission);
+                Permission permission = new Permission(permissionPair.Value);
+                result.Add(permissionPair.Key, permission);
             }
 
             return result;
@@ -30,16 +30,16 @@ namespace QonversionUnity
         {
             var result = new Dictionary<string, Product>();
 
-            if (!(Json.Deserialize(jsonStr) is List<object> products))
+            if (!(Json.Deserialize(jsonStr) is Dictionary<string, Dictionary<string, object>> products))
             {
                 Debug.LogError("Could not parse QProducts");
                 return result;
             }
 
-            foreach (Dictionary<string, object> productDict in products)
+            foreach (KeyValuePair<string, Dictionary<string, object>> productPair in products)
             {
-                Product product = new Product(productDict);
-                result.Add(product.QonversionId, product);
+                Product product = new Product(productPair.Value);
+                result.Add(productPair.Key, product);
             }
 
             return result;
@@ -82,19 +82,16 @@ namespace QonversionUnity
         {
             var result = new Dictionary<string, Eligibility>();
 
-            if (!(Json.Deserialize(jsonStr) is List<object> elibilities))
+            if (!(Json.Deserialize(jsonStr) is Dictionary<string, Dictionary<string, object>> elibilities))
             {
                 Debug.LogError("Could not parse Eligibilities");
                 return result;
             }
 
-            foreach (Dictionary<string, object> eligibilityDict in elibilities)
+            foreach (KeyValuePair<string, Dictionary<string, object>> eligibilityPair in elibilities)
             {
-                if (eligibilityDict.TryGetValue("productId", out object value))
-                {
-                    Eligibility eligibility = new Eligibility(eligibilityDict);
-                    result.Add(value as string, eligibility);
-                }
+                Eligibility eligibility = new Eligibility(eligibilityPair.Value);
+                result.Add(eligibilityPair.Key, eligibility);
             }
 
             return result;

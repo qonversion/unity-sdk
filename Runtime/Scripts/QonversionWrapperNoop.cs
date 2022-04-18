@@ -2,7 +2,10 @@ namespace QonversionUnity
  {
     internal class QonversionWrapperNoop : IQonversionWrapper
     {
-        public void Launch(string gameObjectName, string projectKey, bool observerMode)
+        public void Initialize(string gameObjectName)
+        {
+        }
+        public void Launch(string projectKey, bool observerMode, string callbackName)
         {
         }
 
@@ -38,7 +41,7 @@ namespace QonversionUnity
         {
         }
 
-        public void PurchaseProduct(string productJson, string callbackName)
+        public void PurchaseProduct(string productId, string offeringId, string callbackName)
         {
         }
 
@@ -50,7 +53,7 @@ namespace QonversionUnity
         {
         }
 
-        public void UpdatePurchaseWithProduct(string productJson, string oldProductId, ProrationMode prorationMode, string callbackName)
+        public void UpdatePurchaseWithProduct(string productId, string offeringId, string oldProductId, ProrationMode prorationMode, string callbackName)
         {
         }
 
@@ -62,7 +65,7 @@ namespace QonversionUnity
         {
         }
 
-        public void StoreSdkInfo(string version, string versionKey, string source, string sourceKey)
+        public void StoreSdkInfo(string version, string source)
         {
         }
 
@@ -84,21 +87,6 @@ namespace QonversionUnity
 
         public void PromoPurchase(string storeProductId, string callbackName)
         { 
-        }
-
-        public void AddPromoPurchasesDelegate()
-        {  
-        }
-
-        public void RemovePromoPurchasesDelegate()
-        {
-        }
-        public void AddUpdatedPurchasesDelegate()
-        {
-        }
-
-        public void RemoveUpdatedPurchasesDelegate()
-        {
         }
 
         public void SetNotificationsToken(string token)
