@@ -333,7 +333,7 @@ namespace QonversionUnity
         /// <see href="https://documentation.qonversion.io/docs/making-purchases#1-make-a-purchase"/>
         public static void PurchaseProduct([NotNull] Product product, OnPermissionsReceived callback)
         {
-            if(product == null)
+            if (product == null)
             {
                 callback(null, new QonversionError("PurchaseInvalid", "Product is null"));
                 return;
@@ -595,26 +595,28 @@ namespace QonversionUnity
         // Called from the native SDK - Called when deferred or pending purchase occured
         private void OnReceiveUpdatedPurchases(string jsonString)
         {
-             if (_onUpdatedPurchasesReceived == null)
-             {
-                 return;
-             }
+            Debug.Log("OnReceiveUpdatedPurchases " + jsonString);
 
-             Debug.Log("OnReceiveUpdatedPurchases " + jsonString);
-             Dictionary<string, Permission> permissions = Mapper.PermissionsFromJson(jsonString);
-             _onUpdatedPurchasesReceived(permissions);
+            if (_onUpdatedPurchasesReceived == null)
+            {
+                return;
+            }
+
+            Dictionary<string, Permission> permissions = Mapper.PermissionsFromJson(jsonString);
+            _onUpdatedPurchasesReceived(permissions);
         }
 
         private void OnReceivePromoPurchase(string storeProductId)
         {
-             if (_onPromoPurchasesReceived == null)
-             {
-                 return;
-             }
+            Debug.Log("OnReceivePromoPurchase " + storeProductId);
+            
+			if (_onPromoPurchasesReceived == null)
+            {
+                return;
+            }
 
-             Debug.Log("OnReceivePromoPurchase " + storeProductId);
-             _storedPromoProductId = storeProductId;
-             _onPromoPurchasesReceived(storeProductId, PromoPurchase);
+            _storedPromoProductId = storeProductId;
+            _onPromoPurchasesReceived(storeProductId, PromoPurchase);
         }
 
         private static OnPermissionsReceived PromoPurchaseCallback { get; set; }

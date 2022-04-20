@@ -10,10 +10,8 @@ namespace QonversionUnity
 
         public AutomationsEvent(Dictionary<string, object> dict)
         {
-
-            if (dict.TryGetValue("timestamp", out object time)) Date = Utils.FormatDate((long)time);
+            if (dict.TryGetValue("timestamp", out object time)) Date = Utils.FormatDate(Convert.ToInt64((double)time));
             if (dict.TryGetValue("type", out object eventType)) Type = FormatAutomationsEventType(eventType);
-
         }
 
         public override string ToString()

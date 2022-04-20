@@ -11,16 +11,19 @@ namespace QonversionUnity
         {
             var result = new Dictionary<string, Permission>();
 
-            if (!(Json.Deserialize(jsonStr) is Dictionary<string, Dictionary<string, object>> permissions))
+            if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> permissions))
             {
                 Debug.LogError("Could not parse QPermissions");
                 return result;
             }
 
-            foreach (KeyValuePair<string, Dictionary<string, object>> permissionPair in permissions)
+            foreach (KeyValuePair<string, object> permissionPair in permissions)
             {
-                Permission permission = new Permission(permissionPair.Value);
-                result.Add(permissionPair.Key, permission);
+                if (permissionPair.Value is Dictionary<string, object> permissionDict)
+                {
+                    Permission permission = new Permission(permissionDict);
+                    result.Add(permissionPair.Key, permission);
+                }
             }
 
             return result;
@@ -30,16 +33,19 @@ namespace QonversionUnity
         {
             var result = new Dictionary<string, Product>();
 
-            if (!(Json.Deserialize(jsonStr) is Dictionary<string, Dictionary<string, object>> products))
+            if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> products))
             {
                 Debug.LogError("Could not parse QProducts");
                 return result;
             }
 
-            foreach (KeyValuePair<string, Dictionary<string, object>> productPair in products)
+            foreach (KeyValuePair<string, object> productPair in products)
             {
-                Product product = new Product(productPair.Value);
-                result.Add(productPair.Key, product);
+                if (productPair.Value is Dictionary<string, object> productDict)
+                {
+                    Product product = new Product(productDict);
+                    result.Add(productPair.Key, product);
+                }
             }
 
             return result;
@@ -82,16 +88,19 @@ namespace QonversionUnity
         {
             var result = new Dictionary<string, Eligibility>();
 
-            if (!(Json.Deserialize(jsonStr) is Dictionary<string, Dictionary<string, object>> elibilities))
+            if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> elibilities))
             {
                 Debug.LogError("Could not parse Eligibilities");
                 return result;
             }
 
-            foreach (KeyValuePair<string, Dictionary<string, object>> eligibilityPair in elibilities)
+            foreach (KeyValuePair<string, object> eligibilityPair in elibilities)
             {
-                Eligibility eligibility = new Eligibility(eligibilityPair.Value);
-                result.Add(eligibilityPair.Key, eligibility);
+                if (eligibilityPair.Value is Dictionary<string, object> eligibilityDict)
+                {
+                    Eligibility eligibility = new Eligibility(eligibilityDict);
+                    result.Add(eligibilityPair.Key, eligibility);
+                }
             }
 
             return result;

@@ -48,7 +48,7 @@ namespace QonversionUnity
                    $"{nameof(IsActive)}: {IsActive}";
         }
 
-        private DateTime FormatDate(object time) => Utils.FormatDate((long)time);
+        private DateTime FormatDate(object time) => Utils.FormatDate(Convert.ToInt64((double)time));
 
         private QProductRenewState FormatRenewState(object renewState) =>
             (QProductRenewState)Convert.ToInt32(renewState);
