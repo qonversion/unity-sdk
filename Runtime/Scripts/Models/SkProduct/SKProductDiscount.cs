@@ -23,7 +23,7 @@ namespace QonversionUnity
             if (dict.TryGetValue("paymentMode", out value)) PaymentMode = FormatPaymentMode(value);
             if (dict.TryGetValue("numberOfPeriods", out value)) NumberOfPeriods = Convert.ToInt32(value);
 
-            if (dict.TryGetValue("priceLocale", out priceLocale))
+            if (dict.TryGetValue("priceLocale", out object priceLocale))
             {
                 if (priceLocale is Dictionary<string, object> priceLocaleDict)
                 {
