@@ -247,6 +247,6 @@ bool _handleNotification(const char* notification) {
     return result;
 }
 
-void _subscribeAutomationsDelegate() {
+void _subscribeOnAutomationEvents() {
     automationsDelegate = [[QNUAutomationsDelegate alloc] initWithListenerName:unityListenerName];
 }

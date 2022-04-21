@@ -98,14 +98,12 @@ namespace QonversionUnity
             return false;
         }
 
-        public void AddAutomationsDelegate()
+        public void SubscribeOnAutomationEvents()
         {
-
         }
 
         public void PresentCodeRedemptionSheet()
         {
-
         }
     }
   }

@@ -26,7 +26,7 @@
         void PromoPurchase(string storeProductId, string callbackName);
         void SetNotificationsToken(string token);
         bool HandleNotification(string notification);
-        void AddAutomationsDelegate();
+        void SubscribeOnAutomationEvents();
         void PresentCodeRedemptionSheet();
     }
 }

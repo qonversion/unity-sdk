@@ -250,10 +250,10 @@ namespace QonversionUnity
 #endif
         }
 
-        public void AddAutomationsDelegate()
+        public void SubscribeOnAutomationEvents()
         {
 #if UNITY_IOS
-            _subscribeAutomationsDelegate();
+            _subscribeOnAutomationEvents();
 #endif
         }
     }

@@ -27,7 +27,7 @@ public class QonversionWrapper {
     public static String ON_UPDATED_PURCHASES_LISTENER = "OnReceiveUpdatedPurchases";
 
     private static MessageSender messageSender;
-    private static AutomationsDelegate automationsDelegate = null;
+    private static AutomationsWrapper automationsWrapper;
     private static QonversionSandwich qonversionSandwich;
 
     public static synchronized void initialize(String unityListener) {
@@ -39,6 +39,7 @@ public class QonversionWrapper {
                 () -> UnityPlayer.currentActivity,
                 permissions -> sendMessageToUnity(permissions, ON_UPDATED_PURCHASES_LISTENER)
         );
+        automationsWrapper = new AutomationsWrapper(messageSender);
     }
 
     public static synchronized void storeSdkInfo(String version, String source) {
@@ -152,8 +153,8 @@ public class QonversionWrapper {
         }
     }
 
-    public static synchronized void subscribeAutomationsDelegate() {
-        automationsDelegate = new AutomationsDelegate(messageSender);
+    public static synchronized void subscribeOnAutomationEvents() {
+        automationsWrapper.subscribe();
     }
 
     private static ResultListener getResultListener(@NotNull String methodName) {
@@ -172,13 +173,13 @@ public class QonversionWrapper {
 
     private static void handleErrorResponse(@NotNull SandwichError error, @NotNull String methodName) {
         ObjectMapper mapper = new ObjectMapper();
-        ObjectNode rootNode = mapper.createObjectNode();
-        String message = String.format("%s. %s", error.getDescription(), error.getAdditionalMessage());
 
         ObjectNode errorNode = mapper.createObjectNode();
-        errorNode.put("message", message);
         errorNode.put("code", error.getCode());
+        errorNode.put("description", error.getDescription());
+        errorNode.put("additionalMessage", error.getAdditionalMessage());
 
+        ObjectNode rootNode = mapper.createObjectNode();
         rootNode.set("error", errorNode);
 
         sendMessageToUnity(rootNode, methodName);
