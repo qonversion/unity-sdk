@@ -125,7 +125,7 @@ namespace QonversionUnity
             _automationsDelegate = automationsDelegate;
 
             IQonversionWrapper instance = getFinalInstance();
-            instance.AddAutomationsDelegate();
+            instance.SubscribeOnAutomationEvents();
         }
     
         /// <summary>

@@ -75,7 +75,7 @@ namespace QonversionUnity
         private static extern bool _handleNotification(string notification);
 
         [DllImport("__Internal")]
-        private static extern void _subscribeAutomationsDelegate();
+        private static extern void _subscribeOnAutomationEvents();
 
         [DllImport("__Internal")]
         private static extern void _presentCodeRedemptionSheet();
