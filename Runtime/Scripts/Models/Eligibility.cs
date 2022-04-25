@@ -24,11 +24,11 @@ namespace QonversionUnity
                 case "non_intro_or_trial_product":
                     result = EligibilityStatus.NonIntroProduct;
                     break;
-                case "intro_or_trial_eligible":
-                    result = EligibilityStatus.Eligible;
-                    break;
                 case "intro_or_trial_ineligible":
                     result = EligibilityStatus.Ineligible;
+                    break;
+                case "intro_or_trial_eligible":
+                    result = EligibilityStatus.Eligible;
                     break;
                 default:
                     result = EligibilityStatus.Unknown;

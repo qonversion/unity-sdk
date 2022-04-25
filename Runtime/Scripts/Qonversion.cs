@@ -40,6 +40,7 @@ namespace QonversionUnity
         public delegate void OnUpdatedPurchasesReceived(Dictionary<string, Permission> permissions);
      
         private const string GameObjectName = "QonvesrionRuntimeGameObject";
+        private const string OnLaunchMethodName = "OnLaunch";
         private const string OnCheckPermissionsMethodName = "OnCheckPermissions";
         private const string OnPurchaseMethodName = "OnPurchase";
         private const string OnPromoPurchaseMethodName = "OnPromoPurchase";
@@ -77,6 +78,7 @@ namespace QonversionUnity
                         _Instance = new QonversionWrapperNoop();
                         break;
                 }
+				_Instance.Initialize(GameObjectName);
             }
 
             GameObject go = new GameObject(GameObjectName);
@@ -96,22 +98,10 @@ namespace QonversionUnity
              add
              {
                  _onPromoPurchasesReceived += value;
-
-                 if (_onPromoPurchasesReceived.GetInvocationList().Length == 1)
-                 {
-                     IQonversionWrapper instance = getFinalInstance();
-                     instance.AddPromoPurchasesDelegate();
-                 }
              }
              remove
              {
                  _onPromoPurchasesReceived -= value;
-
-                 if (_onPromoPurchasesReceived == null)
-                 {
-                     IQonversionWrapper instance = getFinalInstance();
-                     instance.RemovePromoPurchasesDelegate();
-                 }
              }
          }
          
@@ -123,22 +113,10 @@ namespace QonversionUnity
              add
              {
                  _onUpdatedPurchasesReceived += value;
-
-                 if (_onUpdatedPurchasesReceived.GetInvocationList().Length == 1)
-                 {
-                     IQonversionWrapper instance = getFinalInstance();
-                     instance.AddUpdatedPurchasesDelegate();
-                 }
              }
              remove
              {
                  _onUpdatedPurchasesReceived -= value;
-
-                 if (_onUpdatedPurchasesReceived == null)
-                 {
-                     IQonversionWrapper instance = getFinalInstance();
-                     instance.RemoveUpdatedPurchasesDelegate();
-                 }
              }
          }
 
@@ -147,7 +125,7 @@ namespace QonversionUnity
             _automationsDelegate = automationsDelegate;
 
             IQonversionWrapper instance = getFinalInstance();
-            instance.AddAutomationsDelegate();
+            instance.SubscribeOnAutomationEvents();
         }
     
         /// <summary>
@@ -161,8 +139,8 @@ namespace QonversionUnity
         public static void Launch(string apiKey, bool observerMode)
         {
             IQonversionWrapper instance = getFinalInstance();
-            instance.StoreSdkInfo(SdkVersion, Constants.VersionKey, SdkSource, Constants.SourceKey);
-            instance.Launch(GameObjectName, apiKey, observerMode);
+            instance.StoreSdkInfo(SdkVersion, SdkSource);
+            instance.Launch(apiKey, observerMode, OnLaunchMethodName);
         }
 
         /// <summary>
@@ -355,17 +333,15 @@ namespace QonversionUnity
         /// <see href="https://documentation.qonversion.io/docs/making-purchases#1-make-a-purchase"/>
         public static void PurchaseProduct([NotNull] Product product, OnPermissionsReceived callback)
         {
-            if(product == null)
+            if (product == null)
             {
                 callback(null, new QonversionError("PurchaseInvalid", "Product is null"));
                 return;
             }
 
-            var productJson = product.OriginalJson;
-          
             PurchaseProductCallback = callback;
             IQonversionWrapper instance = getFinalInstance();
-            instance.PurchaseProduct(productJson, OnPurchaseProductMethodName);
+            instance.PurchaseProduct(product.QonversionId, product.OfferingId, OnPurchaseProductMethodName);
         }
 
         private static OnPermissionsReceived RestoreCallback { get; set; }
@@ -419,11 +395,9 @@ namespace QonversionUnity
                 return;
             }
 
-            var productJson = product.OriginalJson;
-
             UpdatePurchaseWithProductCallback = callback;
             IQonversionWrapper instance = getFinalInstance();
-            instance.UpdatePurchaseWithProduct(productJson, oldProductId, prorationMode, OnUpdatePurchaseWithProductMethodName);
+            instance.UpdatePurchaseWithProduct(product.QonversionId, product.OfferingId, oldProductId, prorationMode, OnUpdatePurchaseWithProductMethodName);
         }
 
         private static OnProductsReceived ProductsCallback { get; set; }
@@ -490,6 +464,12 @@ namespace QonversionUnity
         {
             IQonversionWrapper instance = getFinalInstance();
             return instance.HandleNotification(notification.toJson());
+        }
+
+        // Called from the native SDK - Called when launch completed
+        private void OnLaunch(string jsonString)
+        {
+            Debug.Log("OnLaunch " + jsonString);
         }
 
         // Called from the native SDK - Called when permissions received from the checkPermissions() method 
@@ -615,26 +595,28 @@ namespace QonversionUnity
         // Called from the native SDK - Called when deferred or pending purchase occured
         private void OnReceiveUpdatedPurchases(string jsonString)
         {
-             if (_onUpdatedPurchasesReceived == null)
-             {
-                 return;
-             }
+            Debug.Log("OnReceiveUpdatedPurchases " + jsonString);
 
-             Debug.Log("OnReceiveUpdatedPurchases " + jsonString);
-             Dictionary<string, Permission> permissions = Mapper.PermissionsFromJson(jsonString);
-             _onUpdatedPurchasesReceived(permissions);
+            if (_onUpdatedPurchasesReceived == null)
+            {
+                return;
+            }
+
+            Dictionary<string, Permission> permissions = Mapper.PermissionsFromJson(jsonString);
+            _onUpdatedPurchasesReceived(permissions);
         }
 
         private void OnReceivePromoPurchase(string storeProductId)
         {
-             if (_onPromoPurchasesReceived == null)
-             {
-                 return;
-             }
+            Debug.Log("OnReceivePromoPurchase " + storeProductId);
+            
+			if (_onPromoPurchasesReceived == null)
+            {
+                return;
+            }
 
-             Debug.Log("OnReceivePromoPurchase " + storeProductId);
-             _storedPromoProductId = storeProductId;
-             _onPromoPurchasesReceived(storeProductId, PromoPurchase);
+            _storedPromoProductId = storeProductId;
+            _onPromoPurchasesReceived(storeProductId, PromoPurchase);
         }
 
         private static OnPermissionsReceived PromoPurchaseCallback { get; set; }
