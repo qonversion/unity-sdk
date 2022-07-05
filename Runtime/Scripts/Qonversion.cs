@@ -77,11 +77,11 @@ namespace QonversionUnity
                         _Instance = new QonversionWrapperNoop();
                         break;
                 }
+                
+                GameObject go = new GameObject(GameObjectName);
+                go.AddComponent<Qonversion>();
+                DontDestroyOnLoad(go);
             }
-
-            GameObject go = new GameObject(GameObjectName);
-            go.AddComponent<Qonversion>();
-            DontDestroyOnLoad(go);
 
             return _Instance;
         }
