@@ -51,7 +51,7 @@ namespace QonversionUnity
         private const string OnOfferingsMethodName = "OnOfferings";
         private const string OnEligibilitiesMethodName = "OnEligibilities";
 
-        private const string SdkVersion = "3.4.2";
+        private const string SdkVersion = "3.4.3";
         private const string SdkSource = "unity";
 
         private static IQonversionWrapper _Instance;
@@ -77,11 +77,11 @@ namespace QonversionUnity
                         _Instance = new QonversionWrapperNoop();
                         break;
                 }
+                
+                GameObject go = new GameObject(GameObjectName);
+                go.AddComponent<Qonversion>();
+                DontDestroyOnLoad(go);
             }
-
-            GameObject go = new GameObject(GameObjectName);
-            go.AddComponent<Qonversion>();
-            DontDestroyOnLoad(go);
 
             return _Instance;
         }
