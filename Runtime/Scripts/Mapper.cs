@@ -7,6 +7,35 @@ namespace QonversionUnity
 {
     internal class Mapper
     {
+        internal static Tuple<Dictionary<string, Permission>, bool> PurchaseResultFromJson(string jsonStr)
+        {
+            Dictionary<string, Permission> resultPermissions = null;
+
+            if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> result))
+            {
+                Debug.LogError("Could not parse purchase result");
+                return Tuple.Create(resultPermissions, false);
+            }
+            
+            resultPermissions = new Dictionary<string, Permission>();
+
+            if (!(result["permissions"] is List<object> permissions))
+            {
+                Debug.LogError("Could not parse QPermissions");
+                return Tuple.Create(resultPermissions, false);
+            }
+
+            foreach (Dictionary<string, object> permissionDict in permissions)
+            {
+                Permission permission = new Permission(permissionDict);
+                resultPermissions.Add(permission.PermissionID, permission);
+            }
+
+            bool isCancelled = Convert.ToBoolean(result["isCancelled"]);
+
+            return Tuple.Create(resultPermissions, isCancelled);
+        }
+
         internal static Dictionary<string, Permission> PermissionsFromJson(string jsonStr)
         {
             var result = new Dictionary<string, Permission>();
