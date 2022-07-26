@@ -306,6 +306,26 @@
     [UtilityBridge sendUnityMessage:permissions toMethod:methodName unityListener: unityListenerName];
 }
 
++ (void)handlePurchaseResponse:(NSDictionary<NSString *,QNPermission *> *) permissions
+                   isCancelled:(BOOL) cancelled
+                     withError:(NSError *) error
+                      toMethod:(NSString *) methodName
+                 unityListener:(const char *) unityListenerName{
+    if (error) {
+        [UtilityBridge handleErrorResponse:error toMethod:methodName unityListener:unityListenerName];
+        return;
+    }
+    
+    NSArray *convertedPermissions = [UtilityBridge convertPermissions:result.allValues];
+    
+    NSDictionary *result = @{
+      "permissions": convertedPermissions,
+      "isCancelled": cancelled
+    };
+  
+    [UtilityBridge sendUnityMessage:result toMethod:methodName unityListener: unityListenerName];
+}
+
 + (void)handleErrorResponse:(NSError *)error toMethod:(NSString *) methodName
               unityListener:(const char *)unityListenerName{
     NSDictionary *errorDict = [UtilityBridge convertError:error];
