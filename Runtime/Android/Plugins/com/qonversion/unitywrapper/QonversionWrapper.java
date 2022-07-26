@@ -140,7 +140,7 @@ public class QonversionWrapper {
         Qonversion.purchase(UnityPlayer.currentActivity, productId, new QonversionPermissionsCallback() {
             @Override
             public void onSuccess(@NotNull Map<String, QPermission> permissions) {
-                handlePermissionsResponse(permissions, unityCallbackName);
+                handlePurchaseResponse(permissions, unityCallbackName);
             }
 
             @Override
@@ -161,7 +161,7 @@ public class QonversionWrapper {
             Qonversion.purchase(UnityPlayer.currentActivity, product, new QonversionPermissionsCallback() {
                 @Override
                 public void onSuccess(@NotNull Map<String, QPermission> permissions) {
-                    handlePermissionsResponse(permissions, unityCallbackName);
+                    handlePurchaseResponse(permissions, unityCallbackName);
                 }
 
                 @Override
@@ -316,6 +316,13 @@ public class QonversionWrapper {
     private static void handlePermissionsResponse(@NotNull Map<String, QPermission> permissions, @NotNull String methodName) {
         List<Map<String, Object>> mappedPermissions = Mapper.mapPermissions(permissions);
         sendMessageToUnity(mappedPermissions, methodName);
+    }
+
+    private static void handlePurchaseResponse(@NotNull Map<String, QPermission> permissions, @NotNull String methodName) {
+        List<Map<String, Object>> mappedPermissions = Mapper.mapPermissions(permissions);
+        Map<String, Object> result = new HashMap<>();
+        result.put("permissions", mappedPermissions);
+        sendMessageToUnity(result, methodName);
     }
 
     private static void handleErrorResponse(@NotNull QonversionError error, @NotNull String methodName) {
