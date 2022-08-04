@@ -62,6 +62,17 @@ namespace QonversionUnity
         private static string _storedPromoProductId = null;
         private static AutomationsDelegate _automationsDelegate;
 
+        private static List<OnPermissionsReceived> CheckPermissionsCallbacks { get; } = new();
+        private static List<OnPermissionsReceived> RestoreCallbacks { get; } = new();
+        private static OnPurchaseResultReceived PurchaseCallback { get; set; }
+        private static OnPurchaseResultReceived PurchaseProductCallback { get; set; }
+        private static OnPurchaseResultReceived UpdatePurchaseCallback { get; set; }
+        private static OnPurchaseResultReceived UpdatePurchaseWithProductCallback { get; set; }
+        private static List<OnProductsReceived> ProductsCallbacks { get; } = new();
+        private static List<OnOfferingsReceived> OfferingsCallbacks { get; } = new();
+        private static OnEligibilitiesReceived EligibilitiesCallback { get; set; }
+        private static OnPermissionsReceived PromoPurchaseCallback { get; set; }
+
         private static IQonversionWrapper getFinalInstance()
         {
             if (_Instance == null)
@@ -312,8 +323,6 @@ namespace QonversionUnity
             instance.Logout();
         }
 
-        private static OnPermissionsReceived CheckPermissionsCallback { get; set; }
-
         /// <summary>
         /// You need to call the CheckPermissions method at the start of your app to check if a user has the required
         /// permission.
@@ -326,13 +335,11 @@ namespace QonversionUnity
         /// <param name="callback">Callback that will be called when response is received</param>
         public static void CheckPermissions(OnPermissionsReceived callback)
         {
-            CheckPermissionsCallback = callback;
+            CheckPermissionsCallbacks.Add(callback);
             IQonversionWrapper instance = getFinalInstance();
             instance.CheckPermissions(OnCheckPermissionsMethodName);
         }
-
-        private static OnPurchaseResultReceived PurchaseCallback { get; set; }
-
+        
         /// <summary>
         /// Make a purchase and validate that through server-to-server using Qonversion's Backend.
         /// </summary>
@@ -358,8 +365,6 @@ namespace QonversionUnity
             IQonversionWrapper instance = getFinalInstance();
             instance.Purchase(productId, OnPurchaseMethodName);
         }
-
-        private static OnPurchaseResultReceived PurchaseProductCallback { get; set; }
 
         /// <summary>
         /// Make a purchase and validate that through server-to-server using Qonversion's Backend.
@@ -395,8 +400,6 @@ namespace QonversionUnity
             instance.PurchaseProduct(productJson, OnPurchaseProductMethodName);
         }
 
-        private static OnPermissionsReceived RestoreCallback { get; set; }
-
         /// <summary>
         /// Restoring purchases restores users purchases in your app, to maintain access to purchased content.
         /// Users sometimes need to restore purchased content, such as when they upgrade to a new phone.
@@ -404,13 +407,11 @@ namespace QonversionUnity
         /// <param name="callback">Callback that will be called when response is received</param>
         public static void Restore(OnPermissionsReceived callback)
         {
-            RestoreCallback = callback;
+            RestoreCallbacks.Add(callback);
             IQonversionWrapper instance = getFinalInstance();
             instance.Restore(OnRestoreMethodName);
         }
 
-        private static OnPurchaseResultReceived UpdatePurchaseCallback { get; set; }
-        
         /// <summary>
         /// Update (upgrade/downgrade) subscription and validate that through server-to-server using Qonversion's Backend.
         /// </summary>
@@ -442,9 +443,6 @@ namespace QonversionUnity
             IQonversionWrapper instance = getFinalInstance();
             instance.UpdatePurchase(productId, oldProductId, prorationMode, OnUpdatePurchaseMethodName);
         }
-
-        private static OnPurchaseResultReceived UpdatePurchaseWithProductCallback { get; set; }
-
 
         /// <summary>
         /// Update (upgrade/downgrade) subscription and validate that through server-to-server using Qonversion's Backend.
@@ -486,8 +484,6 @@ namespace QonversionUnity
             instance.UpdatePurchaseWithProduct(productJson, oldProductId, prorationMode, OnUpdatePurchaseWithProductMethodName);
         }
 
-        private static OnProductsReceived ProductsCallback { get; set; }
-  
         /// <summary>
         /// Returns Qonversion products in association with Apple and Google Play Store Products.
         /// </summary>
@@ -495,12 +491,10 @@ namespace QonversionUnity
         /// <see href="https://qonversion.io/docs/product-center">Product Center</see>
         public static void Products(OnProductsReceived callback)
         {
-            ProductsCallback = callback;
+            ProductsCallbacks.Add(callback);
             IQonversionWrapper instance = getFinalInstance();
             instance.Products(OnProductsMethodName);
         }
-
-        private static OnOfferingsReceived OfferingsCallback { get; set; }
 
         /// <summary>
         /// Return Qonversion Offerings Object.
@@ -514,12 +508,10 @@ namespace QonversionUnity
         /// <see href="https://qonversion.io/docs/product-center">Product Center</see>
         public static void Offerings(OnOfferingsReceived callback)
         {
-            OfferingsCallback = callback;
+            OfferingsCallbacks.Add(callback);
             IQonversionWrapper instance = getFinalInstance();
             instance.Offerings(OnOfferingsMethodName);
         }
-
-        private static OnEligibilitiesReceived EligibilitiesCallback { get; set; }
 
         /// <summary>
         /// You can check if a user is eligible for an introductory offer, including a free trial.
@@ -556,8 +548,8 @@ namespace QonversionUnity
         private void OnCheckPermissions(string jsonString)
         {
             Debug.Log("OnCheckPermissions " + jsonString);
-            HandlePermissions(CheckPermissionsCallback, jsonString);
-            CheckPermissionsCallback = null;
+            HandlePermissions(CheckPermissionsCallbacks, jsonString);
+            CheckPermissionsCallbacks.Clear();
         }
 
         // Called from the native SDK - Called when purchase result received from the purchase() method
@@ -580,8 +572,8 @@ namespace QonversionUnity
         private void OnRestore(string jsonString)
         {
             Debug.Log("OnRestore " + jsonString);
-            HandlePermissions(RestoreCallback, jsonString);
-            RestoreCallback = null;
+            HandlePermissions(RestoreCallbacks, jsonString);
+            RestoreCallbacks.Clear();
         }
 
         // Called from the native SDK - Called when purchase result received from the updatePurchase() method 
@@ -604,7 +596,11 @@ namespace QonversionUnity
         private void OnPromoPurchase(string jsonString)
         {
             Debug.Log("OnPromoPurchase callback " + jsonString);
-            HandlePermissions(PromoPurchaseCallback, jsonString);
+            if (PromoPurchaseCallback != null) {
+                var callbacks = new List<OnPermissionsReceived> { PromoPurchaseCallback };
+                HandlePermissions(callbacks, jsonString);
+            }
+
             PromoPurchaseCallback = null;
             _storedPromoProductId = null;
         }
@@ -614,20 +610,20 @@ namespace QonversionUnity
         {
             Debug.Log("OnProducts " + jsonString);
 
-            if (ProductsCallback == null) return;
+            if (ProductsCallbacks.Count == 0) return;
 
             var error = Mapper.ErrorFromJson(jsonString);
             if (error != null)
             {
-                ProductsCallback(null, error);
+                ProductsCallbacks.ForEach(callback => callback(null, error));
             }
             else
             {
-                Dictionary<string, Product> products = Mapper.ProductsFromJson(jsonString);
-                ProductsCallback(products, null);
+                var products = Mapper.ProductsFromJson(jsonString);
+                ProductsCallbacks.ForEach(callback => callback(products, null));
             }
 
-            ProductsCallback = null;
+            ProductsCallbacks.Clear();
         }
 
         // Called from the native SDK - Called when offerings received from the offerings() method 
@@ -635,20 +631,20 @@ namespace QonversionUnity
         {
             Debug.Log("OnOfferings " + jsonString);
 
-            if (OfferingsCallback == null) return;
+            if (OfferingsCallbacks.Count == 0) return;
 
             var error = Mapper.ErrorFromJson(jsonString);
             if (error != null)
             {
-                OfferingsCallback(null, error);
+                OfferingsCallbacks.ForEach(callback => callback(null, error));
             }
             else
             {
-                Offerings offerings = Mapper.OfferingsFromJson(jsonString);
-                OfferingsCallback(offerings, null);
+                var offerings = Mapper.OfferingsFromJson(jsonString);
+                OfferingsCallbacks.ForEach(callback => callback(offerings, null));
             }
 
-            OfferingsCallback = null;
+            OfferingsCallbacks.Clear();
         }
 
         // Called from the native SDK - Called when eligibilities received from the checkTrialIntroEligibilityForProductIds() method 
@@ -697,8 +693,6 @@ namespace QonversionUnity
              _onPromoPurchasesReceived(storeProductId, PromoPurchase);
         }
 
-        private static OnPermissionsReceived PromoPurchaseCallback { get; set; }
-
         private void PromoPurchase(OnPermissionsReceived callback)
         {
             PromoPurchaseCallback = callback;
@@ -706,19 +700,19 @@ namespace QonversionUnity
             instance.PromoPurchase(_storedPromoProductId, OnPromoPurchaseMethodName);
         }
 
-        private void HandlePermissions(OnPermissionsReceived callback, string jsonString)
+        private void HandlePermissions(List<OnPermissionsReceived> callbacks, string jsonString)
         {
-            if (callback == null) return;
+            if (callbacks.Count == 0) return;
 
             var error = Mapper.ErrorFromJson(jsonString);
             if (error != null)
             {
-                callback(null, error);
+                callbacks.ForEach(callback => callback(null, error));
             }
             else
             {
-                Dictionary<string, Permission> permissions = Mapper.PermissionsFromJson(jsonString);
-                callback(permissions, null);
+                var permissions = Mapper.PermissionsFromJson(jsonString);
+                callbacks.ForEach(callback => callback(permissions, null));
             }
         }
 
