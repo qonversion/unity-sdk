@@ -296,7 +296,7 @@
 
 + (void)handlePermissionsResponse:(NSDictionary<NSString *,QNPermission *> *) result withError:( NSError *)error
                          toMethod:(NSString *) methodName
-                    unityListener:(const char *)unityListenerName{
+                    unityListener:(const char *)unityListenerName {
     if (error) {
         [UtilityBridge handleErrorResponse:error toMethod:methodName unityListener:unityListenerName];
         return;
@@ -310,20 +310,21 @@
                    isCancelled:(BOOL) cancelled
                      withError:(NSError *) error
                       toMethod:(NSString *) methodName
-                 unityListener:(const char *) unityListenerName{
-    if (error) {
-        [UtilityBridge handleErrorResponse:error toMethod:methodName unityListener:unityListenerName];
-        return;
-    }
-    
-    NSArray *convertedPermissions = [UtilityBridge convertPermissions:result.allValues];
-    
-    NSDictionary *result = @{
-      "permissions": convertedPermissions,
-      "isCancelled": cancelled
-    };
+                 unityListener:(const char *) unityListenerName {
+  if (error) {
+      NSMutableDictionary *errorDict = [[UtilityBridge convertError:error] mutableCopy];
+      errorDict[@"isCancelled"] = cancelled ? @(1) : @(0);
+      [UtilityBridge sendUnityMessage:errorDict toMethod:methodName unityListener: unityListenerName];
+      return;
+  }
   
-    [UtilityBridge sendUnityMessage:result toMethod:methodName unityListener: unityListenerName];
+  NSArray *convertedPermissions = [UtilityBridge convertPermissions:permissions.allValues];
+  
+  NSDictionary *result = @{
+    @"permissions": convertedPermissions
+  };
+
+  [UtilityBridge sendUnityMessage:result toMethod:methodName unityListener: unityListenerName];
 }
 
 + (void)handleErrorResponse:(NSError *)error toMethod:(NSString *) methodName

@@ -696,12 +696,13 @@ namespace QonversionUnity
             var error = Mapper.ErrorFromJson(jsonString);
             if (error != null)
             {
-                callback(null, error, false);
+                var isCancelled = Mapper.GetIsCancelledFromJson(jsonString);
+                callback(null, error, isCancelled);
             }
             else
             {
-                var purchaseResult = Mapper.PurchaseResultFromJson(jsonString);
-                callback(purchaseResult.Item1, null, purchaseResult.Item2);
+                var permissions = Mapper.PermissionsFromPurchaseJson(jsonString);
+                callback(permissions, null, false);
             }
         }
 
@@ -766,7 +767,7 @@ namespace QonversionUnity
 		{
 			return delegate(Dictionary<string, Permission> permissions, QonversionError error, bool isCancelled) {
 				callback(permissions, error);
-			};			
+			};
 		}
     }
 }

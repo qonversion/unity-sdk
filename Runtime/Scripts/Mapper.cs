@@ -7,33 +7,42 @@ namespace QonversionUnity
 {
     internal class Mapper
     {
-        internal static Tuple<Dictionary<string, Permission>, bool> PurchaseResultFromJson(string jsonStr)
+        internal static Dictionary<string, Permission> PermissionsFromPurchaseJson(string jsonStr)
         {
-            Dictionary<string, Permission> resultPermissions = null;
-
-            if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> result))
+            if (Json.Deserialize(jsonStr) is not Dictionary<string, object> result)
             {
                 Debug.LogError("Could not parse purchase result");
-                return Tuple.Create(resultPermissions, false);
+                return null;
             }
             
-            resultPermissions = new Dictionary<string, Permission>();
+            var resultPermissions = new Dictionary<string, Permission>();
 
-            if (!(result["permissions"] is List<object> permissions))
+            if (result["permissions"] is not List<object> permissions)
             {
                 Debug.LogError("Could not parse QPermissions");
-                return Tuple.Create(resultPermissions, false);
+                return resultPermissions;
             }
 
             foreach (Dictionary<string, object> permissionDict in permissions)
             {
-                Permission permission = new Permission(permissionDict);
+                var permission = new Permission(permissionDict);
                 resultPermissions.Add(permission.PermissionID, permission);
             }
 
-            bool isCancelled = Convert.ToBoolean(result["isCancelled"]);
+            return resultPermissions;
+        }
 
-            return Tuple.Create(resultPermissions, isCancelled);
+        internal static bool GetIsCancelledFromJson(string jsonStr)
+        {
+            if (Json.Deserialize(jsonStr) is not Dictionary<string, object> result)
+            {
+                Debug.LogError("Could not parse purchase result");
+                return false;
+            }
+            
+            var isCancelled = Convert.ToBoolean(result.GetValueOrDefault("isCancelled", 0));
+
+            return isCancelled;
         }
 
         internal static Dictionary<string, Permission> PermissionsFromJson(string jsonStr)
