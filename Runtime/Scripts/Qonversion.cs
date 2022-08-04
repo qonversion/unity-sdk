@@ -8,6 +8,7 @@ namespace QonversionUnity
 {
     public class Qonversion : MonoBehaviour
     {
+        public delegate void OnPurchaseResultReceived(Dictionary<string, Permission> permissions, QonversionError error, bool isCancelled);
         public delegate void OnPermissionsReceived(Dictionary<string, Permission> permissions, QonversionError error);
         public delegate void OnProductsReceived(Dictionary<string, Product> products, QonversionError error);
         public delegate void OnOfferingsReceived(Offerings offerings, QonversionError error);
@@ -330,7 +331,7 @@ namespace QonversionUnity
             instance.CheckPermissions(OnCheckPermissionsMethodName);
         }
 
-        private static OnPermissionsReceived PurchaseCallback { get; set; }
+        private static OnPurchaseResultReceived PurchaseCallback { get; set; }
 
         /// <summary>
         /// Make a purchase and validate that through server-to-server using Qonversion's Backend.
@@ -338,14 +339,27 @@ namespace QonversionUnity
         /// <param name="productId">Qonversion product identifier for purchase.</param>
         /// <param name="callback">Callback that will be called when response is received.</param>
         /// <see href="https://documentation.qonversion.io/docs/making-purchases#1-make-a-purchase"/>
+		[Obsolete("Purchase with OnPermissionsReceived callback is deprecated. Consider using Purchase with OnPurchaseResultReceivedCallback instead.")]
         public static void Purchase(string productId, OnPermissionsReceived callback)
         {
-            PurchaseCallback = callback;
+			var convertedCallback = ConvertPermissionsCallbackToPurchaseResultCallback(callback);
+			Purchase(productId, convertedCallback);
+        }
+
+		/// <summary>
+        /// Make a purchase and validate that through server-to-server using Qonversion's Backend.
+        /// </summary>
+        /// <param name="productId">Qonversion product identifier for purchase.</param>
+        /// <param name="callback">Callback that will be called when response is received.</param>
+        /// <see href="https://documentation.qonversion.io/docs/making-purchases#1-make-a-purchase"/>
+		public static void Purchase(string productId, OnPurchaseResultReceived callback)
+        {
+			PurchaseCallback = callback;
             IQonversionWrapper instance = getFinalInstance();
             instance.Purchase(productId, OnPurchaseMethodName);
         }
 
-        private static OnPermissionsReceived PurchaseProductCallback { get; set; }
+        private static OnPurchaseResultReceived PurchaseProductCallback { get; set; }
 
         /// <summary>
         /// Make a purchase and validate that through server-to-server using Qonversion's Backend.
@@ -353,11 +367,24 @@ namespace QonversionUnity
         /// <param name="product">Qonversion product for purchase.</param>
         /// <param name="callback">Callback that will be called when response is received.</param>
         /// <see href="https://documentation.qonversion.io/docs/making-purchases#1-make-a-purchase"/>
-        public static void PurchaseProduct([NotNull] Product product, OnPermissionsReceived callback)
+        [Obsolete("PurchaseProduct with OnPermissionsReceived callback is deprecated. Consider using PurchaseProduct with OnPurchaseResultReceivedCallback instead.")]
+		public static void PurchaseProduct([NotNull] Product product, OnPermissionsReceived callback)
         {
-            if(product == null)
+			var convertedCallback = ConvertPermissionsCallbackToPurchaseResultCallback(callback);
+			PurchaseProduct(product, convertedCallback);
+        }
+
+        /// <summary>
+        /// Make a purchase and validate that through server-to-server using Qonversion's Backend.
+        /// </summary>
+        /// <param name="product">Qonversion product for purchase.</param>
+        /// <param name="callback">Callback that will be called when response is received.</param>
+        /// <see href="https://documentation.qonversion.io/docs/making-purchases#1-make-a-purchase"/>
+		public static void PurchaseProduct([NotNull] Product product, OnPurchaseResultReceived callback)
+        {
+            if (product == null)
             {
-                callback(null, new QonversionError("PurchaseInvalid", "Product is null"));
+                callback(null, new QonversionError("PurchaseInvalid", "Product is null"), false);
                 return;
             }
 
@@ -382,8 +409,8 @@ namespace QonversionUnity
             instance.Restore(OnRestoreMethodName);
         }
 
-        private static OnPermissionsReceived UpdatePurchaseCallback { get; set; }
-
+        private static OnPurchaseResultReceived UpdatePurchaseCallback { get; set; }
+        
         /// <summary>
         /// Update (upgrade/downgrade) subscription and validate that through server-to-server using Qonversion's Backend.
         /// </summary>
@@ -393,14 +420,31 @@ namespace QonversionUnity
         /// <param name="prorationMode">Proration Mode</param>
         /// <see href="https://developer.android.com/google/play/billing/subscriptions#proration">Proration Mode</see>
         /// <see href="https://documentation.qonversion.io/docs/making-purchases#3-update-purchases-android-only">Update Purchase</see>
+        [Obsolete("UpdatePurchase with OnPermissionsReceived callback is deprecated. Consider using UpdatePurchase with OnPurchaseResultReceivedCallback instead.")]
         public static void UpdatePurchase(string productId, string oldProductId, OnPermissionsReceived callback, ProrationMode prorationMode = ProrationMode.UnknownSubscriptionUpgradeDowngradePolicy)
+        {
+            var convertedCallback = ConvertPermissionsCallbackToPurchaseResultCallback(callback);
+            UpdatePurchase(productId, oldProductId, convertedCallback, prorationMode);
+        }
+        
+        /// <summary>
+        /// Update (upgrade/downgrade) subscription and validate that through server-to-server using Qonversion's Backend.
+        /// </summary>
+        /// <param name="productId">Qonversion product identifier for purchase</param>
+        /// <param name="oldProductId">Qonversion product identifier from which the upgrade/downgrade will be initialized</param>
+        /// <param name="callback">Callback that will be called when response is received</param>
+        /// <param name="prorationMode">Proration Mode</param>
+        /// <see href="https://developer.android.com/google/play/billing/subscriptions#proration">Proration Mode</see>
+        /// <see href="https://documentation.qonversion.io/docs/making-purchases#3-update-purchases-android-only">Update Purchase</see>
+        public static void UpdatePurchase(string productId, string oldProductId, OnPurchaseResultReceived callback, ProrationMode prorationMode = ProrationMode.UnknownSubscriptionUpgradeDowngradePolicy)
         {
             UpdatePurchaseCallback = callback;
             IQonversionWrapper instance = getFinalInstance();
             instance.UpdatePurchase(productId, oldProductId, prorationMode, OnUpdatePurchaseMethodName);
         }
 
-        private static OnPermissionsReceived UpdatePurchaseWithProductCallback { get; set; }
+        private static OnPurchaseResultReceived UpdatePurchaseWithProductCallback { get; set; }
+
 
         /// <summary>
         /// Update (upgrade/downgrade) subscription and validate that through server-to-server using Qonversion's Backend.
@@ -411,11 +455,27 @@ namespace QonversionUnity
         /// <param name="prorationMode">Proration Mode</param>
         /// <see href="https://developer.android.com/google/play/billing/subscriptions#proration">Proration Mode</see>
         /// <see href="https://documentation.qonversion.io/docs/making-purchases#3-update-purchases-android-only">Update Purchase</see>
+        [Obsolete("UpdatePurchaseWithProduct with OnPermissionsReceived callback is deprecated. Consider using UpdatePurchaseWithProduct with OnPurchaseResultReceivedCallback instead.")]
         public static void UpdatePurchaseWithProduct([NotNull] Product product, string oldProductId, OnPermissionsReceived callback, ProrationMode prorationMode = ProrationMode.UnknownSubscriptionUpgradeDowngradePolicy)
+        {
+            var convertedCallback = ConvertPermissionsCallbackToPurchaseResultCallback(callback);
+            UpdatePurchaseWithProduct(product, oldProductId, convertedCallback, prorationMode);
+        }
+        
+        /// <summary>
+        /// Update (upgrade/downgrade) subscription and validate that through server-to-server using Qonversion's Backend.
+        /// </summary>
+        /// <param name="product">Qonversion product for purchase</param>
+        /// <param name="oldProductId">Qonversion product identifier from which the upgrade/downgrade will be initialized</param>
+        /// <param name="callback">Callback that will be called when response is received</param>
+        /// <param name="prorationMode">Proration Mode</param>
+        /// <see href="https://developer.android.com/google/play/billing/subscriptions#proration">Proration Mode</see>
+        /// <see href="https://documentation.qonversion.io/docs/making-purchases#3-update-purchases-android-only">Update Purchase</see>
+        public static void UpdatePurchaseWithProduct([NotNull] Product product, string oldProductId, OnPurchaseResultReceived callback, ProrationMode prorationMode = ProrationMode.UnknownSubscriptionUpgradeDowngradePolicy)
         {
             if (product == null)
             {
-                callback(null, new QonversionError("PurchaseInvalid", "Product is null"));
+                callback(null, new QonversionError("PurchaseInvalid", "Product is null"), false);
                 return;
             }
 
@@ -500,19 +560,19 @@ namespace QonversionUnity
             CheckPermissionsCallback = null;
         }
 
-        // Called from the native SDK - Called when permissions received from the purchase() method 
+        // Called from the native SDK - Called when purchase result received from the purchase() method
         private void OnPurchase(string jsonString)
         {
             Debug.Log("OnPurchase callback " + jsonString);
-            HandlePermissions(PurchaseCallback, jsonString);
+            HandlePurchaseResult(PurchaseCallback, jsonString);
             PurchaseCallback = null;
         }
 
-        // Called from the native SDK - Called when permissions received from the purchaseProduct() method 
+        // Called from the native SDK - Called when purchase result received from the purchaseProduct() method 
         private void OnPurchaseProduct(string jsonString)
         {
             Debug.Log("OnPurchaseProduct callback " + jsonString);
-            HandlePermissions(PurchaseProductCallback, jsonString);
+            HandlePurchaseResult(PurchaseProductCallback, jsonString);
             PurchaseProductCallback = null;
         }
 
@@ -524,19 +584,19 @@ namespace QonversionUnity
             RestoreCallback = null;
         }
 
-        // Called from the native SDK - Called when permissions received from the updatePurchase() method 
+        // Called from the native SDK - Called when purchase result received from the updatePurchase() method 
         private void OnUpdatePurchase(string jsonString)
         {
             Debug.Log("OnUpdatePurchase " + jsonString);
-            HandlePermissions(UpdatePurchaseCallback, jsonString);
+            HandlePurchaseResult(UpdatePurchaseCallback, jsonString);
             UpdatePurchaseCallback = null;
         }
         
-        // Called from the native SDK - Called when permissions received from the updatePurchaseWithProduct() method 
+        // Called from the native SDK - Called when purchase result received from the updatePurchaseWithProduct() method 
         private void OnUpdatePurchaseWithProduct(string jsonString)
         {
             Debug.Log("OnUpdatePurchaseWithProduct " + jsonString);
-            HandlePermissions(UpdatePurchaseWithProductCallback, jsonString);
+            HandlePurchaseResult(UpdatePurchaseWithProductCallback, jsonString);
             UpdatePurchaseWithProductCallback = null;
         }
 
@@ -662,6 +722,23 @@ namespace QonversionUnity
             }
         }
 
+        private void HandlePurchaseResult(OnPurchaseResultReceived callback, string jsonString)
+        {
+            if (callback == null) return;
+
+            var error = Mapper.ErrorFromJson(jsonString);
+            if (error != null)
+            {
+                var isCancelled = Mapper.GetIsCancelledFromJson(jsonString);
+                callback(null, error, isCancelled);
+            }
+            else
+            {
+                var permissions = Mapper.PermissionsFromPurchaseJson(jsonString);
+                callback(permissions, null, false);
+            }
+        }
+
         private void OnAutomationsScreenShown(string jsonString)
         {
             if (_automationsDelegate == null)
@@ -718,5 +795,12 @@ namespace QonversionUnity
 
             _automationsDelegate.OnAutomationsFinished();
         }
+
+		private static OnPurchaseResultReceived ConvertPermissionsCallbackToPurchaseResultCallback(OnPermissionsReceived callback)
+		{
+			return delegate(Dictionary<string, Permission> permissions, QonversionError error, bool isCancelled) {
+				callback(permissions, error);
+			};
+		}
     }
 }

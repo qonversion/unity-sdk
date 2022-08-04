@@ -124,7 +124,7 @@ void _purchase(const char* productId, const char* unityCallbackName) {
     NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
 
     [Qonversion purchase:[UtilityBridge сonvertCStringToNSString:productId] completion:^(NSDictionary *result, NSError *error, BOOL cancelled) {
-        [UtilityBridge handlePermissionsResponse:result withError:error toMethod:callbackName unityListener:unityListenerName];
+        [UtilityBridge handlePurchaseResponse:result isCancelled:cancelled withError:error toMethod:callbackName unityListener:unityListenerName];
     }];
 }
 
@@ -136,7 +136,7 @@ void _purchaseProduct(const char* productJson, const char* unityCallbackName) {
     [Qonversion purchaseProduct:product completion:^(NSDictionary<NSString *,QNPermission *> * _Nonnull result,
                                                      NSError * _Nullable error,
                                                      BOOL cancelled) {
-        [UtilityBridge handlePermissionsResponse:result withError:error toMethod:callbackName unityListener:unityListenerName];
+        [UtilityBridge handlePurchaseResponse:result isCancelled:cancelled withError:error toMethod:callbackName unityListener:unityListenerName];
     }];
 }
 
