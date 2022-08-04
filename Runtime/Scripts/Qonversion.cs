@@ -560,7 +560,7 @@ namespace QonversionUnity
             CheckPermissionsCallback = null;
         }
 
-        // Called from the native SDK - Called when purchase result received from the purchase() methods 
+        // Called from the native SDK - Called when purchase result received from the purchase() method
         private void OnPurchase(string jsonString)
         {
             Debug.Log("OnPurchase callback " + jsonString);
