@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.qonversion.android.sdk.QUserProperties;
@@ -140,12 +141,12 @@ public class QonversionWrapper {
         Qonversion.purchase(UnityPlayer.currentActivity, productId, new QonversionPermissionsCallback() {
             @Override
             public void onSuccess(@NotNull Map<String, QPermission> permissions) {
-                handlePermissionsResponse(permissions, unityCallbackName);
+                handlePurchaseResponse(permissions, unityCallbackName);
             }
 
             @Override
             public void onError(@NotNull QonversionError error) {
-                handleErrorResponse(error, unityCallbackName);
+                handlePurchaseErrorResponse(error, unityCallbackName);
             }
         });
     }
@@ -161,12 +162,12 @@ public class QonversionWrapper {
             Qonversion.purchase(UnityPlayer.currentActivity, product, new QonversionPermissionsCallback() {
                 @Override
                 public void onSuccess(@NotNull Map<String, QPermission> permissions) {
-                    handlePermissionsResponse(permissions, unityCallbackName);
+                    handlePurchaseResponse(permissions, unityCallbackName);
                 }
 
                 @Override
                 public void onError(@NotNull QonversionError error) {
-                    handleErrorResponse(error, unityCallbackName);
+                    handlePurchaseErrorResponse(error, unityCallbackName);
                 }
             });
         } catch (Exception e) {
@@ -178,12 +179,12 @@ public class QonversionWrapper {
         Qonversion.updatePurchase(UnityPlayer.currentActivity, productId, oldProductId, prorationMode, new QonversionPermissionsCallback() {
             @Override
             public void onSuccess(@NotNull Map<String, QPermission> permissions) {
-                handlePermissionsResponse(permissions, unityCallbackName);
+                handlePurchaseResponse(permissions, unityCallbackName);
             }
 
             @Override
             public void onError(@NotNull QonversionError error) {
-                handleErrorResponse(error, unityCallbackName);
+                handlePurchaseErrorResponse(error, unityCallbackName);
             }
         });
     }
@@ -199,12 +200,12 @@ public class QonversionWrapper {
             Qonversion.updatePurchase(UnityPlayer.currentActivity, product, oldProductId, prorationMode, new QonversionPermissionsCallback() {
                 @Override
                 public void onSuccess(@NotNull Map<String, QPermission> permissions) {
-                    handlePermissionsResponse(permissions, unityCallbackName);
+                    handlePurchaseResponse(permissions, unityCallbackName);
                 }
 
                 @Override
                 public void onError(@NotNull QonversionError error) {
-                    handleErrorResponse(error, unityCallbackName);
+                    handlePurchaseErrorResponse(error, unityCallbackName);
                 }
             });
         } catch (Exception e) {
@@ -318,18 +319,38 @@ public class QonversionWrapper {
         sendMessageToUnity(mappedPermissions, methodName);
     }
 
+    private static void handlePurchaseResponse(@NotNull Map<String, QPermission> permissions, @NotNull String methodName) {
+        List<Map<String, Object>> mappedPermissions = Mapper.mapPermissions(permissions);
+        Map<String, Object> result = new HashMap<>();
+        result.put("permissions", mappedPermissions);
+        sendMessageToUnity(result, methodName);
+    }
+
+    private static void handlePurchaseErrorResponse(@NotNull QonversionError error, @NotNull String methodName) {
+        final ObjectMapper mapper = new ObjectMapper();
+        final ObjectNode rootNode = createErrorNode(error);
+        final boolean isCancelled = error.getCode() == QonversionErrorCode.CanceledPurchase;
+        final JsonNode isCancelledNode = mapper.convertValue(isCancelled, JsonNode.class);
+        rootNode.set("isCancelled", isCancelledNode);
+        sendMessageToUnity(rootNode, methodName);
+    }
+
     private static void handleErrorResponse(@NotNull QonversionError error, @NotNull String methodName) {
+        final ObjectNode rootNode = createErrorNode(error);
+        sendMessageToUnity(rootNode, methodName);
+    }
+
+    private static ObjectNode createErrorNode(@NotNull QonversionError error) {
         ObjectMapper mapper = new ObjectMapper();
-        ObjectNode rootNode = mapper.createObjectNode();
+        ObjectNode node = mapper.createObjectNode();
         String message = String.format("%s. %s", error.getDescription(), error.getAdditionalMessage());
 
         ObjectNode errorNode = mapper.createObjectNode();
         errorNode.put("message", message);
         errorNode.put("code", error.getCode().name());
 
-        rootNode.set("error", errorNode);
-
-        sendMessageToUnity(rootNode, methodName);
+        node.set("error", errorNode);
+        return node;
     }
 
     private static void sendMessageToUnity(@NotNull Object objectToConvert, @NotNull String methodName) {

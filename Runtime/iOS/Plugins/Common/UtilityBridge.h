@@ -24,6 +24,12 @@
                          toMethod:(NSString *)methodName
                     unityListener:(const char *)unityListenerName;
 
++ (void)handlePurchaseResponse:(NSDictionary<NSString *,QNPermission *> *) permissions
+                   isCancelled:(BOOL) cancelled
+                     withError:(NSError *) error
+                      toMethod:(NSString *) methodName
+                 unityListener:(const char *) unityListenerName;
+
 + (void)handleErrorResponse:(NSError *)error toMethod:(NSString *) methodName
               unityListener:(const char *)unityListenerName;
 
