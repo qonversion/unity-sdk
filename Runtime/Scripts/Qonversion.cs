@@ -409,8 +409,8 @@ namespace QonversionUnity
             instance.Restore(OnRestoreMethodName);
         }
 
-        private static OnPermissionsReceived UpdatePurchaseCallback { get; set; }
-
+        private static OnPurchaseResultReceived UpdatePurchaseCallback { get; set; }
+        
         /// <summary>
         /// Update (upgrade/downgrade) subscription and validate that through server-to-server using Qonversion's Backend.
         /// </summary>
@@ -420,14 +420,31 @@ namespace QonversionUnity
         /// <param name="prorationMode">Proration Mode</param>
         /// <see href="https://developer.android.com/google/play/billing/subscriptions#proration">Proration Mode</see>
         /// <see href="https://documentation.qonversion.io/docs/making-purchases#3-update-purchases-android-only">Update Purchase</see>
+        [Obsolete("UpdatePurchase with OnPermissionsReceived callback is deprecated. Consider using UpdatePurchase with OnPurchaseResultReceivedCallback instead.")]
         public static void UpdatePurchase(string productId, string oldProductId, OnPermissionsReceived callback, ProrationMode prorationMode = ProrationMode.UnknownSubscriptionUpgradeDowngradePolicy)
+        {
+            var convertedCallback = ConvertPermissionsCallbackToPurchaseResultCallback(callback);
+            UpdatePurchase(productId, oldProductId, convertedCallback, prorationMode);
+        }
+        
+        /// <summary>
+        /// Update (upgrade/downgrade) subscription and validate that through server-to-server using Qonversion's Backend.
+        /// </summary>
+        /// <param name="productId">Qonversion product identifier for purchase</param>
+        /// <param name="oldProductId">Qonversion product identifier from which the upgrade/downgrade will be initialized</param>
+        /// <param name="callback">Callback that will be called when response is received</param>
+        /// <param name="prorationMode">Proration Mode</param>
+        /// <see href="https://developer.android.com/google/play/billing/subscriptions#proration">Proration Mode</see>
+        /// <see href="https://documentation.qonversion.io/docs/making-purchases#3-update-purchases-android-only">Update Purchase</see>
+        public static void UpdatePurchase(string productId, string oldProductId, OnPurchaseResultReceived callback, ProrationMode prorationMode = ProrationMode.UnknownSubscriptionUpgradeDowngradePolicy)
         {
             UpdatePurchaseCallback = callback;
             IQonversionWrapper instance = getFinalInstance();
             instance.UpdatePurchase(productId, oldProductId, prorationMode, OnUpdatePurchaseMethodName);
         }
 
-        private static OnPermissionsReceived UpdatePurchaseWithProductCallback { get; set; }
+        private static OnPurchaseResultReceived UpdatePurchaseWithProductCallback { get; set; }
+
 
         /// <summary>
         /// Update (upgrade/downgrade) subscription and validate that through server-to-server using Qonversion's Backend.
@@ -438,11 +455,27 @@ namespace QonversionUnity
         /// <param name="prorationMode">Proration Mode</param>
         /// <see href="https://developer.android.com/google/play/billing/subscriptions#proration">Proration Mode</see>
         /// <see href="https://documentation.qonversion.io/docs/making-purchases#3-update-purchases-android-only">Update Purchase</see>
+        [Obsolete("UpdatePurchaseWithProduct with OnPermissionsReceived callback is deprecated. Consider using UpdatePurchaseWithProduct with OnPurchaseResultReceivedCallback instead.")]
         public static void UpdatePurchaseWithProduct([NotNull] Product product, string oldProductId, OnPermissionsReceived callback, ProrationMode prorationMode = ProrationMode.UnknownSubscriptionUpgradeDowngradePolicy)
+        {
+            var convertedCallback = ConvertPermissionsCallbackToPurchaseResultCallback(callback);
+            UpdatePurchaseWithProduct(product, oldProductId, convertedCallback, prorationMode);
+        }
+        
+        /// <summary>
+        /// Update (upgrade/downgrade) subscription and validate that through server-to-server using Qonversion's Backend.
+        /// </summary>
+        /// <param name="product">Qonversion product for purchase</param>
+        /// <param name="oldProductId">Qonversion product identifier from which the upgrade/downgrade will be initialized</param>
+        /// <param name="callback">Callback that will be called when response is received</param>
+        /// <param name="prorationMode">Proration Mode</param>
+        /// <see href="https://developer.android.com/google/play/billing/subscriptions#proration">Proration Mode</see>
+        /// <see href="https://documentation.qonversion.io/docs/making-purchases#3-update-purchases-android-only">Update Purchase</see>
+        public static void UpdatePurchaseWithProduct([NotNull] Product product, string oldProductId, OnPurchaseResultReceived callback, ProrationMode prorationMode = ProrationMode.UnknownSubscriptionUpgradeDowngradePolicy)
         {
             if (product == null)
             {
-                callback(null, new QonversionError("PurchaseInvalid", "Product is null"));
+                callback(null, new QonversionError("PurchaseInvalid", "Product is null"), false);
                 return;
             }
 
@@ -555,7 +588,7 @@ namespace QonversionUnity
         private void OnUpdatePurchase(string jsonString)
         {
             Debug.Log("OnUpdatePurchase " + jsonString);
-            HandlePermissions(UpdatePurchaseCallback, jsonString);
+            HandlePurchaseResult(UpdatePurchaseCallback, jsonString);
             UpdatePurchaseCallback = null;
         }
         
@@ -563,7 +596,7 @@ namespace QonversionUnity
         private void OnUpdatePurchaseWithProduct(string jsonString)
         {
             Debug.Log("OnUpdatePurchaseWithProduct " + jsonString);
-            HandlePermissions(UpdatePurchaseWithProductCallback, jsonString);
+            HandlePurchaseResult(UpdatePurchaseWithProductCallback, jsonString);
             UpdatePurchaseWithProductCallback = null;
         }
 
