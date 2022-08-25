@@ -31,5 +31,6 @@
         bool HandleNotification(string notification);
         void AddAutomationsDelegate();
         void PresentCodeRedemptionSheet();
+        void SetPermissionsCacheLifetime(PermissionsCacheLifetime lifetime);
     }
 }

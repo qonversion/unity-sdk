@@ -527,6 +527,18 @@ namespace QonversionUnity
             IQonversionWrapper instance = getFinalInstance();
             instance.CheckTrialIntroEligibilityForProductIds(productIdsJson, OnEligibilitiesMethodName);
         }
+        
+        /// <summary>
+        /// Permissions cache is used when there are problems with the Qonversion API
+        /// or internet connection. If so, Qonversion will return the last successfully loaded
+        /// permissions. The current method allows you to configure how long that cache may be used.
+        /// </summary>
+        /// <param name="lifetime">Desired permissions cache lifetime duration.</param>
+        public static void SetPermissionsCacheLifetime(PermissionsCacheLifetime lifetime)
+        {
+            IQonversionWrapper instance = getFinalInstance();
+            instance.SetPermissionsCacheLifetime(lifetime);
+        }
 
         /// <summary>
         /// Set push token to Qonversion to enable Qonversion push notifications
