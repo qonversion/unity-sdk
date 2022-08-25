@@ -532,6 +532,7 @@ namespace QonversionUnity
         /// Permissions cache is used when there are problems with the Qonversion API
         /// or internet connection. If so, Qonversion will return the last successfully loaded
         /// permissions. The current method allows you to configure how long that cache may be used.
+        /// The default value is <see cref="PermissionsCacheLifetime.MONTH>.
         /// </summary>
         /// <param name="lifetime">Desired permissions cache lifetime duration.</param>
         public static void SetPermissionsCacheLifetime(PermissionsCacheLifetime lifetime)
