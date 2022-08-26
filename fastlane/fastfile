@@ -8,7 +8,7 @@ end
 
 def update_constant(new_version)
     path = "../Runtime/Scripts/Qonversion.cs"
-    regex = /private const string SdkVersion =".*";/
+    regex = /private const string SdkVersion = ".*";/
     result_value = "private const string SdkVersion = \"#{new_version}\";"
 
     update_file(path, regex, result_value)
