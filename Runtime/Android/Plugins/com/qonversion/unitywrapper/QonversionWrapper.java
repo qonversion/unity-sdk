@@ -36,6 +36,7 @@ import com.qonversion.android.sdk.QonversionLaunchCallback;
 import com.qonversion.android.sdk.QonversionPermissionsCallback;
 import com.qonversion.android.sdk.dto.QLaunchResult;
 import com.qonversion.android.sdk.dto.QPermission;
+import com.qonversion.android.sdk.dto.QPermissionsCacheLifetime;
 
 import android.preference.PreferenceManager;
 
@@ -287,6 +288,15 @@ public class QonversionWrapper {
 
     public static synchronized void removeUpdatedPurchasesDelegate() {
         updatedPurchasesListener = null;
+    }
+
+    public static synchronized void setPermissionsCacheLifetime(String lifetimeKey) {
+        try {
+            QPermissionsCacheLifetime lifetime = QPermissionsCacheLifetime.valueOf(lifetimeKey);
+            Qonversion.setPermissionsCacheLifetime(lifetime);
+        } catch (IllegalArgumentException e) {
+            Log.e(TAG, "Failed to map QPermissionsCacheLifetime. " + e.getLocalizedMessage());
+        }
     }
 
     public static synchronized void setNotificationsToken(String token) {

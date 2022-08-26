@@ -119,5 +119,10 @@ namespace QonversionUnity
         {
 
         }
+
+        public void SetPermissionsCacheLifetime(PermissionsCacheLifetime lifetime)
+        {
+            
+        }
     }
   }

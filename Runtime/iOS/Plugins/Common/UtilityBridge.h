@@ -37,5 +37,6 @@
 + (NSDictionary *)convertActionResult:(QONActionResult *)actionResult;
 + (NSDictionary *)convertError:(NSError *)error;
 + (NSDictionary *)convertAutomationsEvent:(QONAutomationsEvent *)event;
++ (NSNumber *)convertPermissionsCacheLifetime:(NSString *)lifetimeKey;
 
 @end
