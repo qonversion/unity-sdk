@@ -56,6 +56,7 @@
         @"AdjustAdId": @(QNPropertyAdjustUserID),
         @"KochavaDeviceId": @(QNPropertyKochavaDeviceID),
         @"CustomUserId": @(QNPropertyUserID),
+        @"FirebaseAppInstanceId": @(QNPropertyFirebaseAppInstanceId),
     };
     
     NSNumber *propertyIndex = propertiesDict[propertyStr];
@@ -396,5 +397,21 @@
 
      return [result copy];
  }
+
++ (NSNumber *)convertPermissionsCacheLifetime:(NSString *)lifetimeKey {
+    NSDictionary *lifetimesDict = @{
+        @"WEEK": @(QNPermissionsCacheLifetimeWeek),
+        @"TWO_WEEKS": @(QNPermissionsCacheLifetimeTwoWeeks),
+        @"MONTH": @(QNPermissionsCacheLifetimeMonth),
+        @"TWO_MONTHS": @(QNPermissionsCacheLifetimeTwoMonth),
+        @"THREE_MONTHS": @(QNPermissionsCacheLifetimeThreeMonth),
+        @"SIX_MONTHS": @(QNPermissionsCacheLifetimeSixMonth),
+        @"YEAR": @(QNPermissionsCacheLifetimeYear),
+        @"UNLIMITED": @(QNPermissionsCacheLifetimeUnlimited),
+    }; 
+
+    NSNumber *lifetimeIndex = lifetimesDict[lifetimeKey];
+    return lifetimeIndex;
+}
 
 @end

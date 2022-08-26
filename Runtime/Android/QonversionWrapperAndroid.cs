@@ -193,5 +193,11 @@ namespace QonversionUnity
         public void RemovePromoPurchasesDelegate()
         {
         }
+
+        public void SetPermissionsCacheLifetime(PermissionsCacheLifetime lifetime)
+        {
+            string lifetimeName = Enum.GetName(typeof(PermissionsCacheLifetime), lifetime);
+            CallQonversion("setPermissionsCacheLifetime", lifetimeName);
+        }
     }
 }

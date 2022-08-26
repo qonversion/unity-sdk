@@ -232,6 +232,15 @@ void _removeUpdatedPurchasesDelegate() {
     purchasesDelegate = nil;
 }
 
+void _setPermissionsCacheLifetime(const char* lifetimeName) {
+    NSString *lifetimeNameStr = [UtilityBridge сonvertCStringToNSString:lifetimeName];
+    NSNumber *lifetimeIndex = [UtilityBridge convertPermissionsCacheLifetime:lifetimeNameStr];
+    
+    if (lifetimeIndex) {
+        [Qonversion setPermissionsCacheLifetime:lifetimeIndex.integerValue];
+    }
+}
+
 void _setNotificationsToken(const char* token) {
     NSString *hexString = [UtilityBridge сonvertCStringToNSString:token];
     NSData *tokenData = [UtilityBridge convertHexToData:hexString];
