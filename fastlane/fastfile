@@ -1,0 +1,28 @@
+def update_package_json(new_version)
+	path = "../package.json"
+    regex = /"version": ".*",/
+    result_value = "\"version\": \"#{new_version}\","
+
+    update_file(path, regex, result_value)
+end
+
+def update_constant(new_version)
+    path = "../Runtime/Scripts/Qonversion.cs"
+    regex = /private const string SdkVersion =".*";/
+    result_value = "private const string SdkVersion = \"#{new_version}\";"
+
+    update_file(path, regex, result_value)
+end
+
+def update_file(path, regex, result_value)
+	file = File.read(path)
+    new_content = file.gsub(regex, result_value)
+    File.open(path, 'w') { |line| line.puts new_content }
+end
+
+lane :bump do |options|
+  	new_version = options[:version]
+
+	update_package_json(new_version)
+	update_constant(new_version)
+end
