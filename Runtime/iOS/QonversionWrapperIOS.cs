@@ -134,8 +134,8 @@ namespace QonversionUnity
 
         public void SetProperty(UserProperty key, string value)
         {
-            string propertyName = Enum.GetName(typeof(UserProperty), key);
 #if UNITY_IOS
+            string propertyName = Enum.GetName(typeof(UserProperty), key);
             _setProperty(propertyName, value);
 #endif
         }
@@ -292,8 +292,8 @@ namespace QonversionUnity
         
         public void SetPermissionsCacheLifetime(PermissionsCacheLifetime lifetime)
         {
-            string lifetimeName = Enum.GetName(typeof(PermissionsCacheLifetime), lifetime);
 #if UNITY_IOS
+            string lifetimeName = Enum.GetName(typeof(PermissionsCacheLifetime), lifetime);
             _setPermissionsCacheLifetime(lifetimeName);
 #endif
         }
