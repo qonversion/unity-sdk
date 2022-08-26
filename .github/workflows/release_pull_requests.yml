@@ -1,4 +1,4 @@
-name: Release pull requests 2
+name: Release pull requests
 on:
   push:
     tags:
