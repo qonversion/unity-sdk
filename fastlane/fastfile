@@ -25,6 +25,4 @@ lane :bump do |options|
 
 	update_package_json(new_version)
 	update_constant(new_version)
-  end
-
 end
