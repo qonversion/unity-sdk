@@ -24,6 +24,12 @@
                          toMethod:(NSString *)methodName
                     unityListener:(const char *)unityListenerName;
 
++ (void)handlePurchaseResponse:(NSDictionary<NSString *,QNPermission *> *) permissions
+                   isCancelled:(BOOL) cancelled
+                     withError:(NSError *) error
+                      toMethod:(NSString *) methodName
+                 unityListener:(const char *) unityListenerName;
+
 + (void)handleErrorResponse:(NSError *)error toMethod:(NSString *) methodName
               unityListener:(const char *)unityListenerName;
 
@@ -31,5 +37,6 @@
 + (NSDictionary *)convertActionResult:(QONActionResult *)actionResult;
 + (NSDictionary *)convertError:(NSError *)error;
 + (NSDictionary *)convertAutomationsEvent:(QONAutomationsEvent *)event;
++ (NSNumber *)convertPermissionsCacheLifetime:(NSString *)lifetimeKey;
 
 @end

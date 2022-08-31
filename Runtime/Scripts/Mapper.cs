@@ -7,6 +7,44 @@ namespace QonversionUnity
 {
     internal class Mapper
     {
+        internal static Dictionary<string, Permission> PermissionsFromPurchaseJson(string jsonStr)
+        {
+            if (Json.Deserialize(jsonStr) is not Dictionary<string, object> result)
+            {
+                Debug.LogError("Could not parse purchase result");
+                return null;
+            }
+            
+            var resultPermissions = new Dictionary<string, Permission>();
+
+            if (result["permissions"] is not List<object> permissions)
+            {
+                Debug.LogError("Could not parse QPermissions");
+                return resultPermissions;
+            }
+
+            foreach (Dictionary<string, object> permissionDict in permissions)
+            {
+                var permission = new Permission(permissionDict);
+                resultPermissions.Add(permission.PermissionID, permission);
+            }
+
+            return resultPermissions;
+        }
+
+        internal static bool GetIsCancelledFromJson(string jsonStr)
+        {
+            if (Json.Deserialize(jsonStr) is not Dictionary<string, object> result)
+            {
+                Debug.LogError("Could not parse purchase result");
+                return false;
+            }
+            
+            var isCancelled = Convert.ToBoolean(result.GetValueOrDefault("isCancelled", 0));
+
+            return isCancelled;
+        }
+
         internal static Dictionary<string, Permission> PermissionsFromJson(string jsonStr)
         {
             var result = new Dictionary<string, Permission>();

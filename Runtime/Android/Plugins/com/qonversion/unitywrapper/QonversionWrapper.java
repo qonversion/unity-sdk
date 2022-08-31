@@ -3,6 +3,7 @@ package com.qonversion.unitywrapper;
 import android.app.Application;
 import android.util.Log;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.unity3d.player.UnityPlayer;
@@ -132,6 +133,15 @@ public class QonversionWrapper {
         }
     }
 
+    public static synchronized void setPermissionsCacheLifetime(String lifetimeKey) {
+        try {
+            QPermissionsCacheLifetime lifetime = QPermissionsCacheLifetime.valueOf(lifetimeKey);
+            Qonversion.setPermissionsCacheLifetime(lifetime);
+        } catch (IllegalArgumentException e) {
+            Log.e(TAG, "Failed to map QPermissionsCacheLifetime. " + e.getLocalizedMessage());
+        }
+    }
+
     public static synchronized void setNotificationsToken(String token) {
         qonversionSandwich.setNotificationToken(token);
     }
@@ -171,9 +181,30 @@ public class QonversionWrapper {
         };
     }
 
-    private static void handleErrorResponse(@NotNull SandwichError error, @NotNull String methodName) {
-        ObjectMapper mapper = new ObjectMapper();
+    private static void handlePurchaseResponse(@NotNull Map<String, QPermission> permissions, @NotNull String methodName) {
+        List<Map<String, Object>> mappedPermissions = Mapper.mapPermissions(permissions);
+        Map<String, Object> result = new HashMap<>();
+        result.put("permissions", mappedPermissions);
+        sendMessageToUnity(result, methodName);
+    }
 
+    private static void handlePurchaseErrorResponse(@NotNull QonversionError error, @NotNull String methodName) {
+        final ObjectMapper mapper = new ObjectMapper();
+        final ObjectNode rootNode = createErrorNode(error);
+        final boolean isCancelled = error.getCode() == QonversionErrorCode.CanceledPurchase;
+        final JsonNode isCancelledNode = mapper.convertValue(isCancelled, JsonNode.class);
+        rootNode.set("isCancelled", isCancelledNode);
+        sendMessageToUnity(rootNode, methodName);
+    }
+
+    private static void handleErrorResponse(@NotNull SandwichError error, @NotNull String methodName) {
+        final ObjectNode rootNode = createErrorNode(error);
+
+        sendMessageToUnity(rootNode, methodName);
+    }
+
+    private static ObjectNode createErrorNode(@NotNull QonversionError error) {
+        ObjectMapper mapper = new ObjectMapper();
         ObjectNode errorNode = mapper.createObjectNode();
         errorNode.put("code", error.getCode());
         errorNode.put("description", error.getDescription());
@@ -181,8 +212,7 @@ public class QonversionWrapper {
 
         ObjectNode rootNode = mapper.createObjectNode();
         rootNode.set("error", errorNode);
-
-        sendMessageToUnity(rootNode, methodName);
+        return node;
     }
 
     private static void sendMessageToUnity(@NotNull Object objectToConvert, @NotNull String methodName) {

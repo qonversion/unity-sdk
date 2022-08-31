@@ -105,5 +105,10 @@ namespace QonversionUnity
         public void PresentCodeRedemptionSheet()
         {
         }
+
+        public void SetPermissionsCacheLifetime(PermissionsCacheLifetime lifetime)
+        {
+            
+        }
     }
   }

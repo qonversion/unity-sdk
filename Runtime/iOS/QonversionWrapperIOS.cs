@@ -79,6 +79,9 @@ namespace QonversionUnity
 
         [DllImport("__Internal")]
         private static extern void _presentCodeRedemptionSheet();
+
+        [DllImport("__Internal")]
+        private static extern void _setPermissionsCacheLifetime(string lifetimeKey);
 #endif
 
         public void Initialize(string gameObjectName)
@@ -129,8 +132,8 @@ namespace QonversionUnity
 
         public void SetProperty(UserProperty key, string value)
         {
-            string propertyName = Enum.GetName(typeof(UserProperty), key);
 #if UNITY_IOS
+            string propertyName = Enum.GetName(typeof(UserProperty), key);
             _setProperty(propertyName, value);
 #endif
         }
@@ -254,6 +257,14 @@ namespace QonversionUnity
         {
 #if UNITY_IOS
             _subscribeOnAutomationEvents();
+#endif
+        }
+        
+        public void SetPermissionsCacheLifetime(PermissionsCacheLifetime lifetime)
+        {
+#if UNITY_IOS
+            string lifetimeName = Enum.GetName(typeof(PermissionsCacheLifetime), lifetime);
+            _setPermissionsCacheLifetime(lifetimeName);
 #endif
         }
     }

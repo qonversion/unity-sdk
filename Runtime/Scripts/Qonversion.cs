@@ -8,6 +8,7 @@ namespace QonversionUnity
 {
     public class Qonversion : MonoBehaviour
     {
+        public delegate void OnPurchaseResultReceived(Dictionary<string, Permission> permissions, QonversionError error, bool isCancelled);
         public delegate void OnPermissionsReceived(Dictionary<string, Permission> permissions, QonversionError error);
         public delegate void OnProductsReceived(Dictionary<string, Product> products, QonversionError error);
         public delegate void OnOfferingsReceived(Offerings offerings, QonversionError error);
@@ -52,7 +53,7 @@ namespace QonversionUnity
         private const string OnOfferingsMethodName = "OnOfferings";
         private const string OnEligibilitiesMethodName = "OnEligibilities";
 
-        private const string SdkVersion = "3.4.1";
+        private const string SdkVersion = "3.5.0";
         private const string SdkSource = "unity";
 
         private static IQonversionWrapper _Instance;
@@ -61,6 +62,17 @@ namespace QonversionUnity
         private static OnPromoPurchasesReceived _onPromoPurchasesReceived;
         private static string _storedPromoProductId = null;
         private static AutomationsDelegate _automationsDelegate;
+
+        private static List<OnPermissionsReceived> CheckPermissionsCallbacks { get; } = new();
+        private static List<OnPermissionsReceived> RestoreCallbacks { get; } = new();
+        private static OnPurchaseResultReceived PurchaseCallback { get; set; }
+        private static OnPurchaseResultReceived PurchaseProductCallback { get; set; }
+        private static OnPurchaseResultReceived UpdatePurchaseCallback { get; set; }
+        private static OnPurchaseResultReceived UpdatePurchaseWithProductCallback { get; set; }
+        private static List<OnProductsReceived> ProductsCallbacks { get; } = new();
+        private static List<OnOfferingsReceived> OfferingsCallbacks { get; } = new();
+        private static OnEligibilitiesReceived EligibilitiesCallback { get; set; }
+        private static OnPermissionsReceived PromoPurchaseCallback { get; set; }
 
         private static IQonversionWrapper getFinalInstance()
         {
@@ -78,12 +90,12 @@ namespace QonversionUnity
                         _Instance = new QonversionWrapperNoop();
                         break;
                 }
-				_Instance.Initialize(GameObjectName);
+                _Instance.Initialize(GameObjectName);
+                
+                GameObject go = new GameObject(GameObjectName);
+                go.AddComponent<Qonversion>();
+                DontDestroyOnLoad(go);
             }
-
-            GameObject go = new GameObject(GameObjectName);
-            go.AddComponent<Qonversion>();
-            DontDestroyOnLoad(go);
 
             return _Instance;
         }
@@ -289,8 +301,6 @@ namespace QonversionUnity
             instance.Logout();
         }
 
-        private static OnPermissionsReceived CheckPermissionsCallback { get; set; }
-
         /// <summary>
         /// You need to call the CheckPermissions method at the start of your app to check if a user has the required
         /// permission.
@@ -303,27 +313,36 @@ namespace QonversionUnity
         /// <param name="callback">Callback that will be called when response is received</param>
         public static void CheckPermissions(OnPermissionsReceived callback)
         {
-            CheckPermissionsCallback = callback;
+            CheckPermissionsCallbacks.Add(callback);
             IQonversionWrapper instance = getFinalInstance();
             instance.CheckPermissions(OnCheckPermissionsMethodName);
         }
-
-        private static OnPermissionsReceived PurchaseCallback { get; set; }
-
+        
         /// <summary>
         /// Make a purchase and validate that through server-to-server using Qonversion's Backend.
         /// </summary>
         /// <param name="productId">Qonversion product identifier for purchase.</param>
         /// <param name="callback">Callback that will be called when response is received.</param>
         /// <see href="https://documentation.qonversion.io/docs/making-purchases#1-make-a-purchase"/>
+		[Obsolete("Purchase with OnPermissionsReceived callback is deprecated. Consider using Purchase with OnPurchaseResultReceivedCallback instead.")]
         public static void Purchase(string productId, OnPermissionsReceived callback)
         {
-            PurchaseCallback = callback;
+			var convertedCallback = ConvertPermissionsCallbackToPurchaseResultCallback(callback);
+			Purchase(productId, convertedCallback);
+        }
+
+		/// <summary>
+        /// Make a purchase and validate that through server-to-server using Qonversion's Backend.
+        /// </summary>
+        /// <param name="productId">Qonversion product identifier for purchase.</param>
+        /// <param name="callback">Callback that will be called when response is received.</param>
+        /// <see href="https://documentation.qonversion.io/docs/making-purchases#1-make-a-purchase"/>
+		public static void Purchase(string productId, OnPurchaseResultReceived callback)
+        {
+			PurchaseCallback = callback;
             IQonversionWrapper instance = getFinalInstance();
             instance.Purchase(productId, OnPurchaseMethodName);
         }
-
-        private static OnPermissionsReceived PurchaseProductCallback { get; set; }
 
         /// <summary>
         /// Make a purchase and validate that through server-to-server using Qonversion's Backend.
@@ -331,11 +350,24 @@ namespace QonversionUnity
         /// <param name="product">Qonversion product for purchase.</param>
         /// <param name="callback">Callback that will be called when response is received.</param>
         /// <see href="https://documentation.qonversion.io/docs/making-purchases#1-make-a-purchase"/>
-        public static void PurchaseProduct([NotNull] Product product, OnPermissionsReceived callback)
+        [Obsolete("PurchaseProduct with OnPermissionsReceived callback is deprecated. Consider using PurchaseProduct with OnPurchaseResultReceivedCallback instead.")]
+		public static void PurchaseProduct([NotNull] Product product, OnPermissionsReceived callback)
+        {
+			var convertedCallback = ConvertPermissionsCallbackToPurchaseResultCallback(callback);
+			PurchaseProduct(product, convertedCallback);
+        }
+
+        /// <summary>
+        /// Make a purchase and validate that through server-to-server using Qonversion's Backend.
+        /// </summary>
+        /// <param name="product">Qonversion product for purchase.</param>
+        /// <param name="callback">Callback that will be called when response is received.</param>
+        /// <see href="https://documentation.qonversion.io/docs/making-purchases#1-make-a-purchase"/>
+		public static void PurchaseProduct([NotNull] Product product, OnPurchaseResultReceived callback)
         {
             if (product == null)
             {
-                callback(null, new QonversionError("PurchaseInvalid", "Product is null"));
+                callback(null, new QonversionError("PurchaseInvalid", "Product is null"), false);
                 return;
             }
 
@@ -344,8 +376,6 @@ namespace QonversionUnity
             instance.PurchaseProduct(product.QonversionId, product.OfferingId, OnPurchaseProductMethodName);
         }
 
-        private static OnPermissionsReceived RestoreCallback { get; set; }
-
         /// <summary>
         /// Restoring purchases restores users purchases in your app, to maintain access to purchased content.
         /// Users sometimes need to restore purchased content, such as when they upgrade to a new phone.
@@ -353,12 +383,10 @@ namespace QonversionUnity
         /// <param name="callback">Callback that will be called when response is received</param>
         public static void Restore(OnPermissionsReceived callback)
         {
-            RestoreCallback = callback;
+            RestoreCallbacks.Add(callback);
             IQonversionWrapper instance = getFinalInstance();
             instance.Restore(OnRestoreMethodName);
         }
-
-        private static OnPermissionsReceived UpdatePurchaseCallback { get; set; }
 
         /// <summary>
         /// Update (upgrade/downgrade) subscription and validate that through server-to-server using Qonversion's Backend.
@@ -369,14 +397,28 @@ namespace QonversionUnity
         /// <param name="prorationMode">Proration Mode</param>
         /// <see href="https://developer.android.com/google/play/billing/subscriptions#proration">Proration Mode</see>
         /// <see href="https://documentation.qonversion.io/docs/making-purchases#3-update-purchases-android-only">Update Purchase</see>
+        [Obsolete("UpdatePurchase with OnPermissionsReceived callback is deprecated. Consider using UpdatePurchase with OnPurchaseResultReceivedCallback instead.")]
         public static void UpdatePurchase(string productId, string oldProductId, OnPermissionsReceived callback, ProrationMode prorationMode = ProrationMode.UnknownSubscriptionUpgradeDowngradePolicy)
+        {
+            var convertedCallback = ConvertPermissionsCallbackToPurchaseResultCallback(callback);
+            UpdatePurchase(productId, oldProductId, convertedCallback, prorationMode);
+        }
+        
+        /// <summary>
+        /// Update (upgrade/downgrade) subscription and validate that through server-to-server using Qonversion's Backend.
+        /// </summary>
+        /// <param name="productId">Qonversion product identifier for purchase</param>
+        /// <param name="oldProductId">Qonversion product identifier from which the upgrade/downgrade will be initialized</param>
+        /// <param name="callback">Callback that will be called when response is received</param>
+        /// <param name="prorationMode">Proration Mode</param>
+        /// <see href="https://developer.android.com/google/play/billing/subscriptions#proration">Proration Mode</see>
+        /// <see href="https://documentation.qonversion.io/docs/making-purchases#3-update-purchases-android-only">Update Purchase</see>
+        public static void UpdatePurchase(string productId, string oldProductId, OnPurchaseResultReceived callback, ProrationMode prorationMode = ProrationMode.UnknownSubscriptionUpgradeDowngradePolicy)
         {
             UpdatePurchaseCallback = callback;
             IQonversionWrapper instance = getFinalInstance();
             instance.UpdatePurchase(productId, oldProductId, prorationMode, OnUpdatePurchaseMethodName);
         }
-
-        private static OnPermissionsReceived UpdatePurchaseWithProductCallback { get; set; }
 
         /// <summary>
         /// Update (upgrade/downgrade) subscription and validate that through server-to-server using Qonversion's Backend.
@@ -387,11 +429,27 @@ namespace QonversionUnity
         /// <param name="prorationMode">Proration Mode</param>
         /// <see href="https://developer.android.com/google/play/billing/subscriptions#proration">Proration Mode</see>
         /// <see href="https://documentation.qonversion.io/docs/making-purchases#3-update-purchases-android-only">Update Purchase</see>
+        [Obsolete("UpdatePurchaseWithProduct with OnPermissionsReceived callback is deprecated. Consider using UpdatePurchaseWithProduct with OnPurchaseResultReceivedCallback instead.")]
         public static void UpdatePurchaseWithProduct([NotNull] Product product, string oldProductId, OnPermissionsReceived callback, ProrationMode prorationMode = ProrationMode.UnknownSubscriptionUpgradeDowngradePolicy)
+        {
+            var convertedCallback = ConvertPermissionsCallbackToPurchaseResultCallback(callback);
+            UpdatePurchaseWithProduct(product, oldProductId, convertedCallback, prorationMode);
+        }
+        
+        /// <summary>
+        /// Update (upgrade/downgrade) subscription and validate that through server-to-server using Qonversion's Backend.
+        /// </summary>
+        /// <param name="product">Qonversion product for purchase</param>
+        /// <param name="oldProductId">Qonversion product identifier from which the upgrade/downgrade will be initialized</param>
+        /// <param name="callback">Callback that will be called when response is received</param>
+        /// <param name="prorationMode">Proration Mode</param>
+        /// <see href="https://developer.android.com/google/play/billing/subscriptions#proration">Proration Mode</see>
+        /// <see href="https://documentation.qonversion.io/docs/making-purchases#3-update-purchases-android-only">Update Purchase</see>
+        public static void UpdatePurchaseWithProduct([NotNull] Product product, string oldProductId, OnPurchaseResultReceived callback, ProrationMode prorationMode = ProrationMode.UnknownSubscriptionUpgradeDowngradePolicy)
         {
             if (product == null)
             {
-                callback(null, new QonversionError("PurchaseInvalid", "Product is null"));
+                callback(null, new QonversionError("PurchaseInvalid", "Product is null"), false);
                 return;
             }
 
@@ -400,8 +458,6 @@ namespace QonversionUnity
             instance.UpdatePurchaseWithProduct(product.QonversionId, product.OfferingId, oldProductId, prorationMode, OnUpdatePurchaseWithProductMethodName);
         }
 
-        private static OnProductsReceived ProductsCallback { get; set; }
-  
         /// <summary>
         /// Returns Qonversion products in association with Apple and Google Play Store Products.
         /// </summary>
@@ -409,12 +465,10 @@ namespace QonversionUnity
         /// <see href="https://qonversion.io/docs/product-center">Product Center</see>
         public static void Products(OnProductsReceived callback)
         {
-            ProductsCallback = callback;
+            ProductsCallbacks.Add(callback);
             IQonversionWrapper instance = getFinalInstance();
             instance.Products(OnProductsMethodName);
         }
-
-        private static OnOfferingsReceived OfferingsCallback { get; set; }
 
         /// <summary>
         /// Return Qonversion Offerings Object.
@@ -428,12 +482,10 @@ namespace QonversionUnity
         /// <see href="https://qonversion.io/docs/product-center">Product Center</see>
         public static void Offerings(OnOfferingsReceived callback)
         {
-            OfferingsCallback = callback;
+            OfferingsCallbacks.Add(callback);
             IQonversionWrapper instance = getFinalInstance();
             instance.Offerings(OnOfferingsMethodName);
         }
-
-        private static OnEligibilitiesReceived EligibilitiesCallback { get; set; }
 
         /// <summary>
         /// You can check if a user is eligible for an introductory offer, including a free trial.
@@ -448,6 +500,19 @@ namespace QonversionUnity
             EligibilitiesCallback = callback;
             IQonversionWrapper instance = getFinalInstance();
             instance.CheckTrialIntroEligibilityForProductIds(productIdsJson, OnEligibilitiesMethodName);
+        }
+        
+        /// <summary>
+        /// Permissions cache is used when there are problems with the Qonversion API
+        /// or internet connection. If so, Qonversion will return the last successfully loaded
+        /// permissions. The current method allows you to configure how long that cache may be used.
+        /// The default value is <see cref="PermissionsCacheLifetime.MONTH>.
+        /// </summary>
+        /// <param name="lifetime">Desired permissions cache lifetime duration.</param>
+        public static void SetPermissionsCacheLifetime(PermissionsCacheLifetime lifetime)
+        {
+            IQonversionWrapper instance = getFinalInstance();
+            instance.SetPermissionsCacheLifetime(lifetime);
         }
 
         /// <summary>
@@ -476,23 +541,23 @@ namespace QonversionUnity
         private void OnCheckPermissions(string jsonString)
         {
             Debug.Log("OnCheckPermissions " + jsonString);
-            HandlePermissions(CheckPermissionsCallback, jsonString);
-            CheckPermissionsCallback = null;
+            HandlePermissions(CheckPermissionsCallbacks, jsonString);
+            CheckPermissionsCallbacks.Clear();
         }
 
-        // Called from the native SDK - Called when permissions received from the purchase() method 
+        // Called from the native SDK - Called when purchase result received from the purchase() method
         private void OnPurchase(string jsonString)
         {
             Debug.Log("OnPurchase callback " + jsonString);
-            HandlePermissions(PurchaseCallback, jsonString);
+            HandlePurchaseResult(PurchaseCallback, jsonString);
             PurchaseCallback = null;
         }
 
-        // Called from the native SDK - Called when permissions received from the purchaseProduct() method 
+        // Called from the native SDK - Called when purchase result received from the purchaseProduct() method 
         private void OnPurchaseProduct(string jsonString)
         {
             Debug.Log("OnPurchaseProduct callback " + jsonString);
-            HandlePermissions(PurchaseProductCallback, jsonString);
+            HandlePurchaseResult(PurchaseProductCallback, jsonString);
             PurchaseProductCallback = null;
         }
 
@@ -500,23 +565,23 @@ namespace QonversionUnity
         private void OnRestore(string jsonString)
         {
             Debug.Log("OnRestore " + jsonString);
-            HandlePermissions(RestoreCallback, jsonString);
-            RestoreCallback = null;
+            HandlePermissions(RestoreCallbacks, jsonString);
+            RestoreCallbacks.Clear();
         }
 
-        // Called from the native SDK - Called when permissions received from the updatePurchase() method 
+        // Called from the native SDK - Called when purchase result received from the updatePurchase() method 
         private void OnUpdatePurchase(string jsonString)
         {
             Debug.Log("OnUpdatePurchase " + jsonString);
-            HandlePermissions(UpdatePurchaseCallback, jsonString);
+            HandlePurchaseResult(UpdatePurchaseCallback, jsonString);
             UpdatePurchaseCallback = null;
         }
         
-        // Called from the native SDK - Called when permissions received from the updatePurchaseWithProduct() method 
+        // Called from the native SDK - Called when purchase result received from the updatePurchaseWithProduct() method 
         private void OnUpdatePurchaseWithProduct(string jsonString)
         {
             Debug.Log("OnUpdatePurchaseWithProduct " + jsonString);
-            HandlePermissions(UpdatePurchaseWithProductCallback, jsonString);
+            HandlePurchaseResult(UpdatePurchaseWithProductCallback, jsonString);
             UpdatePurchaseWithProductCallback = null;
         }
 
@@ -524,7 +589,11 @@ namespace QonversionUnity
         private void OnPromoPurchase(string jsonString)
         {
             Debug.Log("OnPromoPurchase callback " + jsonString);
-            HandlePermissions(PromoPurchaseCallback, jsonString);
+            if (PromoPurchaseCallback != null) {
+                var callbacks = new List<OnPermissionsReceived> { PromoPurchaseCallback };
+                HandlePermissions(callbacks, jsonString);
+            }
+
             PromoPurchaseCallback = null;
             _storedPromoProductId = null;
         }
@@ -534,20 +603,20 @@ namespace QonversionUnity
         {
             Debug.Log("OnProducts " + jsonString);
 
-            if (ProductsCallback == null) return;
+            if (ProductsCallbacks.Count == 0) return;
 
             var error = Mapper.ErrorFromJson(jsonString);
             if (error != null)
             {
-                ProductsCallback(null, error);
+                ProductsCallbacks.ForEach(callback => callback(null, error));
             }
             else
             {
-                Dictionary<string, Product> products = Mapper.ProductsFromJson(jsonString);
-                ProductsCallback(products, null);
+                var products = Mapper.ProductsFromJson(jsonString);
+                ProductsCallbacks.ForEach(callback => callback(products, null));
             }
 
-            ProductsCallback = null;
+            ProductsCallbacks.Clear();
         }
 
         // Called from the native SDK - Called when offerings received from the offerings() method 
@@ -555,20 +624,20 @@ namespace QonversionUnity
         {
             Debug.Log("OnOfferings " + jsonString);
 
-            if (OfferingsCallback == null) return;
+            if (OfferingsCallbacks.Count == 0) return;
 
             var error = Mapper.ErrorFromJson(jsonString);
             if (error != null)
             {
-                OfferingsCallback(null, error);
+                OfferingsCallbacks.ForEach(callback => callback(null, error));
             }
             else
             {
-                Offerings offerings = Mapper.OfferingsFromJson(jsonString);
-                OfferingsCallback(offerings, null);
+                var offerings = Mapper.OfferingsFromJson(jsonString);
+                OfferingsCallbacks.ForEach(callback => callback(offerings, null));
             }
 
-            OfferingsCallback = null;
+            OfferingsCallbacks.Clear();
         }
 
         // Called from the native SDK - Called when eligibilities received from the checkTrialIntroEligibilityForProductIds() method 
@@ -619,8 +688,6 @@ namespace QonversionUnity
             _onPromoPurchasesReceived(storeProductId, PromoPurchase);
         }
 
-        private static OnPermissionsReceived PromoPurchaseCallback { get; set; }
-
         private void PromoPurchase(OnPermissionsReceived callback)
         {
             PromoPurchaseCallback = callback;
@@ -628,19 +695,36 @@ namespace QonversionUnity
             instance.PromoPurchase(_storedPromoProductId, OnPromoPurchaseMethodName);
         }
 
-        private void HandlePermissions(OnPermissionsReceived callback, string jsonString)
+        private void HandlePermissions(List<OnPermissionsReceived> callbacks, string jsonString)
+        {
+            if (callbacks.Count == 0) return;
+
+            var error = Mapper.ErrorFromJson(jsonString);
+            if (error != null)
+            {
+                callbacks.ForEach(callback => callback(null, error));
+            }
+            else
+            {
+                var permissions = Mapper.PermissionsFromJson(jsonString);
+                callbacks.ForEach(callback => callback(permissions, null));
+            }
+        }
+
+        private void HandlePurchaseResult(OnPurchaseResultReceived callback, string jsonString)
         {
             if (callback == null) return;
 
             var error = Mapper.ErrorFromJson(jsonString);
             if (error != null)
             {
-                callback(null, error);
+                var isCancelled = Mapper.GetIsCancelledFromJson(jsonString);
+                callback(null, error, isCancelled);
             }
             else
             {
-                Dictionary<string, Permission> permissions = Mapper.PermissionsFromJson(jsonString);
-                callback(permissions, null);
+                var permissions = Mapper.PermissionsFromPurchaseJson(jsonString);
+                callback(permissions, null, false);
             }
         }
 
@@ -700,5 +784,12 @@ namespace QonversionUnity
 
             _automationsDelegate.OnAutomationsFinished();
         }
+
+		private static OnPurchaseResultReceived ConvertPermissionsCallbackToPurchaseResultCallback(OnPermissionsReceived callback)
+		{
+			return delegate(Dictionary<string, Permission> permissions, QonversionError error, bool isCancelled) {
+				callback(permissions, error);
+			};
+		}
     }
 }

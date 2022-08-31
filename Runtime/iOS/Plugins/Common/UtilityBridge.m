@@ -56,6 +56,7 @@
         @"AdjustAdId": @(QNPropertyAdjustUserID),
         @"KochavaDeviceId": @(QNPropertyKochavaDeviceID),
         @"CustomUserId": @(QNPropertyUserID),
+        @"FirebaseAppInstanceId": @(QNPropertyFirebaseAppInstanceId),
     };
     
     NSNumber *propertyIndex = propertiesDict[propertyStr];
@@ -296,7 +297,7 @@
 
 + (void)handlePermissionsResponse:(NSDictionary<NSString *,QNPermission *> *) result withError:( NSError *)error
                          toMethod:(NSString *) methodName
-                    unityListener:(const char *)unityListenerName{
+                    unityListener:(const char *)unityListenerName {
     if (error) {
         [UtilityBridge handleErrorResponse:error toMethod:methodName unityListener:unityListenerName];
         return;
@@ -304,6 +305,27 @@
     
     NSArray *permissions = [UtilityBridge convertPermissions:result.allValues];
     [UtilityBridge sendUnityMessage:permissions toMethod:methodName unityListener: unityListenerName];
+}
+
++ (void)handlePurchaseResponse:(NSDictionary<NSString *,QNPermission *> *) permissions
+                   isCancelled:(BOOL) cancelled
+                     withError:(NSError *) error
+                      toMethod:(NSString *) methodName
+                 unityListener:(const char *) unityListenerName {
+  if (error) {
+      NSMutableDictionary *errorDict = [[UtilityBridge convertError:error] mutableCopy];
+      errorDict[@"isCancelled"] = cancelled ? @(1) : @(0);
+      [UtilityBridge sendUnityMessage:errorDict toMethod:methodName unityListener: unityListenerName];
+      return;
+  }
+  
+  NSArray *convertedPermissions = [UtilityBridge convertPermissions:permissions.allValues];
+  
+  NSDictionary *result = @{
+    @"permissions": convertedPermissions
+  };
+
+  [UtilityBridge sendUnityMessage:result toMethod:methodName unityListener: unityListenerName];
 }
 
 + (void)handleErrorResponse:(NSError *)error toMethod:(NSString *) methodName
@@ -375,5 +397,21 @@
 
      return [result copy];
  }
+
++ (NSNumber *)convertPermissionsCacheLifetime:(NSString *)lifetimeKey {
+    NSDictionary *lifetimesDict = @{
+        @"WEEK": @(QNPermissionsCacheLifetimeWeek),
+        @"TWO_WEEKS": @(QNPermissionsCacheLifetimeTwoWeeks),
+        @"MONTH": @(QNPermissionsCacheLifetimeMonth),
+        @"TWO_MONTHS": @(QNPermissionsCacheLifetimeTwoMonth),
+        @"THREE_MONTHS": @(QNPermissionsCacheLifetimeThreeMonth),
+        @"SIX_MONTHS": @(QNPermissionsCacheLifetimeSixMonth),
+        @"YEAR": @(QNPermissionsCacheLifetimeYear),
+        @"UNLIMITED": @(QNPermissionsCacheLifetimeUnlimited),
+    }; 
+
+    NSNumber *lifetimeIndex = lifetimesDict[lifetimeKey];
+    return lifetimeIndex;
+}
 
 @end

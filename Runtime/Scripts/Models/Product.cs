@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using JetBrains.Annotations;
 using QonversionUnity.MiniJSON;
 using UnityEngine;
@@ -87,7 +88,16 @@ namespace QonversionUnity
                 {
                     SkProduct = new SKProduct(skProduct);
 
-                    Price = double.Parse(SkProduct.Price);
+                    double parsedPrice;
+                    if (double.TryParse(SkProduct.Price, NumberStyles.Float, CultureInfo.InvariantCulture, out parsedPrice))
+                    {
+                        Price = parsedPrice;
+                    }
+                    else
+                    {
+                        Debug.LogError("Failed to parse SKProduct price: " + SkProduct.Price);
+                    }
+
                     CurrencyCode = SkProduct.CurrencyCode;
                     StoreTitle = SkProduct.LocalizedTitle;
                     StoreDescription = SkProduct.LocalizedDescription;
