@@ -509,10 +509,10 @@ namespace QonversionUnity
         /// The default value is <see cref="PermissionsCacheLifetime.MONTH>.
         /// </summary>
         /// <param name="lifetime">Desired permissions cache lifetime duration.</param>
-        public static void SetPermissionsCacheLifetime(PermissionsCacheLifetime lifetime)
-        {
+        public static void SetPermissionsCacheLifetime(PermissionsCacheLifetime lifetime) {
+            var lifetimeKey = Mapper.GetLifetimeKey(lifetime);
             IQonversionWrapper instance = getFinalInstance();
-            instance.SetPermissionsCacheLifetime(lifetime);
+            instance.SetPermissionsCacheLifetime(lifetimeKey);
         }
 
         /// <summary>
@@ -723,7 +723,7 @@ namespace QonversionUnity
             }
             else
             {
-                var permissions = Mapper.PermissionsFromPurchaseJson(jsonString);
+                var permissions = Mapper.PermissionsFromJson(jsonString);
                 callback(permissions, null, false);
             }
         }
@@ -737,7 +737,6 @@ namespace QonversionUnity
 
             string screenId = Mapper.ScreenIdFromJson(jsonString);
 
-            Debug.Log(screenId);
             _automationsDelegate.OnAutomationsScreenShown(screenId);
         }
 

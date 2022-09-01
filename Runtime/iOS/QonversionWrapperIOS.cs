@@ -260,11 +260,10 @@ namespace QonversionUnity
 #endif
         }
         
-        public void SetPermissionsCacheLifetime(PermissionsCacheLifetime lifetime)
+        public void SetPermissionsCacheLifetime(string lifetime)
         {
 #if UNITY_IOS
-            string lifetimeName = Enum.GetName(typeof(PermissionsCacheLifetime), lifetime);
-            _setPermissionsCacheLifetime(lifetimeName);
+            _setPermissionsCacheLifetime(lifetime);
 #endif
         }
     }

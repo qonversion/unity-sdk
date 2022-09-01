@@ -11,9 +11,9 @@ namespace QonversionUnity
 
         public ActionResult(Dictionary<string, object> dict)
         {
-            if (dict.TryGetValue("error", out object rawError ) && rawError != null) Error = new QonversionError((Dictionary<string, object>)rawError);
-            if (dict.TryGetValue("value", out object rawParams) && rawParams != null) Parameters = (Dictionary<string, object>)rawParams;
-            if (dict.TryGetValue("type", out object actionType)) Type = FormatActionResultType(actionType);
+            if (dict.TryGetValue("error", out var rawError ) && rawError != null) Error = new QonversionError((Dictionary<string, object>)rawError);
+            if (dict.TryGetValue("value", out var rawParams) && rawParams != null) Parameters = (Dictionary<string, object>)rawParams;
+            if (dict.TryGetValue("type", out var actionType)) Type = FormatActionResultType(actionType);
         }
 
         public override string ToString()

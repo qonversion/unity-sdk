@@ -35,7 +35,7 @@ namespace QonversionUnity
             if (dict.TryGetValue("renewState", out value)) RenewState = FormatRenewState(value);
             if (dict.TryGetValue("active", out value)) IsActive = (bool)value;
             if (dict.TryGetValue("startedTimestamp", out value)) StartedDate = FormatDate(value);
-            if (dict.TryGetValue("expirationTimestamp", out value)) ExpirationDate = FormatDate(value);
+            if (dict.TryGetValue("expirationTimestamp", out value) && value != null) ExpirationDate = FormatDate(value);
         }
 
         public override string ToString()

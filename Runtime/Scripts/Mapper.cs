@@ -7,31 +7,20 @@ namespace QonversionUnity
 {
     internal class Mapper
     {
-        internal static Dictionary<string, Permission> PermissionsFromPurchaseJson(string jsonStr)
-        {
-            if (Json.Deserialize(jsonStr) is not Dictionary<string, object> result)
-            {
-                Debug.LogError("Could not parse purchase result");
-                return null;
-            }
-            
-            var resultPermissions = new Dictionary<string, Permission>();
-
-            if (result["permissions"] is not List<object> permissions)
-            {
-                Debug.LogError("Could not parse QPermissions");
-                return resultPermissions;
-            }
-
-            foreach (Dictionary<string, object> permissionDict in permissions)
-            {
-                var permission = new Permission(permissionDict);
-                resultPermissions.Add(permission.PermissionID, permission);
-            }
-
-            return resultPermissions;
+        internal static string GetLifetimeKey(PermissionsCacheLifetime lifetime) {
+            var keys = new Dictionary<PermissionsCacheLifetime, string>() {
+                {PermissionsCacheLifetime.WEEK, "Week"},
+                {PermissionsCacheLifetime.TWO_WEEKS, "TwoWeeks"},
+                {PermissionsCacheLifetime.MONTH, "Month"},
+                {PermissionsCacheLifetime.TWO_MONTHS, "TwoMonths"},
+                {PermissionsCacheLifetime.THREE_MONTHS, "ThreeMonths"},
+                {PermissionsCacheLifetime.SIX_MONTHS, "SixMonths"},
+                {PermissionsCacheLifetime.YEAR, "Year"},
+                {PermissionsCacheLifetime.UNLIMITED, "Unlimited"}
+            };
+            return keys[lifetime];
         }
-
+        
         internal static bool GetIsCancelledFromJson(string jsonStr)
         {
             if (Json.Deserialize(jsonStr) is not Dictionary<string, object> result)
@@ -119,7 +108,7 @@ namespace QonversionUnity
                 return null;
             }
 
-            return screenResult.GetString("screenID", "");
+            return screenResult.GetString("screenId", "");
         }
 
         internal static Dictionary<string, Eligibility> EligibilitiesFromJson(string jsonStr)
