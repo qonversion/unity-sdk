@@ -189,10 +189,9 @@ namespace QonversionUnity
         {
         }
 
-        public void SetPermissionsCacheLifetime(PermissionsCacheLifetime lifetime)
+        public void SetPermissionsCacheLifetime(string lifetime)
         {
-            string lifetimeName = Enum.GetName(typeof(PermissionsCacheLifetime), lifetime);
-            CallQonversion("setPermissionsCacheLifetime", lifetimeName);
+            CallQonversion("setPermissionsCacheLifetime", lifetime);
         }
     }
 }

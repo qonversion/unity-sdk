@@ -28,6 +28,6 @@
         bool HandleNotification(string notification);
         void SubscribeOnAutomationEvents();
         void PresentCodeRedemptionSheet();
-        void SetPermissionsCacheLifetime(PermissionsCacheLifetime lifetime);
+        void SetPermissionsCacheLifetime(string lifetime);
     }
 }

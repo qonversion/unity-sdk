@@ -16,7 +16,7 @@ namespace QonversionUnity
                 message += description;
                 if (dict.TryGetValue("domain", out object domain))
                 {
-                    message += ". Domain: " + domain.ToString();
+                    message += ". Domain: " + domain;
                 }
                 if (dict.TryGetValue("additionalMessage", out object additionalMessage))
                 {
