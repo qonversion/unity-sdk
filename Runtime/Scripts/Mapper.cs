@@ -9,7 +9,7 @@ namespace QonversionUnity
     {
         internal static Dictionary<string, Permission> PermissionsFromPurchaseJson(string jsonStr)
         {
-            if (Json.Deserialize(jsonStr) is not Dictionary<string, object> result)
+            if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> result))
             {
                 Debug.LogError("Could not parse purchase result");
                 return null;
@@ -17,7 +17,7 @@ namespace QonversionUnity
             
             var resultPermissions = new Dictionary<string, Permission>();
 
-            if (result["permissions"] is not List<object> permissions)
+            if (!(result["permissions"] is List<object> permissions))
             {
                 Debug.LogError("Could not parse QPermissions");
                 return resultPermissions;
@@ -34,15 +34,13 @@ namespace QonversionUnity
 
         internal static bool GetIsCancelledFromJson(string jsonStr)
         {
-            if (Json.Deserialize(jsonStr) is not Dictionary<string, object> result)
+            if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> result))
             {
                 Debug.LogError("Could not parse purchase result");
                 return false;
             }
             
-            var isCancelled = Convert.ToBoolean(result.GetValueOrDefault("isCancelled", 0));
-
-            return isCancelled;
+            return result.TryGetValue("isCancelled", out var isCancelled) && Convert.ToBoolean(isCancelled);
         }
 
         internal static Dictionary<string, Permission> PermissionsFromJson(string jsonStr)
