@@ -53,7 +53,7 @@ namespace QonversionUnity
         private const string OnOfferingsMethodName = "OnOfferings";
         private const string OnEligibilitiesMethodName = "OnEligibilities";
 
-        private const string SdkVersion = "3.5.0";
+        private const string SdkVersion = "3.5.1";
         private const string SdkSource = "unity";
 
         private static IQonversionWrapper _Instance;
@@ -63,14 +63,14 @@ namespace QonversionUnity
         private static string _storedPromoProductId = null;
         private static AutomationsDelegate _automationsDelegate;
 
-        private static List<OnPermissionsReceived> CheckPermissionsCallbacks { get; } = new();
-        private static List<OnPermissionsReceived> RestoreCallbacks { get; } = new();
+        private static List<OnPermissionsReceived> CheckPermissionsCallbacks { get; } = new List<OnPermissionsReceived>();
+        private static List<OnPermissionsReceived> RestoreCallbacks { get; } = new List<OnPermissionsReceived>();
         private static OnPurchaseResultReceived PurchaseCallback { get; set; }
         private static OnPurchaseResultReceived PurchaseProductCallback { get; set; }
         private static OnPurchaseResultReceived UpdatePurchaseCallback { get; set; }
         private static OnPurchaseResultReceived UpdatePurchaseWithProductCallback { get; set; }
-        private static List<OnProductsReceived> ProductsCallbacks { get; } = new();
-        private static List<OnOfferingsReceived> OfferingsCallbacks { get; } = new();
+        private static List<OnProductsReceived> ProductsCallbacks { get; } = new List<OnProductsReceived>();
+        private static List<OnOfferingsReceived> OfferingsCallbacks { get; } = new List<OnOfferingsReceived>();
         private static OnEligibilitiesReceived EligibilitiesCallback { get; set; }
         private static OnPermissionsReceived PromoPurchaseCallback { get; set; }
 

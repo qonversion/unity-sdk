@@ -23,15 +23,13 @@ namespace QonversionUnity
         
         internal static bool GetIsCancelledFromJson(string jsonStr)
         {
-            if (Json.Deserialize(jsonStr) is not Dictionary<string, object> result)
+            if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> result))
             {
                 Debug.LogError("Could not parse purchase result");
                 return false;
             }
             
-            var isCancelled = Convert.ToBoolean(result.GetValueOrDefault("isCancelled", 0));
-
-            return isCancelled;
+            return result.TryGetValue("isCancelled", out var isCancelled) && Convert.ToBoolean(isCancelled);
         }
 
         internal static Dictionary<string, Permission> PermissionsFromJson(string jsonStr)
