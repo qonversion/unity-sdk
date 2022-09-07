@@ -89,7 +89,7 @@ namespace QonversionUnity
                     SkProduct = new SKProduct(skProduct);
 
                     double parsedPrice;
-                    if (double.TryParse(SkProduct.Price, NumberStyles.Float, CultureInfo.InvariantCulture, out parsedPrice))
+                    if (double.TryParse(SkProduct.Price, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedPrice))
                     {
                         Price = parsedPrice;
                     }
@@ -101,7 +101,10 @@ namespace QonversionUnity
                     CurrencyCode = SkProduct.CurrencyCode;
                     StoreTitle = SkProduct.LocalizedTitle;
                     StoreDescription = SkProduct.LocalizedDescription;
-                    PrettyIntroductoryPrice = SkProduct.IntroductoryPrice.CurrencySymbol + SkProduct.IntroductoryPrice.Price;
+                    if (SkProduct.IntroductoryPrice != null) {
+                        PrettyIntroductoryPrice = SkProduct.IntroductoryPrice.CurrencySymbol +
+                                                  SkProduct.IntroductoryPrice.Price;
+                    }
                 }
             }
         }
