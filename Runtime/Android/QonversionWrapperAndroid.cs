@@ -181,14 +181,6 @@ namespace QonversionUnity
         {
         }
 
-        public void AddPromoPurchasesDelegate()
-        {
-        }
-
-        public void RemovePromoPurchasesDelegate()
-        {
-        }
-
         public void SetPermissionsCacheLifetime(string lifetime)
         {
             CallQonversion("setPermissionsCacheLifetime", lifetime);

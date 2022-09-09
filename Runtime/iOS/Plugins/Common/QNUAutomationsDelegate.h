@@ -6,13 +6,14 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "Qonversion.h"
+@import QonversionSandwich;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface QNUAutomationsDelegate : NSObject <QONAutomationsDelegate>
+@interface QNUAutomationsDelegate : NSObject <AutomationsEventListener>
 
 - (instancetype)initWithListenerName:(char *)unityListenerName;
+- (void)subscribe;
 
 @end
 

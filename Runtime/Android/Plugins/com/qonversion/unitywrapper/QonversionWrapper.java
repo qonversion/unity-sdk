@@ -17,6 +17,7 @@ import java.util.List;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.qonversion.sandwich.PurchaseResultListener;
 import io.qonversion.sandwich.QonversionSandwich;
 import io.qonversion.sandwich.ResultListener;
 import io.qonversion.sandwich.SandwichError;
@@ -94,19 +95,19 @@ public class QonversionWrapper {
     }
 
     public static synchronized void purchase(String productId, String unityCallbackName) {
-        qonversionSandwich.purchase(productId, getResultListener(unityCallbackName));
+        qonversionSandwich.purchase(productId, getPurchaseResultListener(unityCallbackName));
     }
 
     public static synchronized void purchaseProduct(String productId, String offeringId, String unityCallbackName) {
-        qonversionSandwich.purchaseProduct(productId, offeringId, getResultListener(unityCallbackName));
+        qonversionSandwich.purchaseProduct(productId, offeringId, getPurchaseResultListener(unityCallbackName));
     }
 
     public static synchronized void updatePurchase(String productId, String oldProductId, int prorationMode, String unityCallbackName) {
-        qonversionSandwich.updatePurchase(productId, oldProductId, prorationMode, getResultListener(unityCallbackName));
+        qonversionSandwich.updatePurchase(productId, oldProductId, prorationMode, getPurchaseResultListener(unityCallbackName));
     }
 
     public static synchronized void updatePurchaseWithProduct(String productId, String offeringId, String oldProductId, int prorationMode, String unityCallbackName) {
-        qonversionSandwich.updatePurchaseWithProduct(productId, offeringId, oldProductId, prorationMode, getResultListener(unityCallbackName));
+        qonversionSandwich.updatePurchaseWithProduct(productId, offeringId, oldProductId, prorationMode, getPurchaseResultListener(unityCallbackName));
     }
 
     public static synchronized void restore(String unityCallbackName) {
@@ -134,12 +135,7 @@ public class QonversionWrapper {
     }
 
     public static synchronized void setPermissionsCacheLifetime(String lifetimeKey) {
-        try {
-            QPermissionsCacheLifetime lifetime = QPermissionsCacheLifetime.valueOf(lifetimeKey);
-            Qonversion.setPermissionsCacheLifetime(lifetime);
-        } catch (IllegalArgumentException e) {
-            Log.e(TAG, "Failed to map QPermissionsCacheLifetime. " + e.getLocalizedMessage());
-        }
+        qonversionSandwich.setPermissionsCacheLifetime(lifetimeKey);
     }
 
     public static synchronized void setNotificationsToken(String token) {
@@ -181,20 +177,22 @@ public class QonversionWrapper {
         };
     }
 
-    private static void handlePurchaseResponse(@NotNull Map<String, QPermission> permissions, @NotNull String methodName) {
-        List<Map<String, Object>> mappedPermissions = Mapper.mapPermissions(permissions);
-        Map<String, Object> result = new HashMap<>();
-        result.put("permissions", mappedPermissions);
-        sendMessageToUnity(result, methodName);
-    }
+    private static PurchaseResultListener getPurchaseResultListener(@NotNull String methodName) {
+        return new PurchaseResultListener() {
+            @Override
+            public void onSuccess(@NonNull Map<String, ?> data) {
+                sendMessageToUnity(data, methodName);
+            }
 
-    private static void handlePurchaseErrorResponse(@NotNull QonversionError error, @NotNull String methodName) {
-        final ObjectMapper mapper = new ObjectMapper();
-        final ObjectNode rootNode = createErrorNode(error);
-        final boolean isCancelled = error.getCode() == QonversionErrorCode.CanceledPurchase;
-        final JsonNode isCancelledNode = mapper.convertValue(isCancelled, JsonNode.class);
-        rootNode.set("isCancelled", isCancelledNode);
-        sendMessageToUnity(rootNode, methodName);
+            @Override
+            public void onError(@NonNull SandwichError error, boolean isCancelled) {
+                final ObjectMapper mapper = new ObjectMapper();
+                final ObjectNode rootNode = createErrorNode(error);
+                final JsonNode isCancelledNode = mapper.convertValue(isCancelled, JsonNode.class);
+                rootNode.set("isCancelled", isCancelledNode);
+                sendMessageToUnity(rootNode, methodName);
+            }
+        };
     }
 
     private static void handleErrorResponse(@NotNull SandwichError error, @NotNull String methodName) {
@@ -203,7 +201,7 @@ public class QonversionWrapper {
         sendMessageToUnity(rootNode, methodName);
     }
 
-    private static ObjectNode createErrorNode(@NotNull QonversionError error) {
+    private static ObjectNode createErrorNode(@NotNull SandwichError error) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode errorNode = mapper.createObjectNode();
         errorNode.put("code", error.getCode());
@@ -212,7 +210,7 @@ public class QonversionWrapper {
 
         ObjectNode rootNode = mapper.createObjectNode();
         rootNode.set("error", errorNode);
-        return node;
+        return rootNode;
     }
 
     private static void sendMessageToUnity(@NotNull Object objectToConvert, @NotNull String methodName) {

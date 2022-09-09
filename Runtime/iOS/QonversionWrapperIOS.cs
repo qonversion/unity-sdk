@@ -42,7 +42,7 @@ namespace QonversionUnity
         private static extern void _launchWithKey(string key, string callbackName);
 
         [DllImport("__Internal")]
-        private static extern void _addAttributionData(string conversionData, int provider);
+        private static extern void _addAttributionData(string conversionData, string providerName);
 
         [DllImport("__Internal")]
         private static extern void _checkPermissions(string callbackName);
@@ -141,7 +141,8 @@ namespace QonversionUnity
         public void AddAttributionData(string conversionData, AttributionSource source)
         {
 #if UNITY_IOS
-            _addAttributionData(conversionData, (int)source);
+            string sourceName = Enum.GetName(typeof(AttributionSource), source);
+            _addAttributionData(conversionData, sourceName);
 #endif
         }
 
