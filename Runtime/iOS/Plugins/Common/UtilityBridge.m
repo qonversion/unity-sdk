@@ -41,7 +41,7 @@
     return [errorDict copy];
 }
 
-+ (void)handleErrorResponse:(SandwichError *)error toMethod:(NSString *) methodName
++ (void)handleErrorResponse:(SandwichError *)error toMethod:(NSString *)methodName
               unityListener:(const char *)unityListenerName{
     NSDictionary *errorDict = [UtilityBridge convertError:error];
     [UtilityBridge sendUnityMessage:errorDict toMethod:methodName unityListener: unityListenerName];
@@ -69,7 +69,7 @@
     if (error) {
         [UtilityBridge handleErrorResponse:error toMethod:callbackName unityListener:unityListenerName];
     } else {
-        [UtilityBridge sendUnityMessage:result toMethod:callbackName unityListener: unityListenerName];
+        [UtilityBridge sendUnityMessage:result toMethod:callbackName unityListener:unityListenerName];
     }
 }
 

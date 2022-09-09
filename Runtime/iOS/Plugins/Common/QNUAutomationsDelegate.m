@@ -19,7 +19,7 @@ char* listenerName = nil;
 @interface QNUAutomationsDelegate ()
 
 @property (nonatomic, strong) AutomationsSandwich *automationsSandwich;
-@property (nonatomic, strong) NSDictionary *automationEvents;
+@property (nonatomic, copy) NSDictionary *automationEvents;
 
 @end
 

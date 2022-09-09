@@ -11,7 +11,7 @@
 + (void)sendUnityMessage:(NSObject *)objectToConvert toMethod:(NSString *)methodName
            unityListener:(const char *)unityListenerName;
 
-+ (void)handleErrorResponse:(SandwichError *)error toMethod:(NSString *) methodName
++ (void)handleErrorResponse:(SandwichError *)error toMethod:(NSString *)methodName
               unityListener:(const char *)unityListenerName;
 
 + (void)handleResult:(NSDictionary *)result
