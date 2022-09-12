@@ -20,10 +20,17 @@ namespace QonversionUnity
             if (dict.TryGetValue("identifier", out object value)) Identifier = value as string;
             if (dict.TryGetValue("type", out value)) Type = FormatDiscountType(value);
             if (dict.TryGetValue("price", out value)) Price = value as string;
-            if (dict.TryGetValue("localeIdentifier", out value)) LocaleIdentifier = value as string;
             if (dict.TryGetValue("paymentMode", out value)) PaymentMode = FormatPaymentMode(value);
             if (dict.TryGetValue("numberOfPeriods", out value)) NumberOfPeriods = Convert.ToInt32(value);
-            if (dict.TryGetValue("currencySymbol", out value)) CurrencySymbol = value as string;
+
+            if (dict.TryGetValue("priceLocale", out object priceLocale))
+            {
+                if (priceLocale is Dictionary<string, object> priceLocaleDict)
+                {
+                    if (priceLocaleDict.TryGetValue("localeIdentifier", out value)) LocaleIdentifier = value as string;
+                    if (priceLocaleDict.TryGetValue("currencySymbol", out value)) CurrencySymbol = value as string;
+                }
+            }
 
             if (dict.TryGetValue("subscriptionPeriod", out value))
             {
