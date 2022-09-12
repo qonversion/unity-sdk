@@ -56,7 +56,16 @@ namespace QonversionUnity
 
             if (dict.TryGetValue("downloadContentLengths", out value)) DownloadContentLengths = value as List<int>;
             if (dict.TryGetValue("downloadContentVersion", out value)) DownloadContentVersion = value as string;
-            if (dict.TryGetValue("currencyCode", out value)) CurrencyCode = value as string;
+            if (dict.TryGetValue("priceLocale", out object priceLocale))
+            {
+                if (priceLocale is Dictionary<string, object> priceLocaleDict)
+                {
+                    if (priceLocaleDict.TryGetValue("currencyCode", out value))
+                    {
+                        CurrencyCode = value as string;
+                    }
+                }
+            }
         }
 
         public override string ToString()

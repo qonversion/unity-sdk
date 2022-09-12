@@ -5,14 +5,19 @@ namespace QonversionUnity
 {
     internal class QonversionWrapperAndroid : IQonversionWrapper
     {
-        public void StoreSdkInfo(string version, string versionKey, string source, string sourceKey)
+        public void Initialize(string gameObjectName)
         {
-            CallQonversion("storeSdkInfo", version, versionKey, source, sourceKey);
+            CallQonversion("initialize", gameObjectName);
         }
 
-        public void Launch(string gameObjectName, string projectKey, bool observerMode)
+        public void StoreSdkInfo(string version, string source)
         {
-            CallQonversion("launch", gameObjectName, projectKey, observerMode);
+            CallQonversion("storeSdkInfo", version, source);
+        }
+
+        public void Launch(string projectKey, bool observerMode, string callbackName)
+        {
+            CallQonversion("launch", projectKey, observerMode, callbackName);
         }
 
         public void SetDebugMode()
@@ -104,9 +109,9 @@ namespace QonversionUnity
             CallQonversion("purchase", productId, callbackName);
         }
 
-        public void PurchaseProduct(string productJson, string callbackName)
+        public void PurchaseProduct(string productId, string offeringId, string callbackName)
         {
-            CallQonversion("purchaseProduct", productJson, callbackName);
+            CallQonversion("purchaseProduct", productId, offeringId, callbackName);
         }
 
         public void Restore(string callbackName)
@@ -119,9 +124,9 @@ namespace QonversionUnity
             CallQonversion("updatePurchase", productId, oldProductId, (int)prorationMode, callbackName);
         }
 
-        public void UpdatePurchaseWithProduct(string productJson, string oldProductId, ProrationMode prorationMode, string callbackName)
+        public void UpdatePurchaseWithProduct(string productId, string offeringId, string oldProductId, ProrationMode prorationMode, string callbackName)
         {
-            CallQonversion("updatePurchaseWithProduct", productJson, oldProductId, (int)prorationMode, callbackName);
+            CallQonversion("updatePurchaseWithProduct", productId, offeringId, oldProductId, (int)prorationMode, callbackName);
         }
 
         public void Products(string callbackName)
@@ -139,16 +144,6 @@ namespace QonversionUnity
             CallQonversion("checkTrialIntroEligibilityForProductIds", productIdsJson, callbackName);
         }
 
-        public void AddUpdatedPurchasesDelegate()
-        {
-            CallQonversion("addUpdatedPurchasesDelegate");
-        }
-
-        public void RemoveUpdatedPurchasesDelegate()
-        {
-            CallQonversion("removeUpdatedPurchasesDelegate");
-        }
-
         public void SetNotificationsToken(string token)
         {
             CallQonversion("setNotificationsToken", token);
@@ -159,9 +154,9 @@ namespace QonversionUnity
             return CallQonversion<bool>("handleNotification", notification);
         }
 
-        public void AddAutomationsDelegate()
+        public void SubscribeOnAutomationEvents()
         {
-            CallQonversion("subscribeAutomationsDelegate");
+            CallQonversion("subscribeOnAutomationEvents");
         }
 
         private const string QonversionWrapper = "com.qonversion.unitywrapper.QonversionWrapper";
@@ -186,18 +181,9 @@ namespace QonversionUnity
         {
         }
 
-        public void AddPromoPurchasesDelegate()
+        public void SetPermissionsCacheLifetime(string lifetime)
         {
-        }
-
-        public void RemovePromoPurchasesDelegate()
-        {
-        }
-
-        public void SetPermissionsCacheLifetime(PermissionsCacheLifetime lifetime)
-        {
-            string lifetimeName = Enum.GetName(typeof(PermissionsCacheLifetime), lifetime);
-            CallQonversion("setPermissionsCacheLifetime", lifetimeName);
+            CallQonversion("setPermissionsCacheLifetime", lifetime);
         }
     }
 }

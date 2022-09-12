@@ -7,31 +7,20 @@ namespace QonversionUnity
 {
     internal class Mapper
     {
-        internal static Dictionary<string, Permission> PermissionsFromPurchaseJson(string jsonStr)
-        {
-            if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> result))
-            {
-                Debug.LogError("Could not parse purchase result");
-                return null;
-            }
-            
-            var resultPermissions = new Dictionary<string, Permission>();
-
-            if (!(result["permissions"] is List<object> permissions))
-            {
-                Debug.LogError("Could not parse QPermissions");
-                return resultPermissions;
-            }
-
-            foreach (Dictionary<string, object> permissionDict in permissions)
-            {
-                var permission = new Permission(permissionDict);
-                resultPermissions.Add(permission.PermissionID, permission);
-            }
-
-            return resultPermissions;
+        internal static string GetLifetimeKey(PermissionsCacheLifetime lifetime) {
+            var keys = new Dictionary<PermissionsCacheLifetime, string>() {
+                {PermissionsCacheLifetime.WEEK, "Week"},
+                {PermissionsCacheLifetime.TWO_WEEKS, "TwoWeeks"},
+                {PermissionsCacheLifetime.MONTH, "Month"},
+                {PermissionsCacheLifetime.TWO_MONTHS, "TwoMonths"},
+                {PermissionsCacheLifetime.THREE_MONTHS, "ThreeMonths"},
+                {PermissionsCacheLifetime.SIX_MONTHS, "SixMonths"},
+                {PermissionsCacheLifetime.YEAR, "Year"},
+                {PermissionsCacheLifetime.UNLIMITED, "Unlimited"}
+            };
+            return keys[lifetime];
         }
-
+        
         internal static bool GetIsCancelledFromJson(string jsonStr)
         {
             if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> result))
@@ -47,16 +36,19 @@ namespace QonversionUnity
         {
             var result = new Dictionary<string, Permission>();
 
-            if (!(Json.Deserialize(jsonStr) is List<object> permissions))
+            if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> permissions))
             {
                 Debug.LogError("Could not parse QPermissions");
                 return result;
             }
 
-            foreach (Dictionary<string, object> permissionDict in permissions)
+            foreach (KeyValuePair<string, object> permissionPair in permissions)
             {
-                Permission permission = new Permission(permissionDict);
-                result.Add(permission.PermissionID, permission);
+                if (permissionPair.Value is Dictionary<string, object> permissionDict)
+                {
+                    Permission permission = new Permission(permissionDict);
+                    result.Add(permissionPair.Key, permission);
+                }
             }
 
             return result;
@@ -66,16 +58,19 @@ namespace QonversionUnity
         {
             var result = new Dictionary<string, Product>();
 
-            if (!(Json.Deserialize(jsonStr) is List<object> products))
+            if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> products))
             {
                 Debug.LogError("Could not parse QProducts");
                 return result;
             }
 
-            foreach (Dictionary<string, object> productDict in products)
+            foreach (KeyValuePair<string, object> productPair in products)
             {
-                Product product = new Product(productDict);
-                result.Add(product.QonversionId, product);
+                if (productPair.Value is Dictionary<string, object> productDict)
+                {
+                    Product product = new Product(productDict);
+                    result.Add(productPair.Key, product);
+                }
             }
 
             return result;
@@ -111,25 +106,25 @@ namespace QonversionUnity
                 return null;
             }
 
-            return screenResult.GetString("screenID", "");
+            return screenResult.GetString("screenId", "");
         }
 
         internal static Dictionary<string, Eligibility> EligibilitiesFromJson(string jsonStr)
         {
             var result = new Dictionary<string, Eligibility>();
 
-            if (!(Json.Deserialize(jsonStr) is List<object> elibilities))
+            if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> elibilities))
             {
                 Debug.LogError("Could not parse Eligibilities");
                 return result;
             }
 
-            foreach (Dictionary<string, object> eligibilityDict in elibilities)
+            foreach (KeyValuePair<string, object> eligibilityPair in elibilities)
             {
-                if (eligibilityDict.TryGetValue("productId", out object value))
+                if (eligibilityPair.Value is Dictionary<string, object> eligibilityDict)
                 {
                     Eligibility eligibility = new Eligibility(eligibilityDict);
-                    result.Add(value as string, eligibility);
+                    result.Add(eligibilityPair.Key, eligibility);
                 }
             }
 

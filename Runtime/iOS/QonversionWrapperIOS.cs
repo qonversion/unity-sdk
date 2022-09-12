@@ -12,7 +12,10 @@ namespace QonversionUnity
     {
 #if UNITY_IOS
         [DllImport("__Internal")]
-        private static extern void _storeSdkInfo(string version, string versionKey, string source, string sourceKey);
+        private static extern void _initialize(string gameObjectName);
+
+        [DllImport("__Internal")]
+        private static extern void _storeSdkInfo(string version, string source);
 
         [DllImport("__Internal")]
         private static extern void _setDebugMode();
@@ -36,10 +39,10 @@ namespace QonversionUnity
         private static extern void _setUserProperty(string key, string value);
 
         [DllImport("__Internal")]
-        private static extern void _launchWithKey(string gameObjectName, string key);
+        private static extern void _launchWithKey(string key, string callbackName);
 
         [DllImport("__Internal")]
-        private static extern void _addAttributionData(string conversionData, int provider);
+        private static extern void _addAttributionData(string conversionData, string providerName);
 
         [DllImport("__Internal")]
         private static extern void _checkPermissions(string callbackName);
@@ -51,7 +54,7 @@ namespace QonversionUnity
         private static extern void _purchase(string productID, string callbackName);
 
         [DllImport("__Internal")]
-        private static extern void _purchaseProduct(string productJson, string callbackName);
+        private static extern void _purchaseProduct(string productId, string offeringId, string callbackName);
 
         [DllImport("__Internal")]
         private static extern void _products(string callbackName);
@@ -66,25 +69,13 @@ namespace QonversionUnity
         private static extern void _promoPurchase(string storeProductId, string callbackName);
 
         [DllImport("__Internal")]
-        private static extern void _addPromoPurchasesDelegate();
-
-        [DllImport("__Internal")]
-        private static extern void _removePromoPurchasesDelegate();
-
-        [DllImport("__Internal")]
-        private static extern void _addUpdatedPurchasesDelegate();
-
-        [DllImport("__Internal")]
-        private static extern void _removeUpdatedPurchasesDelegate();
-
-        [DllImport("__Internal")]
         private static extern void _setNotificationsToken(string token);
 
         [DllImport("__Internal")]
         private static extern bool _handleNotification(string notification);
 
         [DllImport("__Internal")]
-        private static extern void _subscribeAutomationsDelegate();
+        private static extern void _subscribeOnAutomationEvents();
 
         [DllImport("__Internal")]
         private static extern void _presentCodeRedemptionSheet();
@@ -93,17 +84,24 @@ namespace QonversionUnity
         private static extern void _setPermissionsCacheLifetime(string lifetimeKey);
 #endif
 
-        public void StoreSdkInfo(string version, string versionKey, string source, string sourceKey)
+        public void Initialize(string gameObjectName)
         {
 #if UNITY_IOS
-            _storeSdkInfo(version, versionKey, source, sourceKey);
+            _initialize(gameObjectName);
 #endif
         }
 
-        public void Launch(string gameObjectName, string projectKey, bool observerMode)
+        public void StoreSdkInfo(string version, string source)
         {
 #if UNITY_IOS
-            _launchWithKey(gameObjectName, projectKey);
+            _storeSdkInfo(version, source);
+#endif
+        }
+
+        public void Launch(string projectKey, bool observerMode, string callbackName)
+        {
+#if UNITY_IOS
+            _launchWithKey(projectKey, callbackName);
 #endif
         }
 
@@ -143,7 +141,8 @@ namespace QonversionUnity
         public void AddAttributionData(string conversionData, AttributionSource source)
         {
 #if UNITY_IOS
-            _addAttributionData(conversionData, (int)source);
+            string sourceName = Enum.GetName(typeof(AttributionSource), source);
+            _addAttributionData(conversionData, sourceName);
 #endif
         }
 
@@ -189,10 +188,10 @@ namespace QonversionUnity
 #endif
         }
 
-        public void PurchaseProduct(string productJson, string callbackName)
+        public void PurchaseProduct(string productId, string offeringId, string callbackName)
         {
 #if UNITY_IOS
-            _purchaseProduct(productJson, callbackName);
+            _purchaseProduct(productId, offeringId, callbackName);
 #endif
         }
 
@@ -207,7 +206,7 @@ namespace QonversionUnity
         {
         }
 
-        public void UpdatePurchaseWithProduct(string productJson, string oldProductId, ProrationMode prorationMode, string callbackName)
+        public void UpdatePurchaseWithProduct(string productId, string offeringId, string oldProductId, ProrationMode prorationMode, string callbackName)
         {
         }
 
@@ -239,34 +238,6 @@ namespace QonversionUnity
 #endif
         }
 
-        public void AddPromoPurchasesDelegate()
-        {
-#if UNITY_IOS
-            _addPromoPurchasesDelegate();
-#endif
-        }
-
-        public void RemovePromoPurchasesDelegate()
-        {
-#if UNITY_IOS
-            _removePromoPurchasesDelegate();
-#endif
-        }
-
-        public void AddUpdatedPurchasesDelegate()
-        {
-#if UNITY_IOS
-             _addUpdatedPurchasesDelegate();
-#endif
-        }
-
-        public void RemoveUpdatedPurchasesDelegate()
-        {
-#if UNITY_IOS
-             _removeUpdatedPurchasesDelegate();
-#endif
-        }
-
         public void SetNotificationsToken(string token)
         {
 #if UNITY_IOS
@@ -283,18 +254,17 @@ namespace QonversionUnity
 #endif
         }
 
-        public void AddAutomationsDelegate()
+        public void SubscribeOnAutomationEvents()
         {
 #if UNITY_IOS
-            _subscribeAutomationsDelegate();
+            _subscribeOnAutomationEvents();
 #endif
         }
         
-        public void SetPermissionsCacheLifetime(PermissionsCacheLifetime lifetime)
+        public void SetPermissionsCacheLifetime(string lifetime)
         {
 #if UNITY_IOS
-            string lifetimeName = Enum.GetName(typeof(PermissionsCacheLifetime), lifetime);
-            _setPermissionsCacheLifetime(lifetimeName);
+            _setPermissionsCacheLifetime(lifetime);
 #endif
         }
     }

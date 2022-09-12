@@ -1,170 +1,153 @@
-#import <Qonversion/Qonversion.h>
 #import "UtilityBridge.h"
 #import "QNUAutomationsDelegate.h"
+@import QonversionSandwich;
 
 char* unityListenerName = nil;
 
-@interface PurchasesDelegateWrapper : NSObject <QNPurchasesDelegate, QNPromoPurchasesDelegate>
+@interface QonversionEventListenerWrapper : NSObject <QonversionEventListener>
 
-- (void)qonversionDidReceiveUpdatedPermissions:(NSDictionary<NSString *, QNPermission *>  *_Nonnull)permissions;
-- (void)shouldPurchasePromoProductWithIdentifier:(NSString *)productID executionBlock:(QNPromoPurchaseCompletionHandler)executionBlock;
-
-@property (nonatomic, strong) NSMutableDictionary *promoPurchasesExecutionBlocks;
+- (void)qonversionDidReceiveUpdatedPermissions:(NSDictionary<NSString *, id> * _Nonnull)permissions;
+- (void)shouldPurchasePromoProductWith:(NSString * _Nonnull)productId;
 
 @end
 
-@implementation PurchasesDelegateWrapper
+@implementation QonversionEventListenerWrapper
 
-- (void)shouldPurchasePromoProductWithIdentifier:(NSString *)productID executionBlock:(QNPromoPurchaseCompletionHandler)executionBlock {
-    if (!_promoPurchasesExecutionBlocks) {
-        _promoPurchasesExecutionBlocks = [[NSMutableDictionary alloc] init];
-    }
-    [_promoPurchasesExecutionBlocks setObject:executionBlock forKey:productID];
-
-    UnitySendMessage(unityListenerName, "OnReceivePromoPurchase", productID.UTF8String);
+- (void)qonversionDidReceiveUpdatedPermissions:(NSDictionary<NSString *, id> * _Nonnull)permissions {
+    [UtilityBridge sendUnityMessage:permissions toMethod:@"OnReceiveUpdatedPurchases" unityListener: unityListenerName];
 }
 
-- (void)qonversionDidReceiveUpdatedPermissions:(NSDictionary<NSString *, QNPermission *>  *_Nonnull)permissions {
-    NSArray *permissionsArray = [UtilityBridge convertPermissions:permissions.allValues];
-    [UtilityBridge sendUnityMessage:permissionsArray toMethod:@"OnReceiveUpdatedPurchases" unityListener: unityListenerName];
+- (void)shouldPurchasePromoProductWith:(NSString * _Nonnull)productId {
+    UnitySendMessage(unityListenerName, "OnReceivePromoPurchase", productId.UTF8String);
 }
 
 @end
 
-static PurchasesDelegateWrapper *purchasesDelegate;
-static PurchasesDelegateWrapper *promoPurchasesDelegate;
 static QNUAutomationsDelegate *automationsDelegate;
+static QonversionSandwich *qonversionSandwich;
 
-void _storeSdkInfo(const char* version, const char* versionKey, const char* source, const char* sourceKey) {
-    NSString *versionStr = [UtilityBridge сonvertCStringToNSString:version];
-    NSString *versionKeyStr = [UtilityBridge сonvertCStringToNSString:versionKey];
-    NSString *sourceStr = [UtilityBridge сonvertCStringToNSString:source];
-    NSString *sourceKeyStr = [UtilityBridge сonvertCStringToNSString:sourceKey];
-    
-    [[NSUserDefaults standardUserDefaults] setValue:versionStr forKey:versionKeyStr];
-    [[NSUserDefaults standardUserDefaults] setValue:sourceStr forKey:sourceKeyStr];
-}
-
-void _setDebugMode() {
-    [Qonversion setDebugMode];
-}
-
-void _launchWithKey(const char* unityListener, const char* key) {
+void _initialize(const char* unityListener) {
     unsigned long len = strlen(unityListener);
     unityListenerName = malloc(len + 1);
     strcpy(unityListenerName, unityListener);
+
+    qonversionSandwich = [[QonversionSandwich alloc] initWithQonversionEventListener:[QonversionEventListenerWrapper new]];
+    automationsDelegate = [[QNUAutomationsDelegate alloc] initWithListenerName:unityListenerName];
+}
+
+void _storeSdkInfo(const char* version, const char* source) {
+    NSString *versionStr = [UtilityBridge сonvertCStringToNSString:version];
+    NSString *sourceStr = [UtilityBridge сonvertCStringToNSString:source];
     
-    [Qonversion launchWithKey:[UtilityBridge сonvertCStringToNSString:key]];
+    [qonversionSandwich storeSdkInfoWithSource:sourceStr version:versionStr];
+}
+
+void _setDebugMode() {
+    [qonversionSandwich setDebugMode];
+}
+
+void _launchWithKey(const char* key, const char* unityCallbackName) {
+    NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
+    
+    NSString *projectKey = [UtilityBridge сonvertCStringToNSString:key];
+    
+    [qonversionSandwich launchWithProjectKey:projectKey completion:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
+        [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
+    }];
 }
 
 void _setAdvertisingID() {
-    [Qonversion setAdvertisingID];
+    [qonversionSandwich setAdvertisingId];
 }
 
 void _presentCodeRedemptionSheet() {
     if (@available(iOS 14.0, *)) {
-        [Qonversion presentCodeRedemptionSheet];
+        [qonversionSandwich presentCodeRedemptionSheet];
     }
 }
 
 void _setAppleSearchAdsAttributionEnabled(const bool enable) {
-    [Qonversion setAppleSearchAdsAttributionEnabled:enable];
+    [qonversionSandwich setAppleSearchAdsAttributionEnabled:enable];
 }
 
 void _setProperty(const char* propertyName, const char* value) {
-    NSString *propertyNameStr = [UtilityBridge сonvertCStringToNSString:propertyName];
+    NSString *propertyStr = [UtilityBridge сonvertCStringToNSString:propertyName];
     NSString *valueStr = [UtilityBridge сonvertCStringToNSString:value];
-    NSNumber *propertyIndex = [UtilityBridge convertProperty:propertyNameStr];
     
-    if (propertyIndex) {
-        [Qonversion setProperty:propertyIndex.integerValue value:valueStr];
-    }
+    [qonversionSandwich setDefinedProperty:propertyStr value:valueStr];
 }
 
 void _setUserProperty(const char* key, const char* value) {
     NSString *keyStr = [UtilityBridge сonvertCStringToNSString:key];
     NSString *valueStr = [UtilityBridge сonvertCStringToNSString:value];
-
-    [Qonversion setUserProperty:keyStr value:valueStr];
+    
+    [qonversionSandwich setCustomProperty:keyStr value:valueStr];
 }
 
-void _addAttributionData(const char* conversionData, const int provider) {
+void _addAttributionData(const char* conversionData, const char* provider) {
     NSDictionary *conversionInfo = [UtilityBridge dictionaryFromJsonString: [UtilityBridge сonvertCStringToNSString: conversionData]];
-    
-    [Qonversion addAttributionData:conversionInfo
-                      fromProvider:(QNAttributionProvider)provider];
+    NSString *providerStr = [UtilityBridge сonvertCStringToNSString:provider];
+
+    [qonversionSandwich addAttributionDataWithSourceKey:providerStr value:conversionInfo];
 }
 
 void _identify(const char* userId) {
     NSString *userIdStr = [UtilityBridge сonvertCStringToNSString:userId];
-    [Qonversion identify:userIdStr];
+    [qonversionSandwich identify:userIdStr];
 }
 
 void _logout() {
-    [Qonversion logout];
+    [qonversionSandwich logout];
 }
 
 void _checkPermissions(const char* unityCallbackName) {
     NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
     
-    [Qonversion checkPermissions:^(NSDictionary<NSString *,QNPermission *> *result, NSError *error) {
-        [UtilityBridge handlePermissionsResponse:result withError:error toMethod:callbackName unityListener:unityListenerName];
+    [qonversionSandwich checkPermissions:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
+        [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
     }];
 }
 
 void _restore(const char* unityCallbackName) {
     NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
 
-    [Qonversion restoreWithCompletion:^(NSDictionary *result, NSError *error) {
-        [UtilityBridge handlePermissionsResponse:result withError:error toMethod:callbackName unityListener:unityListenerName];
+    [qonversionSandwich restore:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
+        [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
     }];
 }
 
 void _purchase(const char* productId, const char* unityCallbackName) {
     NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
-
-    [Qonversion purchase:[UtilityBridge сonvertCStringToNSString:productId] completion:^(NSDictionary *result, NSError *error, BOOL cancelled) {
-        [UtilityBridge handlePurchaseResponse:result isCancelled:cancelled withError:error toMethod:callbackName unityListener:unityListenerName];
+    NSString *productIdStr = [UtilityBridge сonvertCStringToNSString:productId];
+    
+    [qonversionSandwich purchase:productIdStr completion:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
+        [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
     }];
 }
 
-void _purchaseProduct(const char* productJson, const char* unityCallbackName) {
-    NSString *productJsonStr = [UtilityBridge сonvertCStringToNSString:productJson];
+void _purchaseProduct(const char* productId, const char* offeringId, const char* unityCallbackName) {
+    NSString *productIdStr = [UtilityBridge сonvertCStringToNSString:productId];
+    NSString *offeringIdStr = [UtilityBridge сonvertCStringToNSString:offeringId];
     NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
-
-    QNProduct *product = [UtilityBridge convertProductFromJson: productJsonStr];
-    [Qonversion purchaseProduct:product completion:^(NSDictionary<NSString *,QNPermission *> * _Nonnull result,
-                                                     NSError * _Nullable error,
-                                                     BOOL cancelled) {
-        [UtilityBridge handlePurchaseResponse:result isCancelled:cancelled withError:error toMethod:callbackName unityListener:unityListenerName];
+    
+    [qonversionSandwich purchaseProduct:productIdStr :offeringIdStr completion:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
+        [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
     }];
 }
 
 void _products(const char* unityCallbackName) {
     NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
-
-    [Qonversion products:^(NSDictionary *result, NSError *error) {
-        if (error) {
-            [UtilityBridge handleErrorResponse:error toMethod:callbackName unityListener:unityListenerName];
-            return;
-        }
-        
-        NSArray *products = [UtilityBridge convertProducts:result.allValues];
-        [UtilityBridge sendUnityMessage:products toMethod:callbackName unityListener: unityListenerName];
+    
+    [qonversionSandwich products:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
+        [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
     }];
 }
 
 void _offerings(const char* unityCallbackName) {
     NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
-
-    [Qonversion offerings:^(QNOfferings * _Nullable result, NSError * _Nullable error) {
-        if (error) {
-            [UtilityBridge handleErrorResponse:error toMethod:callbackName unityListener:unityListenerName];
-            return;
-        }
-        
-        NSDictionary *offerings = [UtilityBridge convertOfferings:result];
-        [UtilityBridge sendUnityMessage:offerings toMethod:callbackName unityListener: unityListenerName];
+    
+    [qonversionSandwich offerings:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
+        [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
     }];
 }
 
@@ -181,14 +164,8 @@ void _checkTrialIntroEligibilityForProductIds(const char* productIdsJson, const 
         return;
     }
     if (products) {
-        [Qonversion checkTrialIntroEligibilityForProductIds:products completion:^(NSDictionary<NSString *,QNIntroEligibility *> * _Nonnull result, NSError * _Nullable error) {
-            if (error) {
-                [UtilityBridge handleErrorResponse:error toMethod:callbackName unityListener:unityListenerName];
-                return;
-            }
-            
-            NSDictionary *eligibilities = [UtilityBridge convertIntroEligibility:result];
-            [UtilityBridge sendUnityMessage:eligibilities toMethod:callbackName unityListener: unityListenerName];
+        [qonversionSandwich checkTrialIntroEligibility:products completion:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
+            [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
         }];
     }
 }
@@ -196,66 +173,30 @@ void _checkTrialIntroEligibilityForProductIds(const char* productIdsJson, const 
 void _promoPurchase(const char* storeProductId, const char* unityCallbackName) {
     NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
     NSString *storeProductIdStr = [UtilityBridge сonvertCStringToNSString:storeProductId];
-    QNPromoPurchaseCompletionHandler executionBlock = [promoPurchasesDelegate.promoPurchasesExecutionBlocks objectForKey:storeProductIdStr];
-    if (executionBlock) {
-        [promoPurchasesDelegate.promoPurchasesExecutionBlocks removeObjectForKey:storeProductIdStr];
-        QNPurchaseCompletionHandler completion = ^(NSDictionary<NSString *, QNPermission*> *result, NSError  *_Nullable error, BOOL cancelled) {
-            [UtilityBridge handlePermissionsResponse:result withError:error toMethod:callbackName unityListener:unityListenerName];
-        };
-
-        executionBlock(completion);
-    } else {
-        NSError *error = [NSError errorWithDomain:keyQNErrorDomain code:QNErrorProductNotFound userInfo:nil];
-        [UtilityBridge handleErrorResponse:error toMethod:callbackName unityListener:unityListenerName];
-    }
-}
-
-void _addPromoPurchasesDelegate() {
-    if (!promoPurchasesDelegate) {
-        promoPurchasesDelegate = [PurchasesDelegateWrapper alloc];
-    }
-    [Qonversion setPromoPurchasesDelegate:promoPurchasesDelegate];
-}
-
-void _removePromoPurchasesDelegate() {
-    promoPurchasesDelegate = nil;
- }
-
-void _addUpdatedPurchasesDelegate() {
-    if (!purchasesDelegate) {
-        purchasesDelegate = [PurchasesDelegateWrapper alloc];
-    }
-    [Qonversion setPurchasesDelegate:purchasesDelegate];
-}
-
-void _removeUpdatedPurchasesDelegate() {
-    purchasesDelegate = nil;
+    
+    [qonversionSandwich promoPurchase:storeProductIdStr completion:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
+        [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
+    }];
 }
 
 void _setPermissionsCacheLifetime(const char* lifetimeName) {
     NSString *lifetimeNameStr = [UtilityBridge сonvertCStringToNSString:lifetimeName];
-    NSNumber *lifetimeIndex = [UtilityBridge convertPermissionsCacheLifetime:lifetimeNameStr];
-    
-    if (lifetimeIndex) {
-        [Qonversion setPermissionsCacheLifetime:lifetimeIndex.integerValue];
-    }
+    [qonversionSandwich setPermissionsCacheLifetime:lifetimeNameStr];
 }
 
 void _setNotificationsToken(const char* token) {
-    NSString *hexString = [UtilityBridge сonvertCStringToNSString:token];
-    NSData *tokenData = [UtilityBridge convertHexToData:hexString];
-    
-    [Qonversion setNotificationsToken:tokenData];
+    NSString *tokenStr = [UtilityBridge сonvertCStringToNSString:token];
+    [qonversionSandwich setNotificationToken:tokenStr];
 }
 
 bool _handleNotification(const char* notification) {
     NSDictionary *notificationInfo = [UtilityBridge dictionaryFromJsonString: [UtilityBridge сonvertCStringToNSString: notification]];
     
-    BOOL result = [Qonversion handleNotification:notificationInfo];
+    BOOL isQonversionNotification = [qonversionSandwich handleNotification:notificationInfo];
     
-    return result;
+    return isQonversionNotification;
 }
 
-void _subscribeAutomationsDelegate() {
-    automationsDelegate = [[QNUAutomationsDelegate alloc] initWithListenerName:unityListenerName];
+void _subscribeOnAutomationEvents() {
+    [automationsDelegate subscribe];
 }
