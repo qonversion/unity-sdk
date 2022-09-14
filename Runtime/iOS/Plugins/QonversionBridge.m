@@ -130,7 +130,7 @@ void _purchaseProduct(const char* productId, const char* offeringId, const char*
     NSString *offeringIdStr = [UtilityBridge сonvertCStringToNSString:offeringId];
     NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
     
-    [qonversionSandwich purchaseProduct:productIdStr :offeringIdStr completion:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
+    [qonversionSandwich purchaseProduct:productIdStr offeringId:offeringIdStr completion:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
         [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
     }];
 }
