@@ -9,6 +9,7 @@ namespace QonversionUnity
         KochavaDeviceId,
         CustomUserId,
         FacebookAttribution,
-        FirebaseAppInstanceId
+        FirebaseAppInstanceId,
+        AppSetId
     }
 }
