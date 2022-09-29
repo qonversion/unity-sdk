@@ -197,6 +197,20 @@ bool _handleNotification(const char* notification) {
     return isQonversionNotification;
 }
 
+const char* _getNotificationCustomPayload(const char* notification) {
+  NSDictionary *notificationInfo = [UtilityBridge dictionaryFromJsonString: [UtilityBridge сonvertCStringToNSString: notification]];
+  
+  NSDictionary *payload = [qonversionSandwich getNotificationCustomPayload:notificationInfo];
+  
+  if (payload == nil) {
+    return nil;
+  }
+
+  const char *data = [UtilityBridge jsonStringFromObject:payload];
+
+  return data;
+}
+
 void _subscribeOnAutomationEvents() {
     [automationsDelegate subscribe];
 }

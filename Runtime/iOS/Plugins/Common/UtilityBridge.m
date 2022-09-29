@@ -47,19 +47,30 @@
     [UtilityBridge sendUnityMessage:errorDict toMethod:methodName unityListener: unityListenerName];
 }
 
-+ (void)sendUnityMessage:(NSObject *)objectToConvert toMethod:(NSString *)methodName
-           unityListener:(const char *)unityListenerName{
++ (const char *)jsonStringFromObject:(NSObject *)objectToConvert{
     NSError *error = nil;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:objectToConvert options:0 error:&error];
     
     if (error) {
         NSLog(@"An error occurred while serializing data: %@", error.localizedDescription);
-        return;
+        return nil;
     }
+
     if (jsonData) {
         NSString *json = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        UnitySendMessage(unityListenerName, methodName.UTF8String, json.UTF8String);
+        return json.UTF8String;
     }
+    return nil;
+}
+
++ (void)sendUnityMessage:(NSObject *)objectToConvert toMethod:(NSString *)methodName
+           unityListener:(const char *)unityListenerName{
+    const char *data = [UtilityBridge jsonStringFromObject:objectToConvert];
+    
+    if (data) {
+      UnitySendMessage(unityListenerName, methodName.UTF8String, data);
+    }
+    return;
 }
 
 + (void)handleResult:(NSDictionary *)result

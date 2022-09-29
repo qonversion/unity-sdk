@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using QonversionUnity.MiniJSON;
 using UnityEngine;
 
 namespace QonversionUnity
@@ -152,6 +154,11 @@ namespace QonversionUnity
         public bool HandleNotification(string notification)
         {
             return CallQonversion<bool>("handleNotification", notification);
+        }
+
+        public string GetNotificationCustomPayload(string notification)
+        {
+            return CallQonversion<string>("getNotificationCustomPayload", notification);
         }
 
         public void SubscribeOnAutomationEvents()

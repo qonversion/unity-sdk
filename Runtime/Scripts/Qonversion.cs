@@ -531,6 +531,26 @@ namespace QonversionUnity
             return instance.HandleNotification(notification.toJson());
         }
 
+        [CanBeNull]
+        public static Dictionary<string, object> GetNotificationCustomPayload(Dictionary<string, object> notification)
+        {
+            IQonversionWrapper instance = getFinalInstance();
+            var payloadJson = instance.GetNotificationCustomPayload(notification.toJson());
+
+            if (payloadJson == null)
+            {
+                return null;
+            }
+
+            if (!(Json.Deserialize(payloadJson) is Dictionary<string, object> response))
+            {
+                Debug.LogError("Could not parse custom notification payload.");
+                return null;
+            }
+
+            return response;
+        }
+
         // Called from the native SDK - Called when launch completed
         private void OnLaunch(string jsonString)
         {

@@ -7,6 +7,7 @@
 + (NSDictionary*)dictionaryFromJsonString:(NSString*) jsonString;
 + (NSDictionary *)convertError:(SandwichError *)error;
 + (NSDictionary *)convertSandwichError:(SandwichError *)error;
++ (const char *)jsonStringFromObject:(NSObject *)objectToConvert;
 
 + (void)sendUnityMessage:(NSObject *)objectToConvert toMethod:(NSString *)methodName
            unityListener:(const char *)unityListenerName;
