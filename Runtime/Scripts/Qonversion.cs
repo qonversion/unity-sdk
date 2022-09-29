@@ -53,7 +53,7 @@ namespace QonversionUnity
         private const string OnOfferingsMethodName = "OnOfferings";
         private const string OnEligibilitiesMethodName = "OnEligibilities";
 
-        private const string SdkVersion = "3.6.2";
+        private const string SdkVersion = "3.7.0";
         private const string SdkSource = "unity";
 
         private static IQonversionWrapper _Instance;
@@ -529,6 +529,26 @@ namespace QonversionUnity
         {
             IQonversionWrapper instance = getFinalInstance();
             return instance.HandleNotification(notification.toJson());
+        }
+
+        [CanBeNull]
+        public static Dictionary<string, object> GetNotificationCustomPayload(Dictionary<string, object> notification)
+        {
+            IQonversionWrapper instance = getFinalInstance();
+            var payloadJson = instance.GetNotificationCustomPayload(notification.toJson());
+
+            if (payloadJson == null)
+            {
+                return null;
+            }
+
+            if (!(Json.Deserialize(payloadJson) is Dictionary<string, object> response))
+            {
+                Debug.LogError("Could not parse custom notification payload.");
+                return null;
+            }
+
+            return response;
         }
 
         // Called from the native SDK - Called when launch completed
