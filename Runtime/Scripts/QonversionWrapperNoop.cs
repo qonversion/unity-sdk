@@ -98,6 +98,11 @@ namespace QonversionUnity
             return false;
         }
 
+        public string GetNotificationCustomPayload(string notification)
+        {
+            return null;
+        }
+
         public void SubscribeOnAutomationEvents()
         {
         }

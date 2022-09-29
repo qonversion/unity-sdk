@@ -75,6 +75,9 @@ namespace QonversionUnity
         private static extern bool _handleNotification(string notification);
 
         [DllImport("__Internal")]
+        private static extern string _getNotificationCustomPayload(string notification);
+
+        [DllImport("__Internal")]
         private static extern void _subscribeOnAutomationEvents();
 
         [DllImport("__Internal")]
@@ -251,6 +254,15 @@ namespace QonversionUnity
              return _handleNotification(notification);
 #else
             return false;
+#endif
+        }
+
+        public string GetNotificationCustomPayload(string notification)
+        {
+#if UNITY_IOS
+             return _getNotificationCustomPayload(notification);
+#else
+            return null;
 #endif
         }
 

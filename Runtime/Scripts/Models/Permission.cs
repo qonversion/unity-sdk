@@ -17,6 +17,9 @@ namespace QonversionUnity
         /// A renew state for an associate product that unlocked permission
         public readonly QProductRenewState RenewState;
 
+        /// A source determining where this permission is originally from - App Store, Play Store, Stripe, etc.
+        public readonly QPermissionSource Source;
+        
         /// Purchase date
         public readonly DateTime StartedDate;
 
@@ -33,6 +36,7 @@ namespace QonversionUnity
             if (dict.TryGetValue("id", out object value)) PermissionID = value as string;
             if (dict.TryGetValue("associatedProduct", out value)) ProductID = value as string;
             if (dict.TryGetValue("renewState", out value)) RenewState = FormatRenewState(value);
+            Source = dict.TryGetValue("source", out value) ? FormatPermissionSource(value) : QPermissionSource.Unknown;
             if (dict.TryGetValue("active", out value)) IsActive = (bool)value;
             if (dict.TryGetValue("startedTimestamp", out value)) StartedDate = FormatDate(value);
             if (dict.TryGetValue("expirationTimestamp", out value) && value != null) ExpirationDate = FormatDate(value);
@@ -43,6 +47,7 @@ namespace QonversionUnity
             return $"{nameof(PermissionID)}: {PermissionID}, " +
                    $"{nameof(ProductID)}: {ProductID}, " +
                    $"{nameof(RenewState)}: {RenewState}, " +
+                   $"{nameof(Source)}: {Source}, " +
                    $"{nameof(StartedDate)}: {StartedDate}, " +
                    $"{nameof(ExpirationDate)}: {ExpirationDate}, " +
                    $"{nameof(IsActive)}: {IsActive}";
@@ -58,6 +63,12 @@ namespace QonversionUnity
 
         private QProductRenewState FormatRenewState(object renewState) =>
             (QProductRenewState)Convert.ToInt32(renewState);
+
+        private QPermissionSource FormatPermissionSource(object source) {
+            return Enum.TryParse(source.ToString(), out QPermissionSource parsedSource)
+                ? parsedSource
+                : QPermissionSource.Unknown;
+        }
     }
 
     public enum QProductRenewState
@@ -74,5 +85,14 @@ namespace QonversionUnity
         /// There was some billing issue.
         /// Prompt the user to update the payment method.
         BillingIssue = 3
+    }
+
+    public enum QPermissionSource
+    {
+        Unknown,
+        AppStore,
+        PlayStore,
+        Stripe,
+        Manual
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace QonversionUnity
+﻿using JetBrains.Annotations;
+
+namespace QonversionUnity
 {
     internal interface IQonversionWrapper
     {
@@ -26,6 +28,7 @@
         void PromoPurchase(string storeProductId, string callbackName);
         void SetNotificationsToken(string token);
         bool HandleNotification(string notification);
+        [CanBeNull] string GetNotificationCustomPayload(string notification);
         void SubscribeOnAutomationEvents();
         void PresentCodeRedemptionSheet();
         void SetPermissionsCacheLifetime(string lifetime);

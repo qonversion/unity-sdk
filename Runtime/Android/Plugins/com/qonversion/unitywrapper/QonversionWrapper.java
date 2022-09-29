@@ -23,6 +23,7 @@ import io.qonversion.sandwich.ResultListener;
 import io.qonversion.sandwich.SandwichError;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class QonversionWrapper {
     public static String TAG = "QonversionWrapper";
@@ -156,6 +157,24 @@ public class QonversionWrapper {
             return result;
         } catch (Exception e) {
             return false;
+        }
+    }
+
+    @Nullable
+    public static synchronized Map<String, Object> getNotificationCustomPayload(String notification) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+
+            TypeReference<HashMap<String, String>> typeRef
+                    = new TypeReference<HashMap<String, String>>() {
+            };
+            Map<String, String> notificationInfo = mapper.readValue(notification, typeRef);
+
+            Map<String, Object> payload = qonversionSandwich.getNotificationCustomPayload(notificationInfo);
+
+            return payload;
+        } catch (Exception e) {
+            return null;
         }
     }
 
