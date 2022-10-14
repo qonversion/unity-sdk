@@ -64,10 +64,10 @@ def parse_versions(tag)
 end
 
 lane :bump do |options|
-  	new_version = options[:version]
+  new_version = options[:version]
 
-	update_package_json(new_version)
-	update_constant(new_version)
+  update_package_json(new_version)
+  update_constant(new_version)
 end
 
 lane :upgrade_sandwich do |options|
