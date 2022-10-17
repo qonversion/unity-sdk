@@ -14,15 +14,73 @@ def update_constant(new_version)
     update_file(path, regex, result_value)
 end
 
+def upgrade_sandwich_android(new_version)
+  path = "../Editor/QonversionDependencies.xml"
+  common_part = "<androidPackage spec=\"io.qonversion.sandwich:sandwich:"
+  regex = /#{common_part}.*" \/>/
+  result_value = "#{common_part}#{new_version}\" \/>"
+
+  update_file(path, regex, result_value)
+end
+
+def upgrade_sandwich_ios(new_version)
+  path = "../Editor/QonversionDependencies.xml"
+  common_part = "<iosPod name=\"QonversionSandwich\" version=\""
+  regex = /#{common_part}.*" \/>/
+  result_value = "#{common_part}#{new_version}\" \/>"
+
+  update_file(path, regex, result_value)
+end
+
 def update_file(path, regex, result_value)
 	file = File.read(path)
     new_content = file.gsub(regex, result_value)
     File.open(path, 'w') { |line| line.puts new_content }
 end
 
-lane :bump do |options|
-  	new_version = options[:version]
+def get_tag
+  tag = last_git_tag()
+  puts tag
+  result_tag = tag.scan(%r{\d{1,2}.\d{1,2}.\d{1,3}}).first
+  return result_tag
+end
 
-	update_package_json(new_version)
-	update_constant(new_version)
+def calculate_patch_version(tag)
+  major, minor, patch = parse_versions(tag)
+  new_patch_version = patch.to_i.next.to_s
+  new_version = major + "." + minor + "." + new_patch_version
+
+  return new_version
+end
+
+def parse_versions(tag)
+  split_version_array = tag.split(".", 3)
+
+  if split_version_array.length == 3
+    major = split_version_array[0]
+    minor = split_version_array[1]
+    patch = split_version_array[2]
+
+    return major, minor, patch
+  end
+end
+
+lane :bump do |options|
+  new_version = options[:version]
+
+  update_package_json(new_version)
+  update_constant(new_version)
+end
+
+lane :upgrade_sandwich do |options|
+  new_version = options[:version]
+
+  upgrade_sandwich_android(new_version)
+  upgrade_sandwich_ios(new_version)
+end
+
+lane :provide_next_patch_version do
+  tag = get_tag
+  new_version = calculate_patch_version(tag)
+  sh("echo version=#{new_version} >> \"$GITHUB_ENV\"")
 end
