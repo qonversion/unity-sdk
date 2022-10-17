@@ -16,16 +16,18 @@ end
 
 def upgrade_sandwich_android(new_version)
   path = "../Editor/QonversionDependencies.xml"
-  regex = /<androidPackage spec="io.qonversion.sandwich:sandwich:.*" \/>/
-  result_value = "<androidPackage spec=\"io.qonversion.sandwich:sandwich:#{new_version}\" \/>"
+  common_part = "<androidPackage spec=\"io.qonversion.sandwich:sandwich:"
+  regex = /#{common_part}.*" \/>/
+  result_value = "#{common_part}#{new_version}\" \/>"
 
   update_file(path, regex, result_value)
 end
 
 def upgrade_sandwich_ios(new_version)
   path = "../Editor/QonversionDependencies.xml"
-  regex = /<iosPod name="QonversionSandwich" version=".*" \/>/
-  result_value = "<iosPod name=\"QonversionSandwich\" version=\"#{new_version}\" \/>"
+  common_part = "<iosPod name=\"QonversionSandwich\" version=\""
+  regex = /#{common_part}.*" \/>/
+  result_value = "#{common_part}#{new_version}\" \/>"
 
   update_file(path, regex, result_value)
 end
