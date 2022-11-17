@@ -5,7 +5,7 @@ namespace QonversionUnity
         public void Initialize(string gameObjectName)
         {
         }
-        public void Launch(string projectKey, bool observerMode, string callbackName)
+        public void InitializeSdk(string projectKey, bool observerMode, string callbackName)
         {
         }
 
@@ -33,7 +33,7 @@ namespace QonversionUnity
         {
         }
 
-        public void CheckPermissions(string callbackName)
+        public void CheckEntitlements(string callbackName)
         {
         }
 
@@ -69,7 +69,7 @@ namespace QonversionUnity
         {
         }
 
-        public void CheckTrialIntroEligibilityForProductIds(string productIdsJson, string callbackName)
+        public void CheckTrialIntroEligibility(string productIdsJson, string callbackName)
         {
         }
 

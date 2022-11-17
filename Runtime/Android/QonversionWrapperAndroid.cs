@@ -17,9 +17,9 @@ namespace QonversionUnity
             CallQonversion("storeSdkInfo", version, source);
         }
 
-        public void Launch(string projectKey, bool observerMode, string callbackName)
+        public void InitializeSdk(string projectKey, bool observerMode, string callbackName)
         {
-            CallQonversion("launch", projectKey, observerMode, callbackName);
+            CallQonversion("initializeSdk", projectKey, observerMode, callbackName);
         }
 
         public void SetDebugMode()
@@ -101,9 +101,9 @@ namespace QonversionUnity
             CallQonversion("logout");
         }
 
-        public void CheckPermissions(string callbackName)
+        public void CheckEntitlements(string callbackName)
         {
-            CallQonversion("checkPermissions", callbackName);
+            CallQonversion("checkEntitlements", callbackName);
         }
 
         public void Purchase(string productId, string callbackName)
@@ -141,9 +141,9 @@ namespace QonversionUnity
             CallQonversion("offerings", callbackName);
         }
 
-        public void CheckTrialIntroEligibilityForProductIds(string productIdsJson, string callbackName)
+        public void CheckTrialIntroEligibility(string productIdsJson, string callbackName)
         {
-            CallQonversion("checkTrialIntroEligibilityForProductIds", productIdsJson, callbackName);
+            CallQonversion("checkTrialIntroEligibility", productIdsJson, callbackName);
         }
 
         public void SetNotificationsToken(string token)

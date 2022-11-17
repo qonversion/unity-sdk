@@ -27,7 +27,7 @@ import androidx.annotation.Nullable;
 
 public class QonversionWrapper {
     public static String TAG = "QonversionWrapper";
-    public static String ON_UPDATED_PURCHASES_LISTENER = "OnReceiveUpdatedPurchases";
+    public static String ENTITLEMENTS_UPDATE_LISTENER = "OnReceivedUpdatedEntitlements";
 
     private static MessageSender messageSender;
     private static AutomationsWrapper automationsWrapper;
@@ -40,7 +40,7 @@ public class QonversionWrapper {
         qonversionSandwich = new QonversionSandwich(
                 application,
                 () -> UnityPlayer.currentActivity,
-                permissions -> sendMessageToUnity(permissions, ON_UPDATED_PURCHASES_LISTENER)
+                entitlements -> sendMessageToUnity(entitlements, ENTITLEMENTS_UPDATE_LISTENER)
         );
         automationsWrapper = new AutomationsWrapper(messageSender);
     }
@@ -49,16 +49,23 @@ public class QonversionWrapper {
         qonversionSandwich.storeSdkInfo(source, version);
     }
 
-    public static synchronized void launch(String projectKey, boolean observerMode, String unityCallbackName) {
-        qonversionSandwich.launch(projectKey, observerMode, getResultListener(unityCallbackName));
+    public static synchronized void initializeSdk(
+            String projectKey,
+            String launchModeKey,
+            @Nullable String environmentKey,
+            @Nullable String entitlementsCacheLifetimeKey
+    ) {
+        qonversionSandwich.initialize(
+                UnityPlayer.currentActivity,
+                projectKey,
+                launchModeKey,
+                environmentKey,
+                entitlementsCacheLifetimeKey
+        );
     }
 
     public static synchronized void syncPurchases() {
         qonversionSandwich.syncPurchases();
-    }
-
-    public static synchronized void setDebugMode() {
-        qonversionSandwich.setDebugMode();
     }
 
     public static synchronized void setProperty(String key, String value) {
@@ -69,7 +76,7 @@ public class QonversionWrapper {
         qonversionSandwich.setCustomProperty(key, value);
     }
 
-    public static synchronized void attribution(String conversionData, String attributionSource) {
+    public static synchronized void attribution(String conversionData, String attributionProvider) {
         try {
             ObjectMapper mapper = new ObjectMapper();
 
@@ -77,7 +84,7 @@ public class QonversionWrapper {
                     = new TypeReference<HashMap<String, Object>>() {};
             Map<String, Object> conversionInfo = mapper.readValue(conversionData, typeRef);
 
-            qonversionSandwich.addAttributionData(attributionSource, conversionInfo);
+            qonversionSandwich.addAttributionData(attributionProvider, conversionInfo);
         } catch (JsonProcessingException e) {
             handleSerializationException(e);
         }
@@ -91,8 +98,8 @@ public class QonversionWrapper {
         qonversionSandwich.logout();
     }
 
-    public static synchronized void checkPermissions(String unityCallbackName) {
-        qonversionSandwich.checkPermissions(getResultListener(unityCallbackName));
+    public static synchronized void checkEntitlements(String unityCallbackName) {
+        qonversionSandwich.checkEntitlements(getResultListener(unityCallbackName));
     }
 
     public static synchronized void purchase(String productId, String unityCallbackName) {
@@ -123,7 +130,7 @@ public class QonversionWrapper {
         qonversionSandwich.offerings(getResultListener(unityCallbackName));
     }
 
-    public static synchronized void checkTrialIntroEligibilityForProductIds(String productIds, String unityCallbackName) {
+    public static synchronized void checkTrialIntroEligibility(String productIds, String unityCallbackName) {
         try {
             ObjectMapper mapper = new ObjectMapper();
             TypeReference<List<String>> typeRef = new TypeReference<List<String>>() {};
@@ -135,47 +142,17 @@ public class QonversionWrapper {
         }
     }
 
-    public static synchronized void setPermissionsCacheLifetime(String lifetimeKey) {
-        qonversionSandwich.setPermissionsCacheLifetime(lifetimeKey);
-    }
-
     public static synchronized void setNotificationsToken(String token) {
-        qonversionSandwich.setNotificationToken(token);
+        automationsWrapper.setNotificationsToken(token);
     }
 
     public static synchronized boolean handleNotification(String notification) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-
-            TypeReference<HashMap<String, String>> typeRef
-                    = new TypeReference<HashMap<String, String>>() {
-            };
-            Map<String, String> notificationInfo = mapper.readValue(notification, typeRef);
-
-            boolean result = qonversionSandwich.handleNotification(notificationInfo);
-
-            return result;
-        } catch (Exception e) {
-            return false;
-        }
+        return automationsWrapper.handleNotification(notification);
     }
 
     @Nullable
     public static synchronized Map<String, Object> getNotificationCustomPayload(String notification) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-
-            TypeReference<HashMap<String, String>> typeRef
-                    = new TypeReference<HashMap<String, String>>() {
-            };
-            Map<String, String> notificationInfo = mapper.readValue(notification, typeRef);
-
-            Map<String, Object> payload = qonversionSandwich.getNotificationCustomPayload(notificationInfo);
-
-            return payload;
-        } catch (Exception e) {
-            return null;
-        }
+        return automationsWrapper.getNotificationCustomPayload(notification);
     }
 
     public static synchronized void subscribeOnAutomationEvents() {

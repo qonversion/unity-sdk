@@ -36,9 +36,10 @@ namespace QonversionUnity
         public delegate void StartPromoPurchase(OnPermissionsReceived callback);
 
         /// <summary>
-        /// Delegate fires each time a deferred transaction happens
+        /// Delegate fires each time a user entitlements change asynchronously,
+        /// for example, when a deferred transaction happens.
         /// </summary>
-        public delegate void OnUpdatedPurchasesReceived(Dictionary<string, Permission> permissions);
+        public delegate void OnUpdatedEntitlementsReceived(Dictionary<string, Permission> permissions);
      
         private const string GameObjectName = "QonvesrionRuntimeGameObject";
         private const string OnLaunchMethodName = "OnLaunch";
@@ -57,7 +58,7 @@ namespace QonversionUnity
         private const string SdkSource = "unity";
 
         private static IQonversionWrapper _Instance;
-        private static OnUpdatedPurchasesReceived _onUpdatedPurchasesReceived;
+        private static OnUpdatedEntitlementsReceived _onUpdatedEntitlementsReceived;
 
         private static OnPromoPurchasesReceived _onPromoPurchasesReceived;
         private static string _storedPromoProductId = null;
@@ -118,17 +119,18 @@ namespace QonversionUnity
          }
          
          /// <summary>
-         /// This event will be fired each time a deferred transaction happens.
+         /// This event will be fired for each asynchronous entitlements update,
+         /// for example, when a deferred transaction happens.
          /// </summary>
-         public static event OnUpdatedPurchasesReceived UpdatedPurchasesReceived
+         public static event OnUpdatedEntitlementsReceived UpdatedEntitlementsReceived
          {
              add
              {
-                 _onUpdatedPurchasesReceived += value;
+                 _onUpdatedEntitlementsReceived += value;
              }
              remove
              {
-                 _onUpdatedPurchasesReceived -= value;
+                 _onUpdatedEntitlementsReceived -= value;
              }
          }
 
@@ -152,7 +154,7 @@ namespace QonversionUnity
         {
             IQonversionWrapper instance = getFinalInstance();
             instance.StoreSdkInfo(SdkVersion, SdkSource);
-            instance.Launch(apiKey, observerMode, OnLaunchMethodName);
+            instance.InitializeSdk(apiKey, observerMode, OnLaunchMethodName);
         }
 
         /// <summary>
@@ -315,7 +317,7 @@ namespace QonversionUnity
         {
             CheckPermissionsCallbacks.Add(callback);
             IQonversionWrapper instance = getFinalInstance();
-            instance.CheckPermissions(OnCheckPermissionsMethodName);
+            instance.CheckEntitlements(OnCheckPermissionsMethodName);
         }
         
         /// <summary>
@@ -493,20 +495,20 @@ namespace QonversionUnity
         /// </summary>
         /// <param name="productIds">Products identifiers that must be checked.</param>
         /// <param name="callback">Callback that will be called when response is received</param>
-        public static void CheckTrialIntroEligibilityForProductIds(IList<string> productIds, OnEligibilitiesReceived callback)
+        public static void CheckTrialIntroEligibility(IList<string> productIds, OnEligibilitiesReceived callback)
         {
             var productIdsJson = Json.Serialize(productIds);
 
             EligibilitiesCallback = callback;
             IQonversionWrapper instance = getFinalInstance();
-            instance.CheckTrialIntroEligibilityForProductIds(productIdsJson, OnEligibilitiesMethodName);
+            instance.CheckTrialIntroEligibility(productIdsJson, OnEligibilitiesMethodName);
         }
         
         /// <summary>
         /// Permissions cache is used when there are problems with the Qonversion API
         /// or internet connection. If so, Qonversion will return the last successfully loaded
         /// permissions. The current method allows you to configure how long that cache may be used.
-        /// The default value is <see cref="PermissionsCacheLifetime.MONTH>.
+        /// The default value is <see cref="PermissionsCacheLifetime.MONTH"/>.
         /// </summary>
         /// <param name="lifetime">Desired permissions cache lifetime duration.</param>
         public static void SetPermissionsCacheLifetime(PermissionsCacheLifetime lifetime) {
@@ -682,17 +684,17 @@ namespace QonversionUnity
         }
 
         // Called from the native SDK - Called when deferred or pending purchase occured
-        private void OnReceiveUpdatedPurchases(string jsonString)
+        private void OnReceivedUpdatedEntitlements(string jsonString)
         {
-            Debug.Log("OnReceiveUpdatedPurchases " + jsonString);
+            Debug.Log("OnReceivedUpdatedEntitlements " + jsonString);
 
-            if (_onUpdatedPurchasesReceived == null)
+            if (_onUpdatedEntitlementsReceived == null)
             {
                 return;
             }
 
             Dictionary<string, Permission> permissions = Mapper.PermissionsFromJson(jsonString);
-            _onUpdatedPurchasesReceived(permissions);
+            _onUpdatedEntitlementsReceived(permissions);
         }
 
         private void OnReceivePromoPurchase(string storeProductId)
