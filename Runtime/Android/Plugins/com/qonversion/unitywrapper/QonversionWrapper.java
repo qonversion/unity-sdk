@@ -98,6 +98,10 @@ public class QonversionWrapper {
         qonversionSandwich.logout();
     }
 
+    public static synchronized void userInfo(String unityCallbackName) {
+        qonversionSandwich.userInfo(getResultListener(unityCallbackName));
+    }
+
     public static synchronized void checkEntitlements(String unityCallbackName) {
         qonversionSandwich.checkEntitlements(getResultListener(unityCallbackName));
     }
