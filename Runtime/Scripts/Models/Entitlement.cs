@@ -4,21 +4,21 @@ using UnityEngine;
 
 namespace QonversionUnity
 {
-    public class Permission
+    public class Entitlement
     {
-        /// Qonversion Permission ID, like premium.
-        [Tooltip("Create Permission: https://qonversion.io/docs/create-permission")]
-        public readonly string PermissionID;
+        /// Qonversion Entitlement ID, like premium.
+        [Tooltip("Create Entitlement: https://qonversion.io/docs/create-permission")]
+        public readonly string Id;
 
         /// Product ID created in Qonversion Dashboard.
         [Tooltip("Create Products: https://qonversion.io/docs/create-products")]
-        public readonly string ProductID;
+        public readonly string ProductId;
 
-        /// A renew state for an associate product that unlocked permission
-        public readonly QProductRenewState RenewState;
+        /// A renew state for an associate product that unlocked entitlement
+        public readonly QEntitlementRenewState RenewState;
 
-        /// A source determining where this permission is originally from - App Store, Play Store, Stripe, etc.
-        public readonly QPermissionSource Source;
+        /// A source determining where this entitlement is originally from - App Store, Play Store, Stripe, etc.
+        public readonly QEntitlementSource Source;
         
         /// Purchase date
         public readonly DateTime StartedDate;
@@ -26,17 +26,17 @@ namespace QonversionUnity
         /// Expiration date for subscription
         public readonly DateTime? ExpirationDate;
 
-        /// Use for checking permission for current user.
+        /// Use for checking entitlement for current user.
         /// Pay attention, isActive == true does not mean that subscription is renewable.
-        /// Subscription could be canceled, but the user could still have a permission
+        /// Subscription could be canceled, but the user could still have a entitlement
         public readonly bool IsActive;
 
-        public Permission(Dictionary<string, object> dict)
+        public Entitlement(Dictionary<string, object> dict)
         {
-            if (dict.TryGetValue("id", out object value)) PermissionID = value as string;
-            if (dict.TryGetValue("associatedProduct", out value)) ProductID = value as string;
+            if (dict.TryGetValue("id", out object value)) Id = value as string;
+            if (dict.TryGetValue("productId", out value)) ProductId = value as string;
             if (dict.TryGetValue("renewState", out value)) RenewState = FormatRenewState(value);
-            Source = dict.TryGetValue("source", out value) ? FormatPermissionSource(value) : QPermissionSource.Unknown;
+            Source = dict.TryGetValue("source", out value) ? FormatEntitlementSource(value) : QEntitlementSource.Unknown;
             if (dict.TryGetValue("active", out value)) IsActive = (bool)value;
             if (dict.TryGetValue("startedTimestamp", out value)) StartedDate = FormatDate(value);
             if (dict.TryGetValue("expirationTimestamp", out value) && value != null) ExpirationDate = FormatDate(value);
@@ -44,8 +44,8 @@ namespace QonversionUnity
 
         public override string ToString()
         {
-            return $"{nameof(PermissionID)}: {PermissionID}, " +
-                   $"{nameof(ProductID)}: {ProductID}, " +
+            return $"{nameof(Id)}: {Id}, " +
+                   $"{nameof(ProductId)}: {ProductId}, " +
                    $"{nameof(RenewState)}: {RenewState}, " +
                    $"{nameof(Source)}: {Source}, " +
                    $"{nameof(StartedDate)}: {StartedDate}, " +
@@ -61,17 +61,17 @@ namespace QonversionUnity
             return Utils.FormatDate((long) time);
         }
 
-        private QProductRenewState FormatRenewState(object renewState) =>
-            (QProductRenewState)Convert.ToInt32(renewState);
+        private QEntitlementRenewState FormatRenewState(object renewState) =>
+            (QEntitlementRenewState)Convert.ToInt32(renewState);
 
-        private QPermissionSource FormatPermissionSource(object source) {
-            return Enum.TryParse(source.ToString(), out QPermissionSource parsedSource)
+        private QEntitlementSource FormatEntitlementSource(object source) {
+            return Enum.TryParse(source.ToString(), out QEntitlementSource parsedSource)
                 ? parsedSource
-                : QPermissionSource.Unknown;
+                : QEntitlementSource.Unknown;
         }
     }
 
-    public enum QProductRenewState
+    public enum QEntitlementRenewState
     {
         /// For in-app purchases.
         NonRenewable = -1,
@@ -87,7 +87,7 @@ namespace QonversionUnity
         BillingIssue = 3
     }
 
-    public enum QPermissionSource
+    public enum QEntitlementSource
     {
         Unknown,
         AppStore,

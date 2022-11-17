@@ -61,29 +61,29 @@ namespace QonversionUnity
         {
         }
 
-        public void AddAttributionData(string conversionData, AttributionSource source)
+        public void AddAttributionData(string conversionData, AttributionProvider provider)
         {
-            string attibutionSource;
+            string attibutionProvider;
 
-            switch (source)
+            switch (provider)
             {
-                case AttributionSource.AppsFlyer:
-                    attibutionSource = "AppsFlyer";
+                case AttributionProvider.AppsFlyer:
+                    attibutionProvider = "AppsFlyer";
                     break;
-                case AttributionSource.Branch:
-                    attibutionSource = "Branch";
+                case AttributionProvider.Branch:
+                    attibutionProvider = "Branch";
                     break;
-                case AttributionSource.Adjust:
-                    attibutionSource = "Adjust";
+                case AttributionProvider.Adjust:
+                    attibutionProvider = "Adjust";
                     break;
                 default:
-                    Debug.LogWarning(string.Format("[Qonversion] Not Supported AttributionSource.{0} on Android platform.", source));
+                    Debug.LogWarning(string.Format("[Qonversion] Not Supported AttributionProvider.{0} on Android platform.", provider));
                     return;
             }
 
             try
             {
-                CallQonversion("attribution", conversionData, attibutionSource);
+                CallQonversion("attribution", conversionData, attibutionProvider);
             }
             catch (Exception e)
             {

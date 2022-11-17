@@ -4,12 +4,13 @@ namespace QonversionUnity
     {
         Email,
         Name,
+        KochavaDeviceId,
         AppsFlyerUserId,
         AdjustAdId,
-        KochavaDeviceId,
         CustomUserId,
-        FacebookAttribution,
+        FacebookAttribution, // Android only
         FirebaseAppInstanceId,
-        AppSetId
+        AppSetId, // Android only
+        AdvertisingId, // iOS only
     }
 }

@@ -8,8 +8,8 @@ namespace QonversionUnity
 {
     public class Qonversion : MonoBehaviour
     {
-        public delegate void OnPurchaseResultReceived(Dictionary<string, Permission> permissions, QonversionError error, bool isCancelled);
-        public delegate void OnPermissionsReceived(Dictionary<string, Permission> permissions, QonversionError error);
+        public delegate void OnPurchaseResultReceived(Dictionary<string, Entitlement> permissions, QonversionError error, bool isCancelled);
+        public delegate void OnPermissionsReceived(Dictionary<string, Entitlement> permissions, QonversionError error);
         public delegate void OnProductsReceived(Dictionary<string, Product> products, QonversionError error);
         public delegate void OnOfferingsReceived(Offerings offerings, QonversionError error);
         public delegate void OnEligibilitiesReceived(Dictionary<string, Eligibility> eligibilities, QonversionError error);
@@ -39,7 +39,7 @@ namespace QonversionUnity
         /// Delegate fires each time a user entitlements change asynchronously,
         /// for example, when a deferred transaction happens.
         /// </summary>
-        public delegate void OnUpdatedEntitlementsReceived(Dictionary<string, Permission> permissions);
+        public delegate void OnUpdatedEntitlementsReceived(Dictionary<string, Entitlement> permissions);
      
         private const string GameObjectName = "QonvesrionRuntimeGameObject";
         private const string OnLaunchMethodName = "OnLaunch";
@@ -253,22 +253,22 @@ namespace QonversionUnity
         /// Sends your attribution data to the attribution source.
         /// </summary>
         /// <param name="conversionData">An object containing your attribution data.</param>
-        /// <param name="attributionSource">The attribution source to which the data will be sent.</param>
-        public static void AddAttributionData(Dictionary<string, object> conversionData, AttributionSource attributionSource)
+        /// <param name="attributionProvider">The attribution source to which the data will be sent.</param>
+        public static void AddAttributionData(Dictionary<string, object> conversionData, AttributionProvider attributionProvider)
         {
-            AddAttributionData(conversionData.toJson(), attributionSource);
+            AddAttributionData(conversionData.toJson(), attributionProvider);
         }
 
         /// <summary>
         /// Sends your attribution data to the attribution source.
         /// </summary>
         /// <param name="conversionData">A json string containing your attribution data.</param>
-        /// <param name="attributionSource">The attribution source to which the data will be sent.</param>
-        public static void AddAttributionData(string conversionData, AttributionSource attributionSource)
+        /// <param name="attributionProvider">The attribution source to which the data will be sent.</param>
+        public static void AddAttributionData(string conversionData, AttributionProvider attributionProvider)
         {
             IQonversionWrapper instance = getFinalInstance();
 
-            instance.AddAttributionData(conversionData, attributionSource);
+            instance.AddAttributionData(conversionData, attributionProvider);
         }
 
         /// <summary>
@@ -508,11 +508,12 @@ namespace QonversionUnity
         /// Permissions cache is used when there are problems with the Qonversion API
         /// or internet connection. If so, Qonversion will return the last successfully loaded
         /// permissions. The current method allows you to configure how long that cache may be used.
-        /// The default value is <see cref="PermissionsCacheLifetime.MONTH"/>.
+        /// The default value is <see cref="EntitlementsCacheLifetime.Month"/>.
         /// </summary>
         /// <param name="lifetime">Desired permissions cache lifetime duration.</param>
-        public static void SetPermissionsCacheLifetime(PermissionsCacheLifetime lifetime) {
-            var lifetimeKey = Mapper.GetLifetimeKey(lifetime);
+        public static void SetPermissionsCacheLifetime(EntitlementsCacheLifetime lifetime) {
+            
+            var lifetimeKey = Enum.GetName(typeof(EntitlementsCacheLifetime), lifetime);
             IQonversionWrapper instance = getFinalInstance();
             instance.SetPermissionsCacheLifetime(lifetimeKey);
         }
@@ -693,7 +694,7 @@ namespace QonversionUnity
                 return;
             }
 
-            Dictionary<string, Permission> permissions = Mapper.PermissionsFromJson(jsonString);
+            Dictionary<string, Entitlement> permissions = Mapper.PermissionsFromJson(jsonString);
             _onUpdatedEntitlementsReceived(permissions);
         }
 
@@ -808,7 +809,7 @@ namespace QonversionUnity
 
 		private static OnPurchaseResultReceived ConvertPermissionsCallbackToPurchaseResultCallback(OnPermissionsReceived callback)
 		{
-			return delegate(Dictionary<string, Permission> permissions, QonversionError error, bool isCancelled) {
+			return delegate(Dictionary<string, Entitlement> permissions, QonversionError error, bool isCancelled) {
 				callback(permissions, error);
 			};
 		}

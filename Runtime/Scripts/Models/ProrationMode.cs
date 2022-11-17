@@ -9,7 +9,7 @@
         ImmediateAndChargeProratedPrice,
         /// Replacement takes effect immediately, and the new price will be charged on next recurrence time.
         ImmediateWithoutProration,
-        ///  Replacement takes effect when the old plan expires, and the new price will be charged at the same time.
+        /// Replacement takes effect when the old plan expires, and the new price will be charged at the same time.
         Deferred
     }
 }

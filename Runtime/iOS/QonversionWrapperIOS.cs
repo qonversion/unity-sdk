@@ -141,7 +141,7 @@ namespace QonversionUnity
 #endif
         }
 
-        public void AddAttributionData(string conversionData, AttributionSource source)
+        public void AddAttributionData(string conversionData, AttributionProvider provider)
         {
 #if UNITY_IOS
             string sourceName = Enum.GetName(typeof(AttributionSource), source);

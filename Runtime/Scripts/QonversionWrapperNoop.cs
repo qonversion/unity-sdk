@@ -21,7 +21,7 @@ namespace QonversionUnity
         {
         }
 
-        public void AddAttributionData(string conversionData, AttributionSource source)
+        public void AddAttributionData(string conversionData, AttributionProvider provider)
         {
         }
 

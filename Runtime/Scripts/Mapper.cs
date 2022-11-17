@@ -7,20 +7,6 @@ namespace QonversionUnity
 {
     internal class Mapper
     {
-        internal static string GetLifetimeKey(PermissionsCacheLifetime lifetime) {
-            var keys = new Dictionary<PermissionsCacheLifetime, string>() {
-                {PermissionsCacheLifetime.WEEK, "Week"},
-                {PermissionsCacheLifetime.TWO_WEEKS, "TwoWeeks"},
-                {PermissionsCacheLifetime.MONTH, "Month"},
-                {PermissionsCacheLifetime.TWO_MONTHS, "TwoMonths"},
-                {PermissionsCacheLifetime.THREE_MONTHS, "ThreeMonths"},
-                {PermissionsCacheLifetime.SIX_MONTHS, "SixMonths"},
-                {PermissionsCacheLifetime.YEAR, "Year"},
-                {PermissionsCacheLifetime.UNLIMITED, "Unlimited"}
-            };
-            return keys[lifetime];
-        }
-        
         internal static bool GetIsCancelledFromJson(string jsonStr)
         {
             if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> result))
@@ -32,9 +18,9 @@ namespace QonversionUnity
             return result.TryGetValue("isCancelled", out var isCancelled) && Convert.ToBoolean(isCancelled);
         }
 
-        internal static Dictionary<string, Permission> PermissionsFromJson(string jsonStr)
+        internal static Dictionary<string, Entitlement> PermissionsFromJson(string jsonStr)
         {
-            var result = new Dictionary<string, Permission>();
+            var result = new Dictionary<string, Entitlement>();
 
             if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> permissions))
             {
@@ -46,8 +32,8 @@ namespace QonversionUnity
             {
                 if (permissionPair.Value is Dictionary<string, object> permissionDict)
                 {
-                    Permission permission = new Permission(permissionDict);
-                    result.Add(permissionPair.Key, permission);
+                    Entitlement entitlement = new Entitlement(permissionDict);
+                    result.Add(permissionPair.Key, entitlement);
                 }
             }
 

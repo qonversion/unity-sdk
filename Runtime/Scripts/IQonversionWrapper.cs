@@ -12,7 +12,7 @@ namespace QonversionUnity
         void SetUserProperty(string key, string value);
         void SetProperty(UserProperty key, string value);
         void SyncPurchases();
-        void AddAttributionData(string conversionData, AttributionSource source);
+        void AddAttributionData(string conversionData, AttributionProvider provider);
         void CheckEntitlements(string callbackName);
         void Purchase(string productId, string callbackName);
         void PurchaseProduct(string productId, string offeringId, string callbackName);
