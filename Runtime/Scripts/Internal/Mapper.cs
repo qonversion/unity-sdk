@@ -18,22 +18,22 @@ namespace QonversionUnity
             return result.TryGetValue("isCancelled", out var isCancelled) && Convert.ToBoolean(isCancelled);
         }
 
-        internal static Dictionary<string, Entitlement> PermissionsFromJson(string jsonStr)
+        internal static Dictionary<string, Entitlement> EntitlementsFromJson(string jsonStr)
         {
             var result = new Dictionary<string, Entitlement>();
 
-            if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> permissions))
+            if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> entitlements))
             {
-                Debug.LogError("Could not parse QPermissions");
+                Debug.LogError("Could not parse QEntitlements");
                 return result;
             }
 
-            foreach (KeyValuePair<string, object> permissionPair in permissions)
+            foreach (KeyValuePair<string, object> entitlementPair in entitlements)
             {
-                if (permissionPair.Value is Dictionary<string, object> permissionDict)
+                if (entitlementPair.Value is Dictionary<string, object> entitlementDict)
                 {
-                    Entitlement entitlement = new Entitlement(permissionDict);
-                    result.Add(permissionPair.Key, entitlement);
+                    Entitlement entitlement = new Entitlement(entitlementDict);
+                    result.Add(entitlementPair.Key, entitlement);
                 }
             }
 
@@ -115,6 +115,17 @@ namespace QonversionUnity
             }
 
             return result;
+        }
+
+        internal static User UserFromJson(string jsonStr)
+        {
+            if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> userInfo))
+            {
+                Debug.LogError("Could not parse User");
+                return new User("", null);
+            }
+
+            return new User(userInfo);
         }
 
         internal static QonversionError ErrorFromJson(string jsonStr)

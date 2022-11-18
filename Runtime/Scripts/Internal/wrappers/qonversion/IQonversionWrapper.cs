@@ -5,14 +5,13 @@ namespace QonversionUnity
     internal interface IQonversionWrapper
     {
         void Initialize(string gameObjectName);
+        void InitializeSdk(string projectKey, string launchMode, [CanBeNull] string environment, [CanBeNull] string entitlementsCacheLifetime);
         void StoreSdkInfo(string version, string source);
-        void SetDebugMode();
         void SetAdvertisingID();
-        void InitializeSdk(string projectKey, bool observerMode, string callbackName);
         void SetUserProperty(string key, string value);
         void SetProperty(UserProperty key, string value);
         void SyncPurchases();
-        void AddAttributionData(string conversionData, AttributionProvider provider);
+        void AddAttributionData(string conversionData, string providerName);
         void CheckEntitlements(string callbackName);
         void Purchase(string productId, string callbackName);
         void PurchaseProduct(string productId, string offeringId, string callbackName);
@@ -25,12 +24,8 @@ namespace QonversionUnity
         void SetAppleSearchAdsAttributionEnabled(bool enable);
         void Identify(string userID);
         void Logout();
+        void UserInfo(string callbackName);
         void PromoPurchase(string storeProductId, string callbackName);
-        void SetNotificationsToken(string token);
-        bool HandleNotification(string notification);
-        [CanBeNull] string GetNotificationCustomPayload(string notification);
-        void SubscribeOnAutomationEvents();
         void PresentCodeRedemptionSheet();
-        void SetPermissionsCacheLifetime(string lifetime);
     }
 }

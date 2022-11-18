@@ -28,7 +28,7 @@ namespace QonversionUnity
         /// <summary>
         /// Called when Automations flow finishes executing an action
         /// For instance, if the user made a purchase then action.type == QONActionResultTypePurchase
-        /// Then you can use the <see cref="Qonversion.CheckPermissions(Qonversion.OnPermissionsReceived)"/> method to get available permissions
+        /// Then you can use the <see cref="Qonversion.CheckEntitlements"/> method to get available permissions
         /// </summary>
         /// <param name="actionResult">executed action</param>
         public abstract void OnAutomationsActionFinished(ActionResult actionResult);

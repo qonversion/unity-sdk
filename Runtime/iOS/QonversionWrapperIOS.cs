@@ -51,6 +51,9 @@ namespace QonversionUnity
         private static extern void _restore(string callbackName);
 
         [DllImport("__Internal")]
+        private static extern void _userInfo(string callbackName);
+
+        [DllImport("__Internal")]
         private static extern void _purchase(string productID, string callbackName);
 
         [DllImport("__Internal")]
@@ -69,22 +72,7 @@ namespace QonversionUnity
         private static extern void _promoPurchase(string storeProductId, string callbackName);
 
         [DllImport("__Internal")]
-        private static extern void _setNotificationsToken(string token);
-
-        [DllImport("__Internal")]
-        private static extern bool _handleNotification(string notification);
-
-        [DllImport("__Internal")]
-        private static extern string _getNotificationCustomPayload(string notification);
-
-        [DllImport("__Internal")]
-        private static extern void _subscribeOnAutomationEvents();
-
-        [DllImport("__Internal")]
         private static extern void _presentCodeRedemptionSheet();
-
-        [DllImport("__Internal")]
-        private static extern void _setPermissionsCacheLifetime(string lifetimeKey);
 #endif
 
         public void Initialize(string gameObjectName)
@@ -101,10 +89,10 @@ namespace QonversionUnity
 #endif
         }
 
-        public void InitializeSdk(string projectKey, bool observerMode, string callbackName)
+        public void InitializeSdk(string projectKey, string launchMode, string environment, string entitlementsCacheLifetime)
         {
 #if UNITY_IOS
-            _launchWithKey(projectKey, callbackName);
+            // todo
 #endif
         }
 
@@ -141,11 +129,10 @@ namespace QonversionUnity
 #endif
         }
 
-        public void AddAttributionData(string conversionData, AttributionProvider provider)
+        public void AddAttributionData(string conversionData, string providerName)
         {
 #if UNITY_IOS
-            string sourceName = Enum.GetName(typeof(AttributionSource), source);
-            _addAttributionData(conversionData, sourceName);
+            _addAttributionData(conversionData, providerName);
 #endif
         }
 
@@ -167,6 +154,13 @@ namespace QonversionUnity
         {
 #if UNITY_IOS
             _logout();
+#endif
+        }
+
+        public void UserInfo(string callbackName)
+        {
+#if UNITY_IOS
+            _userInfo(callbackName);
 #endif
         }
 
@@ -238,45 +232,6 @@ namespace QonversionUnity
         {
 #if UNITY_IOS
             _promoPurchase(storeProductId, callbackName);
-#endif
-        }
-
-        public void SetNotificationsToken(string token)
-        {
-#if UNITY_IOS
-             _setNotificationsToken(token);
-#endif
-        }
-
-        public bool HandleNotification(string notification)
-        {
-#if UNITY_IOS
-             return _handleNotification(notification);
-#else
-            return false;
-#endif
-        }
-
-        public string GetNotificationCustomPayload(string notification)
-        {
-#if UNITY_IOS
-             return _getNotificationCustomPayload(notification);
-#else
-            return null;
-#endif
-        }
-
-        public void SubscribeOnAutomationEvents()
-        {
-#if UNITY_IOS
-            _subscribeOnAutomationEvents();
-#endif
-        }
-        
-        public void SetPermissionsCacheLifetime(string lifetime)
-        {
-#if UNITY_IOS
-            _setPermissionsCacheLifetime(lifetime);
 #endif
         }
     }

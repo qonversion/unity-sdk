@@ -5,7 +5,8 @@ namespace QonversionUnity
         public void Initialize(string gameObjectName)
         {
         }
-        public void InitializeSdk(string projectKey, bool observerMode, string callbackName)
+
+        public void InitializeSdk(string projectKey, string launchMode, string environment, string entitlementsCacheLifetime)
         {
         }
 
@@ -21,7 +22,7 @@ namespace QonversionUnity
         {
         }
 
-        public void AddAttributionData(string conversionData, AttributionProvider provider)
+        public void AddAttributionData(string conversionData, string providerName)
         {
         }
 
@@ -85,35 +86,16 @@ namespace QonversionUnity
         {
         }
 
+        public void UserInfo(string callbackName)
+        {
+        }
+
         public void PromoPurchase(string storeProductId, string callbackName)
         { 
         }
 
-        public void SetNotificationsToken(string token)
-        {
-        }
-
-        public bool HandleNotification(string notification)
-        {
-            return false;
-        }
-
-        public string GetNotificationCustomPayload(string notification)
-        {
-            return null;
-        }
-
-        public void SubscribeOnAutomationEvents()
-        {
-        }
-
         public void PresentCodeRedemptionSheet()
         {
-        }
-
-        public void SetPermissionsCacheLifetime(string lifetime)
-        {
-            
         }
     }
   }
