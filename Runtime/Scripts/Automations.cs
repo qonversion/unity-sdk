@@ -61,14 +61,14 @@ namespace QonversionUnity
         /// <summary>
         /// Set push token to Qonversion to enable Qonversion push notifications
         /// </summary>
-        /// <param name="token">Firebase device token on Android. APNs device token on iOS.</param>
+        /// <param name="token">Firebase device token for Android. APNs device token for iOS.</param>
         public abstract void SetNotificationsToken(string token);
 
         /// <summary>
         /// Call to handle push notifications sent by Qonversion Automations.
         /// </summary>
         /// <param name="notification">notification payload data</param>
-        /// <returns>true when a push notification was received from Qonversion. Otherwise, returns false, so you need to handle a notification yourself</returns>
+        /// <returns>true when a push notification was received from Qonversion. Otherwise, returns false, so you need to handle the notification yourself</returns>
         /// <see href="https://pub.dev/documentation/firebase_messaging_platform_interface/latest/firebase_messaging_platform_interface/RemoteMessage/data.html">Firebase RemoteMessage data</see>
         /// <see href="https://developer.apple.com/documentation/usernotifications/unnotificationcontent/1649869-userinfo">APNs notification data</see>
         public abstract bool HandleNotification(Dictionary<string, object> notification);

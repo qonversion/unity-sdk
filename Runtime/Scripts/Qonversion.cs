@@ -32,7 +32,7 @@ namespace QonversionUnity
         /// <summary>
         /// An entry point to use Qonversion SDK. Call to initialize Qonversion SDK with required and extra configs.
         /// The function is the best way to set additional configs you need to use Qonversion SDK.
-        /// You still have an option to set a part of additional configs later via calling separated setters.
+        /// You still have an option to set a part of additional configs later via calling separate setters.
         /// </summary>
         /// <param name="config">a config that contains key SDK settings.
         /// Call <see cref="QonversionConfigBuilder.Build"/> to configure and create a QonversionConfig instance.</param>

@@ -72,12 +72,8 @@ namespace QonversionUnity
             instance.StoreSdkInfo(SdkVersion, SdkSource);
 
             string launchModeKey = Enum.GetName(typeof(LaunchMode), config.LaunchMode);
-            string environmentKey = config.Environment == null
-                ? Enum.GetName(typeof(Environment), config.Environment)
-                : null;
-            string cacheLifetimeKey = config.EntitlementsCacheLifetime == null
-                ? Enum.GetName(typeof(EntitlementsCacheLifetime), config.EntitlementsCacheLifetime)
-                : null;
+            string environmentKey = Enum.GetName(typeof(Environment), config.Environment);
+            string cacheLifetimeKey = Enum.GetName(typeof(EntitlementsCacheLifetime), config.EntitlementsCacheLifetime);
 
             instance.InitializeSdk(config.ProjectKey, launchModeKey, environmentKey, cacheLifetimeKey);
         }
