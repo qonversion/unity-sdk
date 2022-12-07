@@ -206,13 +206,13 @@ namespace QonversionUnity
             instance.SetUserProperty(key, value);
         }
 
-        public void SetAdvertisingID()
+        public void CollectAdvertisingID()
         {
             IQonversionWrapper instance = GetNativeWrapper();
             instance.SetAdvertisingID();
         }
 
-        public void SetAppleSearchAdsAttributionEnabled(bool enable)
+        public void CollectAppleSearchAdsAttribution()
         {
             IQonversionWrapper instance = GetNativeWrapper();
             instance.SetAppleSearchAdsAttributionEnabled(enable);

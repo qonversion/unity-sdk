@@ -100,13 +100,6 @@ namespace QonversionUnity
         {
         }
 
-        public void SetDebugMode()
-        {
-#if UNITY_IOS
-            _setDebugMode();
-#endif
-        }
-
         public void SetAdvertisingID()
         {
 #if UNITY_IOS
@@ -129,7 +122,7 @@ namespace QonversionUnity
 #endif
         }
 
-        public void AddAttributionData(string conversionData, string providerName)
+        public void AttributionData(string conversionData, string providerName)
         {
 #if UNITY_IOS
             _addAttributionData(conversionData, providerName);

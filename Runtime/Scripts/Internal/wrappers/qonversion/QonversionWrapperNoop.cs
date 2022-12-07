@@ -10,10 +10,6 @@ namespace QonversionUnity
         {
         }
 
-        public void SetDebugMode()
-        {
-        }
-
         public void SetUserProperty(string key, string value)
         {
         }
