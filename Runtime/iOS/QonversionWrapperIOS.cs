@@ -122,7 +122,7 @@ namespace QonversionUnity
 #endif
         }
 
-        public void AttributionData(string conversionData, string providerName)
+        public void AddAttributionData(string conversionData, string providerName)
         {
 #if UNITY_IOS
             _addAttributionData(conversionData, providerName);

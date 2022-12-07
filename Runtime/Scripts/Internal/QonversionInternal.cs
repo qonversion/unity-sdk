@@ -215,7 +215,7 @@ namespace QonversionUnity
         public void CollectAppleSearchAdsAttribution()
         {
             IQonversionWrapper instance = GetNativeWrapper();
-            instance.SetAppleSearchAdsAttributionEnabled(enable);
+            instance.SetAppleSearchAdsAttributionEnabled(true);
         }
 
         public void PresentCodeRedemptionSheet()

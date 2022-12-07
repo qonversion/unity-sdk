@@ -267,7 +267,7 @@ namespace QonversionUnity
         /// Collecting Apple Search Ads attribution data.
         /// </summary>
         /// <see href="https://documentation.qonversion.io/docs/apple-search-ads#enable-data-collection"/>
-        public void collectAppleSearchAdsAttribution();
+        public void CollectAppleSearchAdsAttribution();
 
         /// <summary>
         /// iOS only.
