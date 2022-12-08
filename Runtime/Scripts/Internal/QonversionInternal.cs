@@ -369,7 +369,7 @@ namespace QonversionUnity
             UserInfoCallback = null;
         }
 
-        // Called from the native SDK - Called when deferred or pending purchase occured
+        // Called from the native SDK - Called when entitlements update. For example, when pending purchases like SCA, Ask to buy, etc., happen.
         private void OnReceivedUpdatedEntitlements(string jsonString)
         {
             Debug.Log("OnReceivedUpdatedEntitlements " + jsonString);

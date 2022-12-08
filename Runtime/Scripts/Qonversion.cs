@@ -73,7 +73,7 @@ namespace QonversionUnity
 
         /// <summary>
         /// Delegate fires each time a user entitlements change asynchronously,
-        /// for example, when a deferred transaction happens.
+        /// for example, when pending purchases like SCA, Ask to buy, etc., happen.
         /// </summary>
         public delegate void OnUpdatedEntitlementsReceived(Dictionary<string, Entitlement> entitlements);
 
