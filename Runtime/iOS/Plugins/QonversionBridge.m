@@ -42,7 +42,6 @@ void _initializeSdk(const char* projectKey, const char* launchMode, const char* 
     NSString *cacheLifetimeStr = [UtilityBridge сonvertCStringToNSString:entitlementsCacheLifetime];
 
     [qonversionSandwich initializeWithProjectKey:keyStr launchModeKey:launchModeStr environmentKey:envStr entitlementsCacheLifetimeKey:cacheLifetimeStr];
-    automationsDelegate = [[QNUAutomationsDelegate alloc] initWithListenerName:unityListenerName];
 }
 
 //_initializeSdk(string projectKey, string launchMode, string environment, string entitlementsCacheLifetime);
@@ -91,6 +90,14 @@ void _addAttributionData(const char* conversionData, const char* provider) {
 void _identify(const char* userId) {
     NSString *userIdStr = [UtilityBridge сonvertCStringToNSString:userId];
     [qonversionSandwich identify:userIdStr];
+}
+
+void _userInfo(const char* unityCallbackName) {
+    NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
+
+    [qonversionSandwich userInfo:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
+        [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
+    }];
 }
 
 void _logout() {
@@ -148,7 +155,7 @@ void _offerings(const char* unityCallbackName) {
     }];
 }
 
-void _checkTrialIntroEligibilityForProductIds(const char* productIdsJson, const char* unityCallbackName) {
+void _checkTrialIntroEligibility(const char* productIdsJson, const char* unityCallbackName) {
     NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
     NSString *productIdsJsonStr = [UtilityBridge сonvertCStringToNSString:productIdsJson];
     

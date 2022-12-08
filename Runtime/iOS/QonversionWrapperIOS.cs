@@ -21,9 +21,6 @@ namespace QonversionUnity
         private static extern void _storeSdkInfo(string version, string source);
 
         [DllImport("__Internal")]
-        private static extern void _setDebugMode();
-
-        [DllImport("__Internal")]
         private static extern void _setAdvertisingID();
 
         [DllImport("__Internal")]
@@ -40,9 +37,6 @@ namespace QonversionUnity
 
         [DllImport("__Internal")]
         private static extern void _setUserProperty(string key, string value);
-
-        [DllImport("__Internal")]
-        private static extern void _launchWithKey(string key, string callbackName);
 
         [DllImport("__Internal")]
         private static extern void _addAttributionData(string conversionData, string providerName);
