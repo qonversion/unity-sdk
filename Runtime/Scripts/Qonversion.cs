@@ -39,7 +39,8 @@ namespace QonversionUnity
         /// <returns>Initialized instance of the Qonversion SDK.</returns>
         public static Qonversion Initialize(QonversionConfig config)
         {
-            _backingInstance = new QonversionInternal(config);
+            _backingInstance = QonversionInternal.CreateInstance();
+            _backingInstance?.InitializeInstance(config);
             return _backingInstance;
         }
 
@@ -274,5 +275,7 @@ namespace QonversionUnity
         /// On iOS 14.0+ shows up a sheet for users to redeem AppStore offer codes.
         /// </summary>
         public void PresentCodeRedemptionSheet();
+
+        internal void InitializeInstance(QonversionConfig config);
     }
 }

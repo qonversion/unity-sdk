@@ -45,11 +45,11 @@ namespace QonversionUnity
         public event Qonversion.OnPromoPurchasesReceived PromoPurchasesReceived
         {
             add
-            { 
+            {
                 _onPromoPurchasesReceived += value;
             }
             remove
-            { 
+            {
                 _onPromoPurchasesReceived -= value;
             }
         }
@@ -66,7 +66,16 @@ namespace QonversionUnity
             }
         }
 
-        public QonversionInternal(QonversionConfig config)
+        public static QonversionInternal CreateInstance()
+        {
+            GameObject go = new GameObject(GameObjectName);
+            go.AddComponent<QonversionInternal>();
+            DontDestroyOnLoad(go);
+
+            return go.GetComponent<QonversionInternal>();
+        }
+
+        void Qonversion.InitializeInstance(QonversionConfig config)
         {
             IQonversionWrapper instance = GetNativeWrapper();
             instance.StoreSdkInfo(SdkVersion, SdkSource);
@@ -456,10 +465,6 @@ namespace QonversionUnity
                     break;
             }
             _nativeWrapperInstance.Initialize(GameObjectName);
-            
-            GameObject go = new GameObject(GameObjectName);
-            go.AddComponent<QonversionInternal>();
-            DontDestroyOnLoad(go);
 
             return _nativeWrapperInstance;
         }

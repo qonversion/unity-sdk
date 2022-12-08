@@ -1,53 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
-using UnityEngine;
 
 namespace QonversionUnity
 {
-    public abstract class Automations : MonoBehaviour
+    // ReSharper disable once InconsistentNaming
+    public interface Automations
     {
         [CanBeNull] private static Automations _backingInstance;
 
         /// <summary>
         /// Use this variable to get a current initialized instance of the Qonversion Automations.
-        /// Please, use the property only after calling <see cref="Automations.Initialize"/>.
-        /// Otherwise, trying to access the variable will cause an exception.
+        /// Please, use Automations only after calling <see cref="Qonversion.Initialize"/>.
+        /// Otherwise, trying to access the variable will cause an error.
         /// </summary>
         /// <returns>Current initialized instance of the Qonversion Automations.</returns>
-        /// <exception cref="Exception">throws exception if the instance has not been initialized</exception>
+        /// <exception cref="Exception">throws exception if Qonversion has not been initialized.</exception>
         public static Automations GetSharedInstance()
         {
             if (_backingInstance == null)
             {
-                throw new Exception(
-                    "Automations has not been initialized. You should call " +
-                    "the initialize method before accessing the shared instance of Automations."
-                );
+                try
+                {
+                    Qonversion.GetSharedInstance();
+                }
+                catch (Exception e)
+                {
+                    throw new Exception("Qonversion has not been initialized. " + 
+                                        "Automations should be used after Qonversion is initialized.");
+                }
+
+                _backingInstance = AutomationsInternal.CreateInstance();
             }
 
-            return _backingInstance;
-        }
-
-        /// <summary>
-        /// An entry point to use Qonversion Automations. Call to initialize Automations.
-        /// Make sure you have initialized <see cref="Qonversion"/> first.
-        /// </summary>
-        /// <returns>Initialized instance of the Qonversion Automations.</returns>
-        /// <exception cref="Exception">throws exception if <see cref="Qonversion"/> has not been initialized</exception>
-        public static Automations Initialize()
-        {
-            try
-            {
-                Qonversion.GetSharedInstance();
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Qonversion has not been initialized. " + 
-                                    "Automations initialization should be called after Qonversion is initialized.");
-            }
-
-            _backingInstance = new AutomationsInternal();
             return _backingInstance;
         }
 
