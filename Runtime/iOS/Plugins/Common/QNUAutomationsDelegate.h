@@ -14,6 +14,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithListenerName:(char *)unityListenerName;
 - (void)subscribe;
+- (void)setNotificationsToken:(NSString *)token;
+- (BOOL)handleNotification:(NSDictionary *)notificationInfo;
+- (NSDictionary *)getNotificationCustomPayload:(NSDictionary *)payload;
 
 @end
 

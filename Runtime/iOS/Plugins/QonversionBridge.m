@@ -6,24 +6,24 @@ char* unityListenerName = nil;
 
 @interface QonversionEventListenerWrapper : NSObject <QonversionEventListener>
 
-- (void)qonversionDidReceiveUpdatedPermissions:(NSDictionary<NSString *, id> * _Nonnull)permissions;
+- (void)qonversionDidReceiveUpdatedEntitlements:(NSDictionary<NSString *,id> * _Nonnull)entitlements;
 - (void)shouldPurchasePromoProductWith:(NSString * _Nonnull)productId;
 
 @end
 
 @implementation QonversionEventListenerWrapper
 
-- (void)qonversionDidReceiveUpdatedPermissions:(NSDictionary<NSString *, id> * _Nonnull)permissions {
-    [UtilityBridge sendUnityMessage:permissions toMethod:@"OnReceiveUpdatedPurchases" unityListener: unityListenerName];
-}
-
 - (void)shouldPurchasePromoProductWith:(NSString * _Nonnull)productId {
     UnitySendMessage(unityListenerName, "OnReceivePromoPurchase", productId.UTF8String);
 }
 
+- (void)qonversionDidReceiveUpdatedEntitlements:(NSDictionary<NSString *,id> * _Nonnull)entitlements {
+    [UtilityBridge sendUnityMessage:entitlements toMethod:@"OnReceivedUpdatedEntitlements" unityListener: unityListenerName];
+}
+
 @end
 
-static QNUAutomationsDelegate *automationsDelegate;
+static QNUAutomationsDelegate *automationsBridge;
 static QonversionSandwich *qonversionSandwich;
 
 void _initialize(const char* unityListener) {
@@ -32,9 +32,20 @@ void _initialize(const char* unityListener) {
     strcpy(unityListenerName, unityListener);
 
     qonversionSandwich = [[QonversionSandwich alloc] initWithQonversionEventListener:[QonversionEventListenerWrapper new]];
+    automationsBridge = [[QNUAutomationsDelegate alloc] initWithListenerName:unityListenerName];
+}
+
+void _initializeSdk(const char* projectKey, const char* launchMode, const char* environment, const char* entitlementsCacheLifetime) {
+    NSString *keyStr = [UtilityBridge сonvertCStringToNSString:projectKey];
+    NSString *launchModeStr = [UtilityBridge сonvertCStringToNSString:launchMode];
+    NSString *envStr = [UtilityBridge сonvertCStringToNSString:environment];
+    NSString *cacheLifetimeStr = [UtilityBridge сonvertCStringToNSString:entitlementsCacheLifetime];
+
+    [qonversionSandwich initializeWithProjectKey:keyStr launchModeKey:launchModeStr environmentKey:envStr entitlementsCacheLifetimeKey:cacheLifetimeStr];
     automationsDelegate = [[QNUAutomationsDelegate alloc] initWithListenerName:unityListenerName];
 }
 
+//_initializeSdk(string projectKey, string launchMode, string environment, string entitlementsCacheLifetime);
 void _storeSdkInfo(const char* version, const char* source) {
     NSString *versionStr = [UtilityBridge сonvertCStringToNSString:version];
     NSString *sourceStr = [UtilityBridge сonvertCStringToNSString:source];
@@ -42,22 +53,8 @@ void _storeSdkInfo(const char* version, const char* source) {
     [qonversionSandwich storeSdkInfoWithSource:sourceStr version:versionStr];
 }
 
-void _setDebugMode() {
-    [qonversionSandwich setDebugMode];
-}
-
-void _launchWithKey(const char* key, const char* unityCallbackName) {
-    NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
-    
-    NSString *projectKey = [UtilityBridge сonvertCStringToNSString:key];
-    
-    [qonversionSandwich launchWithProjectKey:projectKey completion:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
-        [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
-    }];
-}
-
 void _setAdvertisingID() {
-    [qonversionSandwich setAdvertisingId];
+    [qonversionSandwich collectAdvertisingId];
 }
 
 void _presentCodeRedemptionSheet() {
@@ -67,7 +64,7 @@ void _presentCodeRedemptionSheet() {
 }
 
 void _setAppleSearchAdsAttributionEnabled(const bool enable) {
-    [qonversionSandwich setAppleSearchAdsAttributionEnabled:enable];
+    [qonversionSandwich collectAppleSearchAdsAttribution];
 }
 
 void _setProperty(const char* propertyName, const char* value) {
@@ -88,7 +85,7 @@ void _addAttributionData(const char* conversionData, const char* provider) {
     NSDictionary *conversionInfo = [UtilityBridge dictionaryFromJsonString: [UtilityBridge сonvertCStringToNSString: conversionData]];
     NSString *providerStr = [UtilityBridge сonvertCStringToNSString:provider];
 
-    [qonversionSandwich addAttributionDataWithSourceKey:providerStr value:conversionInfo];
+    [qonversionSandwich attributionWithProviderKey:providerStr value:conversionInfo];
 }
 
 void _identify(const char* userId) {
@@ -103,7 +100,7 @@ void _logout() {
 void _checkPermissions(const char* unityCallbackName) {
     NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
     
-    [qonversionSandwich checkPermissions:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
+    [qonversionSandwich checkEntitlements:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
         [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
     }];
 }
@@ -179,20 +176,15 @@ void _promoPurchase(const char* storeProductId, const char* unityCallbackName) {
     }];
 }
 
-void _setPermissionsCacheLifetime(const char* lifetimeName) {
-    NSString *lifetimeNameStr = [UtilityBridge сonvertCStringToNSString:lifetimeName];
-    [qonversionSandwich setPermissionsCacheLifetime:lifetimeNameStr];
-}
-
 void _setNotificationsToken(const char* token) {
     NSString *tokenStr = [UtilityBridge сonvertCStringToNSString:token];
-    [qonversionSandwich setNotificationToken:tokenStr];
+    [automationsBridge setNotificationsToken:tokenStr];
 }
 
 bool _handleNotification(const char* notification) {
     NSDictionary *notificationInfo = [UtilityBridge dictionaryFromJsonString: [UtilityBridge сonvertCStringToNSString: notification]];
     
-    BOOL isQonversionNotification = [qonversionSandwich handleNotification:notificationInfo];
+    BOOL isQonversionNotification = [automationsBridge handleNotification:notificationInfo];
     
     return isQonversionNotification;
 }
@@ -200,7 +192,7 @@ bool _handleNotification(const char* notification) {
 const char* _getNotificationCustomPayload(const char* notification) {
   NSDictionary *notificationInfo = [UtilityBridge dictionaryFromJsonString: [UtilityBridge сonvertCStringToNSString: notification]];
   
-  NSDictionary *payload = [qonversionSandwich getNotificationCustomPayload:notificationInfo];
+  NSDictionary *payload = [automationsBridge getNotificationCustomPayload:notificationInfo];
   
   if (payload == nil) {
     return nil;
@@ -212,5 +204,5 @@ const char* _getNotificationCustomPayload(const char* notification) {
 }
 
 void _subscribeOnAutomationEvents() {
-    [automationsDelegate subscribe];
+    [automationsBridge subscribe];
 }

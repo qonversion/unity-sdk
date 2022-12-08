@@ -47,6 +47,18 @@ char* listenerName = nil;
     [self.automationsSandwich subscribe:self];
 }
 
+- (void)setNotificationsToken:(NSString *)token {
+    [self.automationsSandwich setNotificationToken:token];
+}
+
+- (BOOL)handleNotification:(NSDictionary *)notificationInfo {
+    return [self.automationsSandwich handleNotification:notificationInfo];
+}
+
+- (NSDictionary *)getNotificationCustomPayload:(NSDictionary *)payload {
+    return [self.automationsSandwich getNotificationCustomPayload:payload];
+}
+
 - (void)automationDidTriggerWithEvent:(NSString * _Nonnull)event payload:(NSDictionary<NSString *,id> * _Nullable)payload {
     NSString *methodName = self.automationEvents[event];
 
