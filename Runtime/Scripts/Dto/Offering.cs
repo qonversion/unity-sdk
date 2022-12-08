@@ -39,7 +39,8 @@ namespace QonversionUnity
 
     public enum QOfferingTag
     {
-        None,
-        Main
+        Unknown = -1,
+        None = 0,
+        Main = 1
     }
 }

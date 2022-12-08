@@ -4,13 +4,22 @@ using UnityEngine;
 
 namespace QonversionUnity
 {
-    internal class AutomationsInternal : Automations
+    internal class AutomationsInternal : MonoBehaviour, Automations
     {
         private const string GameObjectName = "QonvesrionAutomationsRuntimeGameObject";
         private IAutomationsWrapper _nativeWrapperInstance;
         private AutomationsDelegate _automationsDelegate;
 
-        public override void SetDelegate(AutomationsDelegate automationsDelegate)
+        public static AutomationsInternal CreateInstance()
+        {
+            GameObject go = new GameObject(GameObjectName);
+            go.AddComponent<AutomationsInternal>();
+            DontDestroyOnLoad(go);
+
+            return go.GetComponent<AutomationsInternal>();
+        }
+
+        public void SetDelegate(AutomationsDelegate automationsDelegate)
         {
             _automationsDelegate = automationsDelegate;
 
@@ -18,19 +27,19 @@ namespace QonversionUnity
             instance.SubscribeOnAutomationEvents();
         }
         
-        public override void SetNotificationsToken(string token)
+        public void SetNotificationsToken(string token)
         {
             IAutomationsWrapper instance = GetNativeWrapper();
             instance.SetNotificationsToken(token);
         }
 
-        public override bool HandleNotification(Dictionary<string, object> notification)
+        public bool HandleNotification(Dictionary<string, object> notification)
         {
             IAutomationsWrapper instance = GetNativeWrapper();
             return instance.HandleNotification(notification.toJson());
         }
 
-        public override Dictionary<string, object> GetNotificationCustomPayload(Dictionary<string, object> notification)
+        public Dictionary<string, object> GetNotificationCustomPayload(Dictionary<string, object> notification)
         {
             IAutomationsWrapper instance = GetNativeWrapper();
             var payloadJson = instance.GetNotificationCustomPayload(notification.toJson());
@@ -69,10 +78,6 @@ namespace QonversionUnity
                     break;
             }
             _nativeWrapperInstance.Initialize(GameObjectName);
-            
-            GameObject go = new GameObject(GameObjectName);
-            go.AddComponent<AutomationsInternal>();
-            DontDestroyOnLoad(go);
 
             return _nativeWrapperInstance;
         }
