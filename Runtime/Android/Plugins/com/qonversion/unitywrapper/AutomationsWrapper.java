@@ -34,10 +34,6 @@ public class AutomationsWrapper implements AutomationsEventListener {
         automationsSandwich = new AutomationsSandwich();
     }
 
-    public void initialize() {
-        automationsSandwich.initialize();
-    }
-
     public void subscribe() {
         automationsSandwich.setDelegate(this);
     }
