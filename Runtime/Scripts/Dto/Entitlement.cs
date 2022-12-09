@@ -61,10 +61,34 @@ namespace QonversionUnity
             return Utils.FormatDate((long) time);
         }
 
-        private QEntitlementRenewState FormatRenewState(object renewState) =>
-            (QEntitlementRenewState)Convert.ToInt32(renewState);
+        private QEntitlementRenewState FormatRenewState(object renewState)
+        {
+            string value = renewState as string;
+            QEntitlementRenewState result;
+            switch (value)
+            {
+                case "non_renewable":
+                    result = QEntitlementRenewState.NonRenewable;
+                    break;
+                case "will_renew":
+                    result = QEntitlementRenewState.WillRenew;
+                    break;
+                case "canceled":
+                    result = QEntitlementRenewState.Canceled;
+                    break;
+                case "billing_issue":
+                    result = QEntitlementRenewState.BillingIssue;
+                    break;
+                default:
+                    result = QEntitlementRenewState.Unknown;
+                    break;
+            }
 
-        private QEntitlementSource FormatEntitlementSource(object source) {
+            return result;
+        }
+
+        private QEntitlementSource FormatEntitlementSource(object source)
+        {
             return Enum.TryParse(source.ToString(), out QEntitlementSource parsedSource)
                 ? parsedSource
                 : QEntitlementSource.Unknown;

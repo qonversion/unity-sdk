@@ -41,13 +41,13 @@ namespace QonversionUnity
         /// Make sure the method is called before Qonversion.handleNotification.
         /// </summary>
         /// <param name="automationsDelegate">The delegate to handle automations events</param>
-        public abstract void SetDelegate(AutomationsDelegate automationsDelegate);
+        public void SetDelegate(AutomationsDelegate automationsDelegate);
 
         /// <summary>
         /// Set push token to Qonversion to enable Qonversion push notifications
         /// </summary>
         /// <param name="token">Firebase device token for Android. APNs device token for iOS.</param>
-        public abstract void SetNotificationsToken(string token);
+        public void SetNotificationsToken(string token);
 
         /// <summary>
         /// Call to handle push notifications sent by Qonversion Automations.
@@ -56,7 +56,7 @@ namespace QonversionUnity
         /// <returns>true when a push notification was received from Qonversion. Otherwise, returns false, so you need to handle the notification yourself</returns>
         /// <see href="https://pub.dev/documentation/firebase_messaging_platform_interface/latest/firebase_messaging_platform_interface/RemoteMessage/data.html">Firebase RemoteMessage data</see>
         /// <see href="https://developer.apple.com/documentation/usernotifications/unnotificationcontent/1649869-userinfo">APNs notification data</see>
-        public abstract bool HandleNotification(Dictionary<string, object> notification);
+        public bool HandleNotification(Dictionary<string, object> notification);
 
         /// <summary>
         /// Get parsed custom payload, which you added to the notification in the dashboard
@@ -64,6 +64,6 @@ namespace QonversionUnity
         /// <param name="notification">notification payload data</param>
         /// <returns>a map with custom payload from the notification or null if it's not provided</returns>
         [CanBeNull]
-        public abstract Dictionary<string, object> GetNotificationCustomPayload(Dictionary<string, object> notification);
+        public Dictionary<string, object> GetNotificationCustomPayload(Dictionary<string, object> notification);
     }
 }

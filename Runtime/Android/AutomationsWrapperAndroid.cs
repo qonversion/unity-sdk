@@ -9,11 +9,6 @@ namespace QonversionUnity
             CallQonversion("initialize", gameObjectName);
         }
 
-        public void InitializeSdk()
-        {
-            CallQonversion("initializeSdk");
-        }
-        
         public void SetNotificationsToken(string token)
         {
             CallQonversion("setNotificationsToken", token);

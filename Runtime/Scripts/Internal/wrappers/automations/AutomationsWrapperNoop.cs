@@ -1,12 +1,8 @@
 namespace QonversionUnity
- {
+{
     internal class AutomationsWrapperNoop : IAutomationsWrapper
     {
         public void Initialize(string gameObjectName)
-        {
-        }
-
-        public void InitializeSdk()
         {
         }
 
@@ -28,4 +24,4 @@ namespace QonversionUnity
         {
         }
     }
-  }
+}

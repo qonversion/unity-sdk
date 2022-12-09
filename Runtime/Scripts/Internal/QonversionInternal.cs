@@ -57,11 +57,11 @@ namespace QonversionUnity
         public event Qonversion.OnUpdatedEntitlementsReceived UpdatedEntitlementsReceived
         {
             add
-            { 
+            {
                 _onUpdatedEntitlementsReceived += value;
             }
             remove
-            { 
+            {
                 _onUpdatedEntitlementsReceived -= value;
             }
         }
@@ -69,10 +69,10 @@ namespace QonversionUnity
         public static QonversionInternal CreateInstance()
         {
             GameObject go = new GameObject(GameObjectName);
-            go.AddComponent<QonversionInternal>();
+            QonversionInternal instance = go.AddComponent<QonversionInternal>();
             DontDestroyOnLoad(go);
 
-            return go.GetComponent<QonversionInternal>();
+            return instance;
         }
 
         void Qonversion.InitializeInstance(QonversionConfig config)

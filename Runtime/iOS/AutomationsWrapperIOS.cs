@@ -34,13 +34,6 @@ namespace QonversionUnity
 #endif
         }
 
-        public void InitializeSdk()
-        {
-#if UNITY_IOS
-            // todo
-#endif
-        }
-
         public void SetNotificationsToken(string token)
         {
 #if UNITY_IOS

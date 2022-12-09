@@ -13,10 +13,10 @@ namespace QonversionUnity
         public static AutomationsInternal CreateInstance()
         {
             GameObject go = new GameObject(GameObjectName);
-            go.AddComponent<AutomationsInternal>();
+            AutomationsInternal instance = go.AddComponent<AutomationsInternal>();
             DontDestroyOnLoad(go);
 
-            return go.GetComponent<AutomationsInternal>();
+            return instance;
         }
 
         public void SetDelegate(AutomationsDelegate automationsDelegate)
@@ -44,6 +44,7 @@ namespace QonversionUnity
             IAutomationsWrapper instance = GetNativeWrapper();
             var payloadJson = instance.GetNotificationCustomPayload(notification.toJson());
 
+            Debug.Log(payloadJson);
             if (payloadJson == null)
             {
                 return null;
