@@ -4,19 +4,23 @@ using UnityEngine;
 
 namespace QonversionUnity
 {
-    internal class AutomationsInternal : MonoBehaviour, Automations
+    internal class AutomationsInternal : MonoBehaviour, IAutomations
     {
         private const string GameObjectName = "QonvesrionAutomationsRuntimeGameObject";
+        private const string OnShowScreenMethodName = "OnShowScreen";
+
         private IAutomationsWrapper _nativeWrapperInstance;
         private AutomationsDelegate _automationsDelegate;
+
+        private Automations.OnShowScreenResponseReceived ShowScreenResponseReceivedCallback { get; set; }
 
         public static AutomationsInternal CreateInstance()
         {
             GameObject go = new GameObject(GameObjectName);
-            go.AddComponent<AutomationsInternal>();
+            AutomationsInternal instance = go.AddComponent<AutomationsInternal>();
             DontDestroyOnLoad(go);
 
-            return go.GetComponent<AutomationsInternal>();
+            return instance;
         }
 
         public void SetDelegate(AutomationsDelegate automationsDelegate)
@@ -56,6 +60,14 @@ namespace QonversionUnity
             }
 
             return response;
+        }
+
+        public void ShowScreen(string screenId, Automations.OnShowScreenResponseReceived callback)
+        {
+            ShowScreenResponseReceivedCallback = callback;
+            
+            IAutomationsWrapper instance = GetNativeWrapper();
+            instance.ShowScreen(screenId, OnShowScreenMethodName);
         }
 
         private IAutomationsWrapper GetNativeWrapper()
@@ -137,6 +149,13 @@ namespace QonversionUnity
             }
 
             _automationsDelegate.OnAutomationsFinished();
+        }
+        
+        private void OnShowScreen(string jsonString)
+        {
+            var error = Mapper.ErrorFromJson(jsonString);
+            ShowScreenResponseReceivedCallback(error);
+            ShowScreenResponseReceivedCallback = null;
         }
     }
 }

@@ -1,5 +1,5 @@
 namespace QonversionUnity
- {
+{
     internal class QonversionWrapperNoop : IQonversionWrapper
     {
         public void Initialize(string gameObjectName)
@@ -94,4 +94,4 @@ namespace QonversionUnity
         {
         }
     }
-  }
+}

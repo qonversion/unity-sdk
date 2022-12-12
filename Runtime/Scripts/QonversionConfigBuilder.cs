@@ -4,17 +4,17 @@ namespace QonversionUnity
     {
         private readonly string _projectKey;
         private readonly LaunchMode _launchMode;
-        private Environment _environment;
-        private EntitlementsCacheLifetime _entitlementsCacheLifetime;
+        private Environment _environment = Environment.Production;
+        private EntitlementsCacheLifetime _entitlementsCacheLifetime = EntitlementsCacheLifetime.Month;
 
         public QonversionConfigBuilder(string projectKey, LaunchMode launchMode)
         {
             _projectKey = projectKey;
             _launchMode = launchMode;
         }
-        
+
         /// <summary>
-        /// Set current application <see cref="_environment"/>. Used to distinguish sandbox and production users.
+        /// Set current application <see cref="Environment"/>. Used to distinguish sandbox and production users.
         /// </summary>
         /// <param name="environment">current environment.</param>
         /// <returns>builder instance for chain calls.</returns>
@@ -28,7 +28,7 @@ namespace QonversionUnity
         /// Entitlements cache is used when there are problems with the Qonversion API
         /// or internet connection. If so, Qonversion will return the last successfully loaded
         /// entitlements. The current method allows you to configure how long that cache may be used.
-        /// The default value is <see cref="_entitlementsCacheLifetime.Month"/>.
+        /// The default value is <see cref="EntitlementsCacheLifetime.Month"/>.
         /// </summary>
         /// <param name="lifetime">desired entitlements cache lifetime duration.</param>
         /// <returns>builder instance for chain calls.</returns>

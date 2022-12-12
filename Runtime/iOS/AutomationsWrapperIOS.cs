@@ -25,6 +25,9 @@ namespace QonversionUnity
 
         [DllImport("__Internal")]
         private static extern void _subscribeOnAutomationEvents();
+
+        [DllImport("__Internal")]
+        private static extern void _showScreen(string screenId, string callbackName);
 #endif
 
         public void Initialize(string gameObjectName)
@@ -33,14 +36,6 @@ namespace QonversionUnity
             _initialize(gameObjectName);
 #endif
         }
-
-        public void InitializeSdk()
-        {
-#if UNITY_IOS
-            // todo
-#endif
-        }
-
         public void SetNotificationsToken(string token)
         {
 #if UNITY_IOS
@@ -70,6 +65,12 @@ namespace QonversionUnity
         {
 #if UNITY_IOS
             _subscribeOnAutomationEvents();
+#endif
+        }
+        public void ShowScreen(string screenId, string callbackName)
+        {
+#if UNITY_IOS
+            _showScreen(screenId, callbackName);
 #endif
         }
     }

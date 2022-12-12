@@ -30,7 +30,6 @@ public class QonversionWrapper {
     public static String ENTITLEMENTS_UPDATE_LISTENER = "OnReceivedUpdatedEntitlements";
 
     private static MessageSender messageSender;
-    private static AutomationsWrapper automationsWrapper;
     private static QonversionSandwich qonversionSandwich;
 
     public static synchronized void initialize(String unityListener) {
@@ -42,7 +41,6 @@ public class QonversionWrapper {
                 () -> UnityPlayer.currentActivity,
                 entitlements -> sendMessageToUnity(entitlements, ENTITLEMENTS_UPDATE_LISTENER)
         );
-        automationsWrapper = new AutomationsWrapper(messageSender);
     }
 
     public static synchronized void storeSdkInfo(String version, String source) {
@@ -146,23 +144,6 @@ public class QonversionWrapper {
         }
     }
 
-    public static synchronized void setNotificationsToken(String token) {
-        automationsWrapper.setNotificationsToken(token);
-    }
-
-    public static synchronized boolean handleNotification(String notification) {
-        return automationsWrapper.handleNotification(notification);
-    }
-
-    @Nullable
-    public static synchronized Map<String, Object> getNotificationCustomPayload(String notification) {
-        return automationsWrapper.getNotificationCustomPayload(notification);
-    }
-
-    public static synchronized void subscribeOnAutomationEvents() {
-        automationsWrapper.subscribe();
-    }
-
     private static ResultListener getResultListener(@NotNull String methodName) {
         return new ResultListener() {
             @Override
@@ -187,7 +168,7 @@ public class QonversionWrapper {
             @Override
             public void onError(@NonNull SandwichError error, boolean isCancelled) {
                 final ObjectMapper mapper = new ObjectMapper();
-                final ObjectNode rootNode = createErrorNode(error);
+                final ObjectNode rootNode = Utils.createErrorNode(error);
                 final JsonNode isCancelledNode = mapper.convertValue(isCancelled, JsonNode.class);
                 rootNode.set("isCancelled", isCancelledNode);
                 sendMessageToUnity(rootNode, methodName);
@@ -196,21 +177,9 @@ public class QonversionWrapper {
     }
 
     private static void handleErrorResponse(@NotNull SandwichError error, @NotNull String methodName) {
-        final ObjectNode rootNode = createErrorNode(error);
+        final ObjectNode rootNode = Utils.createErrorNode(error);
 
         sendMessageToUnity(rootNode, methodName);
-    }
-
-    private static ObjectNode createErrorNode(@NotNull SandwichError error) {
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode errorNode = mapper.createObjectNode();
-        errorNode.put("code", error.getCode());
-        errorNode.put("description", error.getDescription());
-        errorNode.put("additionalMessage", error.getAdditionalMessage());
-
-        ObjectNode rootNode = mapper.createObjectNode();
-        rootNode.set("error", errorNode);
-        return rootNode;
     }
 
     private static void sendMessageToUnity(@NotNull Object objectToConvert, @NotNull String methodName) {
