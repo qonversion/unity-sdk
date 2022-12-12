@@ -6,32 +6,37 @@ namespace QonversionUnity
     {
         public void Initialize(string gameObjectName)
         {
-            CallQonversion("initialize", gameObjectName);
+            CallAutomations("initialize", gameObjectName);
         }
 
         public void SetNotificationsToken(string token)
         {
-            CallQonversion("setNotificationsToken", token);
+            CallAutomations("setNotificationsToken", token);
         }
 
         public bool HandleNotification(string notification)
         {
-            return CallQonversion<bool>("handleNotification", notification);
+            return CallAutomations<bool>("handleNotification", notification);
         }
 
         public string GetNotificationCustomPayload(string notification)
         {
-            return CallQonversion<string>("getNotificationCustomPayload", notification);
+            return CallAutomations<string>("getNotificationCustomPayload", notification);
         }
 
         public void SubscribeOnAutomationEvents()
         {
-            CallQonversion("subscribeOnAutomationEvents");
+            CallAutomations("subscribeOnAutomationEvents");
+        }
+
+        public void ShowScreen(string screenId, string callbackName)
+        {
+            CallAutomations("showScreen", screenId, callbackName);
         }
 
         private const string AutomationsWrapper = "com.qonversion.unitywrapper.AutomationsWrapper";
 
-        private static T CallQonversion<T>(string methodName, params object[] args)
+        private static T CallAutomations<T>(string methodName, params object[] args)
         {
             using (var automations = new AndroidJavaClass(AutomationsWrapper))
             {
@@ -39,7 +44,7 @@ namespace QonversionUnity
             }
         }
 
-        private static void CallQonversion(string methodName, params object[] args)
+        private static void CallAutomations(string methodName, params object[] args)
         {
             using (var automations = new AndroidJavaClass(AutomationsWrapper))
             {

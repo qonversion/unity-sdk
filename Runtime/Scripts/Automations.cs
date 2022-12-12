@@ -36,6 +36,8 @@ namespace QonversionUnity
             return _backingInstance;
         }
 
+        public delegate void OnShowScreenResponseReceived(QonversionError error);
+
         /// <summary>
         /// The Automations delegate is responsible for handling in-app screens and actions when push notification is received.
         /// Make sure the method is called before Qonversion.handleNotification.
@@ -65,5 +67,12 @@ namespace QonversionUnity
         /// <returns>a map with custom payload from the notification or null if it's not provided</returns>
         [CanBeNull]
         public Dictionary<string, object> GetNotificationCustomPayload(Dictionary<string, object> notification);
+
+        /// <summary>
+        /// Show the screen using its ID.
+        /// </summary>
+        /// <param name="screenId">identifier of the screen which must be shown</param>
+        /// <param name="callback">callback that will be called when response is received</param>
+        public void ShowScreen(string screenId, OnShowScreenResponseReceived callback);
     }
 }

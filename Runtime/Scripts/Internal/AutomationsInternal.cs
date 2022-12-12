@@ -7,8 +7,12 @@ namespace QonversionUnity
     internal class AutomationsInternal : MonoBehaviour, Automations
     {
         private const string GameObjectName = "QonvesrionAutomationsRuntimeGameObject";
+        private const string OnShowScreenMethodName = "OnShowScreen";
+
         private IAutomationsWrapper _nativeWrapperInstance;
         private AutomationsDelegate _automationsDelegate;
+
+        private Automations.OnShowScreenResponseReceived ShowScreenResponseReceivedCallback { get; set; }
 
         public static AutomationsInternal CreateInstance()
         {
@@ -57,6 +61,14 @@ namespace QonversionUnity
             }
 
             return response;
+        }
+
+        public void ShowScreen(string screenId, Automations.OnShowScreenResponseReceived callback)
+        {
+            ShowScreenResponseReceivedCallback = callback;
+            
+            IAutomationsWrapper instance = GetNativeWrapper();
+            instance.ShowScreen(screenId, OnShowScreenMethodName);
         }
 
         private IAutomationsWrapper GetNativeWrapper()
@@ -138,6 +150,15 @@ namespace QonversionUnity
             }
 
             _automationsDelegate.OnAutomationsFinished();
+        }
+        
+        private void OnShowScreen(string jsonString)
+        {
+            Debug.Log("OnShowScreen " + jsonString);
+            
+            var error = Mapper.ErrorFromJson(jsonString);
+            ShowScreenResponseReceivedCallback(error);
+            ShowScreenResponseReceivedCallback = null;
         }
     }
 }

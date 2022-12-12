@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -16,6 +17,8 @@ import java.util.Map;
 
 import io.qonversion.sandwich.AutomationsEventListener;
 import io.qonversion.sandwich.AutomationsSandwich;
+import io.qonversion.sandwich.ResultListener;
+import io.qonversion.sandwich.SandwichError;
 
 @SuppressWarnings("UnnecessaryLocalVariable")
 public class AutomationsWrapper {
@@ -76,6 +79,26 @@ public class AutomationsWrapper {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public static synchronized void showScreen(String screenId, String unityCallbackName) {
+        automationsSandwich.showScreen(screenId, new ResultListener() {
+            @Override
+            public void onSuccess(@NonNull Map<String, ?> data) {
+                sendMessageToUnity(data, unityCallbackName);
+            }
+
+            @Override
+            public void onError(@NonNull SandwichError error) {
+                handleErrorResponse(error, unityCallbackName);
+            }
+        });
+    }
+
+    private static void handleErrorResponse(@NotNull SandwichError error, @NotNull String methodName) {
+        final ObjectNode rootNode = Utils.createErrorNode(error);
+
+        sendMessageToUnity(rootNode, methodName);
     }
 
     static class EventListener implements AutomationsEventListener {

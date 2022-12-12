@@ -9,5 +9,6 @@ namespace QonversionUnity
         bool HandleNotification(string notification);
         [CanBeNull] string GetNotificationCustomPayload(string notification);
         void SubscribeOnAutomationEvents();
+        void ShowScreen(string screenId, string callbackName);
     }
 }

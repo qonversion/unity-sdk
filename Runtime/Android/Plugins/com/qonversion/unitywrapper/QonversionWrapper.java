@@ -168,7 +168,7 @@ public class QonversionWrapper {
             @Override
             public void onError(@NonNull SandwichError error, boolean isCancelled) {
                 final ObjectMapper mapper = new ObjectMapper();
-                final ObjectNode rootNode = createErrorNode(error);
+                final ObjectNode rootNode = Utils.createErrorNode(error);
                 final JsonNode isCancelledNode = mapper.convertValue(isCancelled, JsonNode.class);
                 rootNode.set("isCancelled", isCancelledNode);
                 sendMessageToUnity(rootNode, methodName);
@@ -177,21 +177,9 @@ public class QonversionWrapper {
     }
 
     private static void handleErrorResponse(@NotNull SandwichError error, @NotNull String methodName) {
-        final ObjectNode rootNode = createErrorNode(error);
+        final ObjectNode rootNode = Utils.createErrorNode(error);
 
         sendMessageToUnity(rootNode, methodName);
-    }
-
-    private static ObjectNode createErrorNode(@NotNull SandwichError error) {
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode errorNode = mapper.createObjectNode();
-        errorNode.put("code", error.getCode());
-        errorNode.put("description", error.getDescription());
-        errorNode.put("additionalMessage", error.getAdditionalMessage());
-
-        ObjectNode rootNode = mapper.createObjectNode();
-        rootNode.set("error", errorNode);
-        return rootNode;
     }
 
     private static void sendMessageToUnity(@NotNull Object objectToConvert, @NotNull String methodName) {

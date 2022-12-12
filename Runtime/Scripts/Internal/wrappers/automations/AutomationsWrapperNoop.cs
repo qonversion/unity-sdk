@@ -23,5 +23,9 @@ namespace QonversionUnity
         public void SubscribeOnAutomationEvents()
         {
         }
+
+        public void ShowScreen(string screenId, string callbackName)
+        {
+        }
     }
 }
