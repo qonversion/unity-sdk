@@ -2,16 +2,16 @@
 #import "QNUAutomationsDelegate.h"
 @import QonversionSandwich;
 
-char* unityListenerName = nil;
+char* automationsUnityListenerName = nil;
 
 static QNUAutomationsDelegate *automationsBridge;
 
-void _initialize(const char* unityListener) {
+void _initializeAutomations(const char* unityListener) {
     unsigned long len = strlen(unityListener);
-    unityListenerName = malloc(len + 1);
-    strcpy(unityListenerName, unityListener);
+    automationsUnityListenerName = malloc(len + 1);
+    strcpy(automationsUnityListenerName, unityListener);
 
-    automationsBridge = [[QNUAutomationsDelegate alloc] initWithListenerName:unityListenerName];
+    automationsBridge = [[QNUAutomationsDelegate alloc] initWithListenerName:automationsUnityListenerName];
 }
 
 void _setNotificationsToken(const char* token) {

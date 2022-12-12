@@ -1,5 +1,4 @@
 #import "UtilityBridge.h"
-#import "QNUAutomationsDelegate.h"
 @import QonversionSandwich;
 
 char* unityListenerName = nil;
@@ -23,7 +22,6 @@ char* unityListenerName = nil;
 
 @end
 
-static QNUAutomationsDelegate *automationsBridge;
 static QonversionSandwich *qonversionSandwich;
 
 void _initialize(const char* unityListener) {
@@ -32,7 +30,6 @@ void _initialize(const char* unityListener) {
     strcpy(unityListenerName, unityListener);
 
     qonversionSandwich = [[QonversionSandwich alloc] initWithQonversionEventListener:[QonversionEventListenerWrapper new]];
-    automationsBridge = [[QNUAutomationsDelegate alloc] initWithListenerName:unityListenerName];
 }
 
 void _initializeSdk(const char* projectKey, const char* launchMode, const char* environment, const char* entitlementsCacheLifetime) {
@@ -181,35 +178,4 @@ void _promoPurchase(const char* storeProductId, const char* unityCallbackName) {
     [qonversionSandwich promoPurchase:storeProductIdStr completion:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
         [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
     }];
-}
-
-void _setNotificationsToken(const char* token) {
-    NSString *tokenStr = [UtilityBridge сonvertCStringToNSString:token];
-    [automationsBridge setNotificationsToken:tokenStr];
-}
-
-bool _handleNotification(const char* notification) {
-    NSDictionary *notificationInfo = [UtilityBridge dictionaryFromJsonString: [UtilityBridge сonvertCStringToNSString: notification]];
-    
-    BOOL isQonversionNotification = [automationsBridge handleNotification:notificationInfo];
-    
-    return isQonversionNotification;
-}
-
-const char* _getNotificationCustomPayload(const char* notification) {
-  NSDictionary *notificationInfo = [UtilityBridge dictionaryFromJsonString: [UtilityBridge сonvertCStringToNSString: notification]];
-  
-  NSDictionary *payload = [automationsBridge getNotificationCustomPayload:notificationInfo];
-  
-  if (payload == nil) {
-    return nil;
-  }
-
-  const char *data = [UtilityBridge jsonStringFromObject:payload];
-
-  return data;
-}
-
-void _subscribeOnAutomationEvents() {
-    [automationsBridge subscribe];
 }

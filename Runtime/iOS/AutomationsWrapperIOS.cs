@@ -12,7 +12,7 @@ namespace QonversionUnity
     {
 #if UNITY_IOS
         [DllImport("__Internal")]
-        private static extern void _initialize(string gameObjectName);
+        private static extern void _initializeAutomations(string gameObjectName);
 
         [DllImport("__Internal")]
         private static extern void _setNotificationsToken(string token);
@@ -33,7 +33,7 @@ namespace QonversionUnity
         public void Initialize(string gameObjectName)
         {
 #if UNITY_IOS
-            _initialize(gameObjectName);
+            _initializeAutomations(gameObjectName);
 #endif
         }
         public void SetNotificationsToken(string token)
