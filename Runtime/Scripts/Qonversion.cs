@@ -262,7 +262,7 @@ namespace QonversionUnity
         /// On iOS 14.5+, after requesting the app tracking entitlement using ATT, you need to notify Qonversion if tracking
         /// is allowed and IDFA is available.
         /// </summary>
-        public void CollectAdvertisingID();
+        public void CollectAdvertisingId();
 
         /// <summary>
         /// Collecting Apple Search Ads attribution data.

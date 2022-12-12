@@ -215,7 +215,7 @@ namespace QonversionUnity
             instance.SetUserProperty(key, value);
         }
 
-        public void CollectAdvertisingID()
+        public void CollectAdvertisingId()
         {
             IQonversionWrapper instance = GetNativeWrapper();
             instance.SetAdvertisingID();
