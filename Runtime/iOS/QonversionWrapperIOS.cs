@@ -101,7 +101,7 @@ namespace QonversionUnity
 #endif
         }
 
-        public void Launch(string projectKey, bool observerMode, string callbackName)
+        public void InitializeSdk(string projectKey, bool observerMode, string callbackName)
         {
 #if UNITY_IOS
             _launchWithKey(projectKey, callbackName);
@@ -177,7 +177,7 @@ namespace QonversionUnity
 #endif
         }
 
-        public void CheckPermissions(string callbackName)
+        public void CheckEntitlements(string callbackName)
         {
 #if UNITY_IOS
             _checkPermissions(callbackName);
@@ -227,10 +227,10 @@ namespace QonversionUnity
 #endif
         }
 
-        public void CheckTrialIntroEligibilityForProductIds(string productIdsJson, string callbackName)
+        public void CheckTrialIntroEligibility(string productIdsJson, string callbackName)
         {
 #if UNITY_IOS
-            _checkTrialIntroEligibilityForProductIds(productIdsJson, callbackName);
+            _checkTrialIntroEligibility(productIdsJson, callbackName);
 #endif
         }
 

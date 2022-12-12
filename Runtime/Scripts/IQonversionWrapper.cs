@@ -8,12 +8,12 @@ namespace QonversionUnity
         void StoreSdkInfo(string version, string source);
         void SetDebugMode();
         void SetAdvertisingID();
-        void Launch(string projectKey, bool observerMode, string callbackName);
+        void InitializeSdk(string projectKey, bool observerMode, string callbackName);
         void SetUserProperty(string key, string value);
         void SetProperty(UserProperty key, string value);
         void SyncPurchases();
         void AddAttributionData(string conversionData, AttributionSource source);
-        void CheckPermissions(string callbackName);
+        void CheckEntitlements(string callbackName);
         void Purchase(string productId, string callbackName);
         void PurchaseProduct(string productId, string offeringId, string callbackName);
         void Restore(string callbackName);
@@ -21,7 +21,7 @@ namespace QonversionUnity
         void UpdatePurchaseWithProduct(string productId, string offeringId, string oldProductId, ProrationMode prorationMode, string callbackName);
         void Products(string callbackName);
         void Offerings(string callbackName);
-        void CheckTrialIntroEligibilityForProductIds(string productIdsJson, string callbackName);
+        void CheckTrialIntroEligibility(string productIdsJson, string callbackName);
         void SetAppleSearchAdsAttributionEnabled(bool enable);
         void Identify(string userID);
         void Logout();
