@@ -1,6 +1,5 @@
 using System;
-using System.Collections.Generic;
-using QonversionUnity.MiniJSON;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace QonversionUnity
@@ -17,9 +16,9 @@ namespace QonversionUnity
             CallQonversion("storeSdkInfo", version, source);
         }
 
-        public void InitializeSdk(string projectKey, bool observerMode, string callbackName)
+        public void InitializeSdk(string projectKey, string launchMode, string environment, string entitlementsCacheLifetime)
         {
-            CallQonversion("initializeSdk", projectKey, observerMode, callbackName);
+            CallQonversion("initializeSdk", projectKey, launchMode, environment, entitlementsCacheLifetime);
         }
 
         public void SetDebugMode()
@@ -61,29 +60,11 @@ namespace QonversionUnity
         {
         }
 
-        public void AddAttributionData(string conversionData, AttributionSource source)
+        public void AddAttributionData(string conversionData, string providerName)
         {
-            string attibutionSource;
-
-            switch (source)
-            {
-                case AttributionSource.AppsFlyer:
-                    attibutionSource = "AppsFlyer";
-                    break;
-                case AttributionSource.Branch:
-                    attibutionSource = "Branch";
-                    break;
-                case AttributionSource.Adjust:
-                    attibutionSource = "Adjust";
-                    break;
-                default:
-                    Debug.LogWarning(string.Format("[Qonversion] Not Supported AttributionSource.{0} on Android platform.", source));
-                    return;
-            }
-
             try
             {
-                CallQonversion("attribution", conversionData, attibutionSource);
+                CallQonversion("attribution", conversionData, providerName);
             }
             catch (Exception e)
             {
@@ -99,6 +80,11 @@ namespace QonversionUnity
         public void Logout()
         {
             CallQonversion("logout");
+        }
+
+        public void UserInfo(string callbackName)
+        {
+            CallQonversion("userInfo", callbackName);
         }
 
         public void CheckEntitlements(string callbackName)
@@ -146,24 +132,8 @@ namespace QonversionUnity
             CallQonversion("checkTrialIntroEligibility", productIdsJson, callbackName);
         }
 
-        public void SetNotificationsToken(string token)
+        public void PromoPurchase(string storeProductId, string callbackName)
         {
-            CallQonversion("setNotificationsToken", token);
-        }
-
-        public bool HandleNotification(string notification)
-        {
-            return CallQonversion<bool>("handleNotification", notification);
-        }
-
-        public string GetNotificationCustomPayload(string notification)
-        {
-            return CallQonversion<string>("getNotificationCustomPayload", notification);
-        }
-
-        public void SubscribeOnAutomationEvents()
-        {
-            CallQonversion("subscribeOnAutomationEvents");
         }
 
         private const string QonversionWrapper = "com.qonversion.unitywrapper.QonversionWrapper";
@@ -182,15 +152,6 @@ namespace QonversionUnity
             {
                 qonversion.CallStatic(methodName, args);
             }
-        }
-
-        public void PromoPurchase(string storeProductId, string callbackName)
-        {
-        }
-
-        public void SetPermissionsCacheLifetime(string lifetime)
-        {
-            CallQonversion("setPermissionsCacheLifetime", lifetime);
         }
     }
 }
