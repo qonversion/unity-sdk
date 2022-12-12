@@ -65,4 +65,12 @@ char* listenerName = nil;
     [UtilityBridge sendUnityMessage:payload ?: @{} toMethod:methodName unityListener: listenerName];
 }
 
+- (void)showScreenWithId:(NSString *)screenId callbackName:(NSString *)callbackName {
+    [self.automationsSandwich showScreen:screenId completion:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
+        if (error) {
+            [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:listenerName];
+        }
+    }];
+}
+
 @end
