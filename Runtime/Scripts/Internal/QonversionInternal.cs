@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace QonversionUnity
 {
-    internal class QonversionInternal : MonoBehaviour, Qonversion
+    internal class QonversionInternal : MonoBehaviour, IQonversion
     {
         private const string GameObjectName = "QonvesrionRuntimeGameObject";
         private const string OnCheckEntitlementsMethodName = "OnCheckEntitlements";
@@ -75,7 +75,7 @@ namespace QonversionUnity
             return instance;
         }
 
-        void Qonversion.InitializeInstance(QonversionConfig config)
+        void IQonversion.InitializeInstance(QonversionConfig config)
         {
             IQonversionWrapper instance = GetNativeWrapper();
             instance.StoreSdkInfo(SdkVersion, SdkSource);
@@ -236,7 +236,6 @@ namespace QonversionUnity
         // Called from the native SDK - Called when entitlements received from the checkEntitlements() method 
         private void OnCheckEntitlements(string jsonString)
         {
-            Debug.Log("OnCheckEntitlements " + jsonString);
             HandleEntitlements(CheckEntitlementsCallbacks, jsonString);
             CheckEntitlementsCallbacks.Clear();
         }
@@ -244,7 +243,6 @@ namespace QonversionUnity
         // Called from the native SDK - Called when purchase result received from the purchase() method
         private void OnPurchase(string jsonString)
         {
-            Debug.Log("OnPurchase callback " + jsonString);
             HandlePurchaseResult(PurchaseCallback, jsonString);
             PurchaseCallback = null;
         }
@@ -252,7 +250,6 @@ namespace QonversionUnity
         // Called from the native SDK - Called when purchase result received from the purchaseProduct() method 
         private void OnPurchaseProduct(string jsonString)
         {
-            Debug.Log("OnPurchaseProduct callback " + jsonString);
             HandlePurchaseResult(PurchaseProductCallback, jsonString);
             PurchaseProductCallback = null;
         }
@@ -260,7 +257,6 @@ namespace QonversionUnity
         // Called from the native SDK - Called when entitlements received from the restore() method 
         private void OnRestore(string jsonString)
         {
-            Debug.Log("OnRestore " + jsonString);
             HandleEntitlements(RestoreCallbacks, jsonString);
             RestoreCallbacks.Clear();
         }
@@ -268,7 +264,6 @@ namespace QonversionUnity
         // Called from the native SDK - Called when purchase result received from the updatePurchase() method 
         private void OnUpdatePurchase(string jsonString)
         {
-            Debug.Log("OnUpdatePurchase " + jsonString);
             HandlePurchaseResult(UpdatePurchaseCallback, jsonString);
             UpdatePurchaseCallback = null;
         }
@@ -276,7 +271,6 @@ namespace QonversionUnity
         // Called from the native SDK - Called when purchase result received from the updatePurchaseWithProduct() method 
         private void OnUpdatePurchaseWithProduct(string jsonString)
         {
-            Debug.Log("OnUpdatePurchaseWithProduct " + jsonString);
             HandlePurchaseResult(UpdatePurchaseWithProductCallback, jsonString);
             UpdatePurchaseWithProductCallback = null;
         }
@@ -284,7 +278,6 @@ namespace QonversionUnity
         // Called from the native SDK - Called when entitlements received from the promoPurchase() method 
         private void OnPromoPurchase(string jsonString)
         {
-            Debug.Log("OnPromoPurchase callback " + jsonString);
             if (PromoPurchaseCallback != null) {
                 var callbacks = new List<Qonversion.OnEntitlementsReceived> { PromoPurchaseCallback };
                 HandleEntitlements(callbacks, jsonString);
@@ -297,8 +290,6 @@ namespace QonversionUnity
         // Called from the native SDK - Called when products received from the products() method 
         private void OnProducts(string jsonString)
         {
-            Debug.Log("OnProducts " + jsonString);
-
             if (ProductsCallbacks.Count == 0) return;
 
             var error = Mapper.ErrorFromJson(jsonString);
@@ -318,8 +309,6 @@ namespace QonversionUnity
         // Called from the native SDK - Called when offerings received from the offerings() method 
         private void OnOfferings(string jsonString)
         {
-            Debug.Log("OnOfferings " + jsonString);
-
             if (OfferingsCallbacks.Count == 0) return;
 
             var error = Mapper.ErrorFromJson(jsonString);
@@ -339,8 +328,6 @@ namespace QonversionUnity
         // Called from the native SDK - Called when eligibilities received from the checkTrialIntroEligibilityForProductIds() method 
         private void OnEligibilities(string jsonString)
         {
-            Debug.Log("OnEligibilities " + jsonString);
-
             if (EligibilitiesCallback == null) return;
 
             var error = Mapper.ErrorFromJson(jsonString);
@@ -360,8 +347,6 @@ namespace QonversionUnity
         // Called from the native SDK - Called when user info received from the UserInfo() method 
         private void OnUserInfo(string jsonString)
         {
-            Debug.Log("OnUserInfo " + jsonString);
-
             if (UserInfoCallback == null) return;
 
             var error = Mapper.ErrorFromJson(jsonString);
@@ -381,8 +366,6 @@ namespace QonversionUnity
         // Called from the native SDK - Called when entitlements update. For example, when pending purchases like SCA, Ask to buy, etc., happen.
         private void OnReceivedUpdatedEntitlements(string jsonString)
         {
-            Debug.Log("OnReceivedUpdatedEntitlements " + jsonString);
-
             if (_onUpdatedEntitlementsReceived == null)
             {
                 return;
@@ -394,8 +377,6 @@ namespace QonversionUnity
 
         private void OnReceivePromoPurchase(string storeProductId)
         {
-            Debug.Log("OnReceivePromoPurchase " + storeProductId);
-            
 			if (_onPromoPurchasesReceived == null)
             {
                 return;

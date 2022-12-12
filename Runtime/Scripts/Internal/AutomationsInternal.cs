@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace QonversionUnity
 {
-    internal class AutomationsInternal : MonoBehaviour, Automations
+    internal class AutomationsInternal : MonoBehaviour, IAutomations
     {
         private const string GameObjectName = "QonvesrionAutomationsRuntimeGameObject";
         private const string OnShowScreenMethodName = "OnShowScreen";
@@ -48,7 +48,6 @@ namespace QonversionUnity
             IAutomationsWrapper instance = GetNativeWrapper();
             var payloadJson = instance.GetNotificationCustomPayload(notification.toJson());
 
-            Debug.Log(payloadJson);
             if (payloadJson == null)
             {
                 return null;
@@ -154,8 +153,6 @@ namespace QonversionUnity
         
         private void OnShowScreen(string jsonString)
         {
-            Debug.Log("OnShowScreen " + jsonString);
-            
             var error = Mapper.ErrorFromJson(jsonString);
             ShowScreenResponseReceivedCallback(error);
             ShowScreenResponseReceivedCallback = null;
