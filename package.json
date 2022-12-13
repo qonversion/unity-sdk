@@ -29,5 +29,6 @@
 		"/Runtime.meta",
 		"/Editor",
 		"/Editor.meta"
-	]
+	],
+	"dependencies": {}
 }
