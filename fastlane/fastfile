@@ -7,7 +7,7 @@ def update_package_json(new_version)
 end
 
 def update_constant(new_version)
-    path = "../Runtime/Scripts/Qonversion.cs"
+    path = "../Runtime/Scripts/Internal/QonversionInternal.cs"
     regex = /private const string SdkVersion = ".*";/
     result_value = "private const string SdkVersion = \"#{new_version}\";"
 

@@ -4,6 +4,8 @@
     {
         AppsFlyer = 0,
         Branch,
-        Adjust
+        Adjust,
+        AppleSearchAds, // ios only
+        AppleAdServices // ios only
     }
 }
