@@ -41,7 +41,6 @@ void _initializeSdk(const char* projectKey, const char* launchMode, const char* 
     [qonversionSandwich initializeWithProjectKey:keyStr launchModeKey:launchModeStr environmentKey:envStr entitlementsCacheLifetimeKey:cacheLifetimeStr];
 }
 
-//_initializeSdk(string projectKey, string launchMode, string environment, string entitlementsCacheLifetime);
 void _storeSdkInfo(const char* version, const char* source) {
     NSString *versionStr = [UtilityBridge сonvertCStringToNSString:version];
     NSString *sourceStr = [UtilityBridge сonvertCStringToNSString:source];
