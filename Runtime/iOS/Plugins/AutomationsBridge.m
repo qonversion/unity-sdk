@@ -27,7 +27,7 @@ bool _handleNotification(const char* notification) {
     return isQonversionNotification;
 }
 
-const char* _getNotificationCustomPayload(const char* notification) {
+char* _getNotificationCustomPayload(const char* notification) {
   NSDictionary *notificationInfo = [UtilityBridge dictionaryFromJsonString: [UtilityBridge сonvertCStringToNSString: notification]];
   
   NSDictionary *payload = [automationsBridge getNotificationCustomPayload:notificationInfo];
@@ -38,7 +38,10 @@ const char* _getNotificationCustomPayload(const char* notification) {
 
   const char *data = [UtilityBridge jsonStringFromObject:payload];
 
-  return data;
+  char* cString = (char*)malloc(strlen(data) + 1);
+  strcpy(cString, data);
+    
+  return cString;
 }
 
 void _showScreen(const char* screenId, const char* unityCallbackName) {
