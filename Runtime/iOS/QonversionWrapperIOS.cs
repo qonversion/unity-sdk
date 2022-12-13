@@ -15,10 +15,10 @@ namespace QonversionUnity
         private static extern void _initialize(string gameObjectName);
 
         [DllImport("__Internal")]
-        private static extern void _storeSdkInfo(string version, string source);
+        private static extern void _initializeSdk(string projectKey, string launchMode, string environment, string entitlementsCacheLifetime);
 
         [DllImport("__Internal")]
-        private static extern void _setDebugMode();
+        private static extern void _storeSdkInfo(string version, string source);
 
         [DllImport("__Internal")]
         private static extern void _setAdvertisingID();
@@ -37,9 +37,6 @@ namespace QonversionUnity
 
         [DllImport("__Internal")]
         private static extern void _setUserProperty(string key, string value);
-
-        [DllImport("__Internal")]
-        private static extern void _launchWithKey(string key, string callbackName);
 
         [DllImport("__Internal")]
         private static extern void _addAttributionData(string conversionData, string providerName);
@@ -66,7 +63,7 @@ namespace QonversionUnity
         private static extern void _offerings(string callbackName);
 
         [DllImport("__Internal")]
-        private static extern void _checkTrialIntroEligibilityForProductIds(string productIdsJson, string callbackName);
+        private static extern void _checkTrialIntroEligibility(string productIdsJson, string callbackName);
 
         [DllImport("__Internal")]
         private static extern void _promoPurchase(string storeProductId, string callbackName);
@@ -92,7 +89,7 @@ namespace QonversionUnity
         public void InitializeSdk(string projectKey, string launchMode, string environment, string entitlementsCacheLifetime)
         {
 #if UNITY_IOS
-            // todo
+        _initializeSdk(projectKey, launchMode, environment, entitlementsCacheLifetime);
 #endif
         }
 
