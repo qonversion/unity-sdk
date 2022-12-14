@@ -15,10 +15,10 @@ namespace QonversionUnity
         private static extern void _initialize(string gameObjectName);
 
         [DllImport("__Internal")]
-        private static extern void _storeSdkInfo(string version, string source);
+        private static extern void _initializeSdk(string projectKey, string launchMode, string environment, string entitlementsCacheLifetime);
 
         [DllImport("__Internal")]
-        private static extern void _setDebugMode();
+        private static extern void _storeSdkInfo(string version, string source);
 
         [DllImport("__Internal")]
         private static extern void _setAdvertisingID();
@@ -39,9 +39,6 @@ namespace QonversionUnity
         private static extern void _setUserProperty(string key, string value);
 
         [DllImport("__Internal")]
-        private static extern void _launchWithKey(string key, string callbackName);
-
-        [DllImport("__Internal")]
         private static extern void _addAttributionData(string conversionData, string providerName);
 
         [DllImport("__Internal")]
@@ -49,6 +46,9 @@ namespace QonversionUnity
 
         [DllImport("__Internal")]
         private static extern void _restore(string callbackName);
+
+        [DllImport("__Internal")]
+        private static extern void _userInfo(string callbackName);
 
         [DllImport("__Internal")]
         private static extern void _purchase(string productID, string callbackName);
@@ -63,28 +63,13 @@ namespace QonversionUnity
         private static extern void _offerings(string callbackName);
 
         [DllImport("__Internal")]
-        private static extern void _checkTrialIntroEligibilityForProductIds(string productIdsJson, string callbackName);
+        private static extern void _checkTrialIntroEligibility(string productIdsJson, string callbackName);
 
         [DllImport("__Internal")]
         private static extern void _promoPurchase(string storeProductId, string callbackName);
 
         [DllImport("__Internal")]
-        private static extern void _setNotificationsToken(string token);
-
-        [DllImport("__Internal")]
-        private static extern bool _handleNotification(string notification);
-
-        [DllImport("__Internal")]
-        private static extern string _getNotificationCustomPayload(string notification);
-
-        [DllImport("__Internal")]
-        private static extern void _subscribeOnAutomationEvents();
-
-        [DllImport("__Internal")]
         private static extern void _presentCodeRedemptionSheet();
-
-        [DllImport("__Internal")]
-        private static extern void _setPermissionsCacheLifetime(string lifetimeKey);
 #endif
 
         public void Initialize(string gameObjectName)
@@ -101,22 +86,15 @@ namespace QonversionUnity
 #endif
         }
 
-        public void Launch(string projectKey, bool observerMode, string callbackName)
+        public void InitializeSdk(string projectKey, string launchMode, string environment, string entitlementsCacheLifetime)
         {
 #if UNITY_IOS
-            _launchWithKey(projectKey, callbackName);
+        _initializeSdk(projectKey, launchMode, environment, entitlementsCacheLifetime);
 #endif
         }
 
         public void SyncPurchases()
         {
-        }
-
-        public void SetDebugMode()
-        {
-#if UNITY_IOS
-            _setDebugMode();
-#endif
         }
 
         public void SetAdvertisingID()
@@ -141,11 +119,10 @@ namespace QonversionUnity
 #endif
         }
 
-        public void AddAttributionData(string conversionData, AttributionSource source)
+        public void AddAttributionData(string conversionData, string providerName)
         {
 #if UNITY_IOS
-            string sourceName = Enum.GetName(typeof(AttributionSource), source);
-            _addAttributionData(conversionData, sourceName);
+            _addAttributionData(conversionData, providerName);
 #endif
         }
 
@@ -170,6 +147,13 @@ namespace QonversionUnity
 #endif
         }
 
+        public void UserInfo(string callbackName)
+        {
+#if UNITY_IOS
+            _userInfo(callbackName);
+#endif
+        }
+
         public void PresentCodeRedemptionSheet()
         {
 #if UNITY_IOS
@@ -177,7 +161,7 @@ namespace QonversionUnity
 #endif
         }
 
-        public void CheckPermissions(string callbackName)
+        public void CheckEntitlements(string callbackName)
         {
 #if UNITY_IOS
             _checkPermissions(callbackName);
@@ -227,10 +211,10 @@ namespace QonversionUnity
 #endif
         }
 
-        public void CheckTrialIntroEligibilityForProductIds(string productIdsJson, string callbackName)
+        public void CheckTrialIntroEligibility(string productIdsJson, string callbackName)
         {
 #if UNITY_IOS
-            _checkTrialIntroEligibilityForProductIds(productIdsJson, callbackName);
+            _checkTrialIntroEligibility(productIdsJson, callbackName);
 #endif
         }
 
@@ -238,45 +222,6 @@ namespace QonversionUnity
         {
 #if UNITY_IOS
             _promoPurchase(storeProductId, callbackName);
-#endif
-        }
-
-        public void SetNotificationsToken(string token)
-        {
-#if UNITY_IOS
-             _setNotificationsToken(token);
-#endif
-        }
-
-        public bool HandleNotification(string notification)
-        {
-#if UNITY_IOS
-             return _handleNotification(notification);
-#else
-            return false;
-#endif
-        }
-
-        public string GetNotificationCustomPayload(string notification)
-        {
-#if UNITY_IOS
-             return _getNotificationCustomPayload(notification);
-#else
-            return null;
-#endif
-        }
-
-        public void SubscribeOnAutomationEvents()
-        {
-#if UNITY_IOS
-            _subscribeOnAutomationEvents();
-#endif
-        }
-        
-        public void SetPermissionsCacheLifetime(string lifetime)
-        {
-#if UNITY_IOS
-            _setPermissionsCacheLifetime(lifetime);
 #endif
         }
     }

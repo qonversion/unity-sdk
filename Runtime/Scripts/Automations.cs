@@ -1,17 +1,39 @@
-﻿using UnityEngine;
+﻿using System;
+using JetBrains.Annotations;
 
 namespace QonversionUnity
 {
-    public partial class Automations : MonoBehaviour
+    public static class Automations
     {
+        [CanBeNull] private static IAutomations _backingInstance;
+
         /// <summary>
-        /// The Automations delegate is responsible for handling in-app screens and actions when push notification is received.
-        /// Make sure the method is called before Qonversion.handleNotification.
+        /// Use this variable to get a current initialized instance of the Qonversion Automations.
+        /// Please, use Automations only after calling <see cref="Qonversion.Initialize"/>.
+        /// Otherwise, trying to access the variable will cause an error.
         /// </summary>
-        /// <param name="automationsDelegate">The delegate to handle automations events</param>
-        public static void SetDelegate(AutomationsDelegate automationsDelegate)
+        /// <returns>Current initialized instance of the Qonversion Automations.</returns>
+        /// <exception cref="Exception">throws exception if Qonversion has not been initialized.</exception>
+        public static IAutomations GetSharedInstance()
         {
-            Qonversion.SetAutomationsDelegate(automationsDelegate);
+            if (_backingInstance == null)
+            {
+                try
+                {
+                    Qonversion.GetSharedInstance();
+                }
+                catch (Exception e)
+                {
+                    throw new Exception("Qonversion has not been initialized. " + 
+                                        "Automations should be used after Qonversion is initialized.");
+                }
+
+                _backingInstance = AutomationsInternal.CreateInstance();
+            }
+
+            return _backingInstance;
         }
+
+        public delegate void OnShowScreenResponseReceived(QonversionError error);
     }
 }
