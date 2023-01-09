@@ -48,6 +48,10 @@
 }
 
 + (const char *)jsonStringFromObject:(NSObject *)objectToConvert{
+    if (objectToConvert == nil) {
+        return nil;
+    }
+
     NSError *error = nil;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:objectToConvert options:0 error:&error];
     
