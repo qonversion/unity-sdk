@@ -6,7 +6,8 @@ namespace QonversionUnity
 {
     public static class Qonversion
     {
-        [CanBeNull] private static IQonversion _backingInstance;
+        [CanBeNull] private static volatile IQonversion _backingInstance;
+        private static object _syncRoot = new Object();
 
         /// <summary>
         /// Use this variable to get a current initialized instance of the Qonversion SDK.
@@ -38,8 +39,22 @@ namespace QonversionUnity
         /// <returns>Initialized instance of the Qonversion SDK.</returns>
         public static IQonversion Initialize(QonversionConfig config)
         {
-            _backingInstance = QonversionInternal.CreateInstance();
-            _backingInstance?.InitializeInstance(config);
+            if (_backingInstance != null)
+            {
+                return _backingInstance;
+            }
+            lock (_syncRoot)
+            {
+                if (_backingInstance != null)
+                {
+                    return _backingInstance;
+                }
+
+                IQonversion instance = QonversionInternal.CreateInstance();
+                instance.InitializeInstance(config);
+
+                _backingInstance = instance;
+            }
             return _backingInstance;
         }
 
