@@ -39,22 +39,20 @@ namespace QonversionUnity
         /// <returns>Initialized instance of the Qonversion SDK.</returns>
         public static IQonversion Initialize(QonversionConfig config)
         {
-            if (_backingInstance != null)
+            if (_backingInstance == null)
             {
-                return _backingInstance;
-            }
-            lock (_syncRoot)
-            {
-                if (_backingInstance != null)
+                lock (_syncRoot)
                 {
-                    return _backingInstance;
+                    if (_backingInstance == null)
+                    {
+                        IQonversion instance = QonversionInternal.CreateInstance();
+                        instance.InitializeInstance(config);
+
+                        _backingInstance = instance;
+                    }
                 }
-
-                IQonversion instance = QonversionInternal.CreateInstance();
-                instance.InitializeInstance(config);
-
-                _backingInstance = instance;
             }
+
             return _backingInstance;
         }
 
