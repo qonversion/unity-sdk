@@ -15,6 +15,7 @@ namespace QonversionUnity
         Popover,
 
         /// Android only - screen will appear/disappear without any animation
+		/// For iOS consider providing the <see cref="ScreenPresentationConfig.Animated"/> flag.
         NoAnimation,
     }
 }

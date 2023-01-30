@@ -11,7 +11,7 @@ namespace QonversionUnity
         [Tooltip("For mode details see the enum description.")]
         public readonly ScreenPresentationStyle PresentationStyle;
 
-        /// iOS only. Ignored on Android.
+        /// iOS only. For Android consider using <see cref="ScreenPresentationStyle.NoAnimation"/>.
         /// Describes whether should transaction be animated or not.
         /// Default value is true.
         public readonly bool Animated;
