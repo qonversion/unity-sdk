@@ -70,6 +70,12 @@ namespace QonversionUnity
             instance.ShowScreen(screenId, OnShowScreenMethodName);
         }
 
+        public void SetScreenPresentationConfig(ScreenPresentationConfig config, string screenId = null)
+        {
+            IAutomationsWrapper instance = GetNativeWrapper();
+            instance.SetScreenPresentationConfig(config.ToJson(), screenId);
+        }
+
         private IAutomationsWrapper GetNativeWrapper()
         {
             if (_nativeWrapperInstance != null)

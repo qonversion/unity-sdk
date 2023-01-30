@@ -95,6 +95,20 @@ public class AutomationsWrapper {
         });
     }
 
+    public static synchronized void setScreenPresentationConfig(String configJson, @Nullable String screenId) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+
+            TypeReference<HashMap<String, Object>> typeRef
+                    = new TypeReference<HashMap<String, Object>>() {};
+            Map<String, Object> configData = mapper.readValue(configJson, typeRef);
+
+            automationsSandwich.setScreenPresentationConfig(configData, screenId);
+        } catch (JsonProcessingException e) {
+            handleSerializationException(e);
+        }
+    }
+
     private static void handleErrorResponse(@NotNull SandwichError error, @NotNull String methodName) {
         final ObjectNode rootNode = Utils.createErrorNode(error);
 
@@ -139,5 +153,9 @@ public class AutomationsWrapper {
 
     private static void handleException(Exception e) {
         Log.e(TAG, "An error occurred while processing automations flow: " + e.getLocalizedMessage());
+    }
+
+    private static void handleSerializationException(JsonProcessingException e) {
+        Log.e(TAG, "An error occurred while serializing data: " + e.getLocalizedMessage());
     }
 }

@@ -10,5 +10,6 @@ namespace QonversionUnity
         [CanBeNull] string GetNotificationCustomPayload(string notification);
         void SubscribeOnAutomationEvents();
         void ShowScreen(string screenId, string callbackName);
+        void SetScreenPresentationConfig(string configJson, [CanBeNull] string screenId);
     }
 }

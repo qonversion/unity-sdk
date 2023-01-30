@@ -27,5 +27,9 @@ namespace QonversionUnity
         public void ShowScreen(string screenId, string callbackName)
         {
         }
+
+        public void SetScreenPresentationConfig(string configJson, string screenId)
+        {
+        }
     }
 }

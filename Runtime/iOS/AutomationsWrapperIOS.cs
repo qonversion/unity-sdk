@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 
 using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace QonversionUnity
@@ -28,6 +29,9 @@ namespace QonversionUnity
 
         [DllImport("__Internal")]
         private static extern void _showScreen(string screenId, string callbackName);
+
+        [DllImport("__Internal")]
+        private static extern void _setScreenPresentationConfig(string configJson, [CanBeNull] string screenId);
 #endif
 
         public void Initialize(string gameObjectName)
@@ -71,6 +75,13 @@ namespace QonversionUnity
         {
 #if UNITY_IOS
             _showScreen(screenId, callbackName);
+#endif
+        }
+
+        public void SetScreenPresentationConfig(string configJson, string screenId)
+        {
+#if UNITY_IOS
+            _setScreenPresentationConfig(configJson, screenId);
 #endif
         }
     }
