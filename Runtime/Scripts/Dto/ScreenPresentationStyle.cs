@@ -4,7 +4,7 @@ namespace QonversionUnity
     {
         /// on Android - default screen transaction animation will be used.
         /// on iOS - not a modal presentation. This style pushes a controller to a current navigation stack.
-		/// For iOS NavigationController on the top of the stack is required.
+        /// For iOS NavigationController on the top of the stack is required.
         Push,
 
         /// on Android - screen will move from bottom to top.
