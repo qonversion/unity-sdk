@@ -45,7 +45,7 @@ namespace QonversionUnity
         /// <summary>
         /// Set the configuration of screen representation.
         /// </summary>
-        /// <param name="config">a configuration to be used</param>
+        /// <param name="config">a configuration to apply</param>
         /// <param name="screenId">identifier of screen, to which a config should be applied.
         ///                        If not provided, the config is used for all the screens</param>
         public void SetScreenPresentationConfig(ScreenPresentationConfig config, [CanBeNull] string screenId = null);
