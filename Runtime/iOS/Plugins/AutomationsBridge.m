@@ -20,7 +20,7 @@ void _setNotificationsToken(const char* token) {
 }
 
 bool _handleNotification(const char* notification) {
-    NSDictionary *notificationInfo = [UtilityBridge dictionaryFromJsonString: [UtilityBridge сonvertCStringToNSString: notification]];
+    NSDictionary *notificationInfo = [UtilityBridge dictionaryFromJsonString:[UtilityBridge сonvertCStringToNSString:notification]];
     
     BOOL isQonversionNotification = [automationsBridge handleNotification:notificationInfo];
     
@@ -28,7 +28,7 @@ bool _handleNotification(const char* notification) {
 }
 
 char* _getNotificationCustomPayload(const char* notification) {
-  NSDictionary *notificationInfo = [UtilityBridge dictionaryFromJsonString: [UtilityBridge сonvertCStringToNSString: notification]];
+  NSDictionary *notificationInfo = [UtilityBridge dictionaryFromJsonString:[UtilityBridge сonvertCStringToNSString:notification]];
   
   NSDictionary *payload = [automationsBridge getNotificationCustomPayload:notificationInfo];
   
@@ -52,4 +52,10 @@ void _showScreen(const char* screenId, const char* unityCallbackName) {
 
 void _subscribeOnAutomationEvents() {
     [automationsBridge subscribe];
+}
+
+void _setScreenPresentationConfig(const char* configData, const char* screenId) {
+    NSDictionary *config = [UtilityBridge dictionaryFromJsonString:[UtilityBridge сonvertCStringToNSString:configData]];
+    NSString *screenIdStr = [UtilityBridge сonvertCStringToNSString:screenId];
+    [automationsBridge setScreenPresentationConfig:config screenId:screenIdStr];
 }
