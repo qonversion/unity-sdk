@@ -34,7 +34,7 @@ namespace QonversionUnity
             
             string presentationStyleName = Enum.GetName(typeof(ScreenPresentationStyle), PresentationStyle);
             data["presentationStyle"] = presentationStyleName;
-            data["animated"] = Animated;
+            data["animated"] = Animated ? "1" : "0";
 
             return data.toJson();
         }
