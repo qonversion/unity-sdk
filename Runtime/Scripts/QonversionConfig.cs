@@ -8,7 +8,6 @@ namespace QonversionUnity
         public readonly LaunchMode LaunchMode;
         public readonly Environment Environment;
         public readonly EntitlementsCacheLifetime EntitlementsCacheLifetime;
-
         [CanBeNull] public readonly string ProxyUrl;
 
         public QonversionConfig(
