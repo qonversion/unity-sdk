@@ -51,14 +51,16 @@ public class QonversionWrapper {
             String projectKey,
             String launchModeKey,
             @Nullable String environmentKey,
-            @Nullable String entitlementsCacheLifetimeKey
+            @Nullable String entitlementsCacheLifetimeKey,
+            @Nullable String proxyUrl
     ) {
         qonversionSandwich.initialize(
                 UnityPlayer.currentActivity,
                 projectKey,
                 launchModeKey,
                 environmentKey,
-                entitlementsCacheLifetimeKey
+                entitlementsCacheLifetimeKey,
+                proxyUrl
         );
     }
 
