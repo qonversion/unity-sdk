@@ -1,3 +1,5 @@
+using JetBrains.Annotations;
+
 namespace QonversionUnity
 {
     public class QonversionConfig
@@ -7,12 +9,21 @@ namespace QonversionUnity
         public readonly Environment Environment;
         public readonly EntitlementsCacheLifetime EntitlementsCacheLifetime;
 
-        public QonversionConfig(string projectKey, LaunchMode launchMode, Environment environment, EntitlementsCacheLifetime entitlementsCacheLifetime)
+        [CanBeNull] public readonly string ProxyUrl;
+
+        public QonversionConfig(
+            string projectKey,
+            LaunchMode launchMode,
+            Environment environment,
+            EntitlementsCacheLifetime entitlementsCacheLifetime,
+            [CanBeNull] string proxyUrl
+        )
         {
             ProjectKey = projectKey;
             LaunchMode = launchMode;
             Environment = environment;
             EntitlementsCacheLifetime = entitlementsCacheLifetime;
+            ProxyUrl = proxyUrl;
         }
     }
 }
