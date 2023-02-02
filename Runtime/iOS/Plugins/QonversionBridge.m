@@ -39,7 +39,7 @@ void _initializeSdk(const char* projectKey, const char* launchMode, const char* 
     NSString *cacheLifetimeStr = [UtilityBridge сonvertCStringToNSString:entitlementsCacheLifetime];
     NSString *proxyUrlStr = [UtilityBridge сonvertCStringToNSString:proxyUrl];
 
-    [qonversionSandwich initializeWithProjectKey:keyStr launchModeKey:launchModeStr environmentKey:envStr entitlementsCacheLifetimeKey:cacheLifetimeStr, proxyUrl:proxyUrlStr];
+    [qonversionSandwich initializeWithProjectKey:keyStr launchModeKey:launchModeStr environmentKey:envStr entitlementsCacheLifetimeKey:cacheLifetimeStr proxyUrl:proxyUrlStr];
 }
 
 void _storeSdkInfo(const char* version, const char* source) {
