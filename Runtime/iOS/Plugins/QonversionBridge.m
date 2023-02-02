@@ -32,13 +32,14 @@ void _initialize(const char* unityListener) {
     qonversionSandwich = [[QonversionSandwich alloc] initWithQonversionEventListener:[QonversionEventListenerWrapper new]];
 }
 
-void _initializeSdk(const char* projectKey, const char* launchMode, const char* environment, const char* entitlementsCacheLifetime) {
+void _initializeSdk(const char* projectKey, const char* launchMode, const char* environment, const char* entitlementsCacheLifetime, const char* proxyUrl) {
     NSString *keyStr = [UtilityBridge сonvertCStringToNSString:projectKey];
     NSString *launchModeStr = [UtilityBridge сonvertCStringToNSString:launchMode];
     NSString *envStr = [UtilityBridge сonvertCStringToNSString:environment];
     NSString *cacheLifetimeStr = [UtilityBridge сonvertCStringToNSString:entitlementsCacheLifetime];
+    NSString *proxyUrlStr = [UtilityBridge сonvertCStringToNSString:proxyUrl];
 
-    [qonversionSandwich initializeWithProjectKey:keyStr launchModeKey:launchModeStr environmentKey:envStr entitlementsCacheLifetimeKey:cacheLifetimeStr];
+    [qonversionSandwich initializeWithProjectKey:keyStr launchModeKey:launchModeStr environmentKey:envStr entitlementsCacheLifetimeKey:cacheLifetimeStr proxyUrl:proxyUrlStr];
 }
 
 void _storeSdkInfo(const char* version, const char* source) {
