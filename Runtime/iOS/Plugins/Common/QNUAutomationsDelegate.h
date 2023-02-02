@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)handleNotification:(NSDictionary *)notificationInfo;
 - (NSDictionary *)getNotificationCustomPayload:(NSDictionary *)payload;
 - (void)showScreenWithId:(NSString *)screenId callbackName:(NSString *)callbackName;
+- (void)setScreenPresentationConfig:(NSDictionary *)config screenId:(NSString *)screenId;
 
 @end
 

@@ -16,9 +16,10 @@ namespace QonversionUnity
             CallQonversion("storeSdkInfo", version, source);
         }
 
-        public void InitializeSdk(string projectKey, string launchMode, string environment, string entitlementsCacheLifetime)
+        public void InitializeSdk(string projectKey, string launchMode, string environment, string entitlementsCacheLifetime,
+            string proxyUrl)
         {
-            CallQonversion("initializeSdk", projectKey, launchMode, environment, entitlementsCacheLifetime);
+            CallQonversion("initializeSdk", projectKey, launchMode, environment, entitlementsCacheLifetime, proxyUrl);
         }
 
         public void SetDebugMode()

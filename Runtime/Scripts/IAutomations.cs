@@ -41,5 +41,13 @@ namespace QonversionUnity
         /// <param name="screenId">identifier of the screen which must be shown</param>
         /// <param name="callback">callback that will be called when response is received</param>
         public void ShowScreen(string screenId, Automations.OnShowScreenResponseReceived callback);
+
+        /// <summary>
+        /// Set the configuration of screen representation.
+        /// </summary>
+        /// <param name="config">a configuration to apply</param>
+        /// <param name="screenId">identifier of screen, to which a config should be applied.
+        ///                        If not provided, the config is used for all the screens</param>
+        public void SetScreenPresentationConfig(ScreenPresentationConfig config, [CanBeNull] string screenId = null);
     }
 }

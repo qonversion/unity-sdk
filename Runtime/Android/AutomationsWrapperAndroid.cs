@@ -34,6 +34,11 @@ namespace QonversionUnity
             CallAutomations("showScreen", screenId, callbackName);
         }
 
+        public void SetScreenPresentationConfig(string configJson, string screenId)
+        {
+            CallAutomations("setScreenPresentationConfig", configJson, screenId);
+        }
+
         private const string AutomationsWrapper = "com.qonversion.unitywrapper.AutomationsWrapper";
 
         private static T CallAutomations<T>(string methodName, params object[] args)

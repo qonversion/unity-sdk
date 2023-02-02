@@ -71,4 +71,8 @@ char* listenerName = nil;
     }];
 }
 
+- (void)setScreenPresentationConfig:(NSDictionary *)config screenId:(NSString *)screenId {
+    [self.automationsSandwich setScreenPresentationConfig:config forScreenId:screenId];
+}
+
 @end

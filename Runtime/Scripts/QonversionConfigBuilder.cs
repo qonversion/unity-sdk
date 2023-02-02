@@ -1,3 +1,5 @@
+using JetBrains.Annotations;
+
 namespace QonversionUnity
 {
     public class QonversionConfigBuilder
@@ -6,6 +8,7 @@ namespace QonversionUnity
         private readonly LaunchMode _launchMode;
         private Environment _environment = Environment.Production;
         private EntitlementsCacheLifetime _entitlementsCacheLifetime = EntitlementsCacheLifetime.Month;
+        [CanBeNull] private string _proxyUrl = null;
 
         public QonversionConfigBuilder(string projectKey, LaunchMode launchMode)
         {
@@ -39,6 +42,19 @@ namespace QonversionUnity
         }
 
         /// <summary>
+        /// Provide a URL to your proxy server which will redirect all the requests from the app
+        /// to our API. Please, contact us before using this feature.
+        /// </summary>
+        /// <param name="url">your proxy server url.</param>
+        /// <returns>builder instance for chain calls.</returns>
+        /// <see href="https://documentation.qonversion.io/docs/custom-proxy-server-for-sdks" />
+        public QonversionConfigBuilder SetProxyURL(string url)
+        {
+            _proxyUrl = url;
+            return this;
+        }
+
+        /// <summary>
         /// Generate <see cref="QonversionConfig"/> instance with all the provided configurations.
         /// </summary>
         /// <returns>the complete <see cref="QonversionConfig"/> instance.</returns>
@@ -48,7 +64,8 @@ namespace QonversionUnity
                 _projectKey,
                 _launchMode,
                 _environment,
-                _entitlementsCacheLifetime
+                _entitlementsCacheLifetime,
+                _proxyUrl
             );
         }
     }

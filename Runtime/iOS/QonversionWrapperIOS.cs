@@ -15,7 +15,7 @@ namespace QonversionUnity
         private static extern void _initialize(string gameObjectName);
 
         [DllImport("__Internal")]
-        private static extern void _initializeSdk(string projectKey, string launchMode, string environment, string entitlementsCacheLifetime);
+        private static extern void _initializeSdk(string projectKey, string launchMode, string environment, string entitlementsCacheLifetime, string proxyUrl);
 
         [DllImport("__Internal")]
         private static extern void _storeSdkInfo(string version, string source);
@@ -86,10 +86,11 @@ namespace QonversionUnity
 #endif
         }
 
-        public void InitializeSdk(string projectKey, string launchMode, string environment, string entitlementsCacheLifetime)
+        public void InitializeSdk(string projectKey, string launchMode, string environment, string entitlementsCacheLifetime,
+            string proxyUrl)
         {
 #if UNITY_IOS
-        _initializeSdk(projectKey, launchMode, environment, entitlementsCacheLifetime);
+        _initializeSdk(projectKey, launchMode, environment, entitlementsCacheLifetime, proxyUrl);
 #endif
         }
 
