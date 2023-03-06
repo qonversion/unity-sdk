@@ -9,6 +9,7 @@ namespace QonversionUnity
         private Environment _environment = Environment.Production;
         private EntitlementsCacheLifetime _entitlementsCacheLifetime = EntitlementsCacheLifetime.Month;
         [CanBeNull] private string _proxyUrl = null;
+        private bool _kidsMode = false;
 
         public QonversionConfigBuilder(string projectKey, LaunchMode launchMode)
         {
@@ -55,6 +56,18 @@ namespace QonversionUnity
         }
 
         /// <summary>
+        /// Android only.
+        /// Use this function to enable Qonversion SDK Kids mode.
+        /// With this mode activated, our SDK does not collect any information that violates Google Children’s Privacy Policy.
+        /// </summary>
+        /// <returns>builder instance for chain calls.</returns>
+        public QonversionConfigBuilder EnableKidsMode()
+        {
+            _kidsMode = true;
+            return this;
+        }
+
+        /// <summary>
         /// Generate <see cref="QonversionConfig"/> instance with all the provided configurations.
         /// </summary>
         /// <returns>the complete <see cref="QonversionConfig"/> instance.</returns>
@@ -65,7 +78,8 @@ namespace QonversionUnity
                 _launchMode,
                 _environment,
                 _entitlementsCacheLifetime,
-                _proxyUrl
+                _proxyUrl,
+                _kidsMode
             );
         }
     }
