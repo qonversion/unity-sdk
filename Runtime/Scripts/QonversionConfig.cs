@@ -9,13 +9,15 @@ namespace QonversionUnity
         public readonly Environment Environment;
         public readonly EntitlementsCacheLifetime EntitlementsCacheLifetime;
         [CanBeNull] public readonly string ProxyUrl;
+        public readonly bool KidsMode = false;
 
         public QonversionConfig(
             string projectKey,
             LaunchMode launchMode,
             Environment environment,
             EntitlementsCacheLifetime entitlementsCacheLifetime,
-            [CanBeNull] string proxyUrl
+            [CanBeNull] string proxyUrl,
+            bool kidsMode
         )
         {
             ProjectKey = projectKey;
@@ -23,6 +25,7 @@ namespace QonversionUnity
             Environment = environment;
             EntitlementsCacheLifetime = entitlementsCacheLifetime;
             ProxyUrl = proxyUrl;
+            KidsMode = kidsMode;
         }
     }
 }

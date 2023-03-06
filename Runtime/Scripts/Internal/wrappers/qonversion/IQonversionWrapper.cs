@@ -5,7 +5,7 @@ namespace QonversionUnity
     internal interface IQonversionWrapper
     {
         void Initialize(string gameObjectName);
-        void InitializeSdk(string projectKey, string launchMode, [CanBeNull] string environment, [CanBeNull] string entitlementsCacheLifetime, [CanBeNull] string proxyUrl);
+        void InitializeSdk(string projectKey, string launchMode, [CanBeNull] string environment, [CanBeNull] string entitlementsCacheLifetime, [CanBeNull] string proxyUrl, bool kidsMode);
         void StoreSdkInfo(string version, string source);
         void SetAdvertisingID();
         void SetUserProperty(string key, string value);

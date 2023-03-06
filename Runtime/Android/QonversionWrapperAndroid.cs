@@ -17,9 +17,9 @@ namespace QonversionUnity
         }
 
         public void InitializeSdk(string projectKey, string launchMode, string environment, string entitlementsCacheLifetime,
-            string proxyUrl)
+            string proxyUrl, bool kidsMode)
         {
-            CallQonversion("initializeSdk", projectKey, launchMode, environment, entitlementsCacheLifetime, proxyUrl);
+            CallQonversion("initializeSdk", projectKey, launchMode, environment, entitlementsCacheLifetime, proxyUrl, kidsMode);
         }
 
         public void SetDebugMode()

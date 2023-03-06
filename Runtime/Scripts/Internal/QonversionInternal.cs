@@ -84,7 +84,7 @@ namespace QonversionUnity
             string environmentKey = Enum.GetName(typeof(Environment), config.Environment);
             string cacheLifetimeKey = Enum.GetName(typeof(EntitlementsCacheLifetime), config.EntitlementsCacheLifetime);
 
-            instance.InitializeSdk(config.ProjectKey, launchModeKey, environmentKey, cacheLifetimeKey, config.ProxyUrl);
+            instance.InitializeSdk(config.ProjectKey, launchModeKey, environmentKey, cacheLifetimeKey, config.ProxyUrl, config.KidsMode);
         }
 
         public void Purchase(string productId, Qonversion.OnPurchaseResultReceived callback)

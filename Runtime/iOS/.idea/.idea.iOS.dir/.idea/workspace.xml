@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="17712b4d-b3a0-43cc-a6a1-885934727d13" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../../Editor/QonversionDependencies.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../Editor/QonversionDependencies.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Android/QonversionWrapperAndroid.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Android/QonversionWrapperAndroid.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Scripts/Internal/QonversionInternal.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Scripts/Internal/QonversionInternal.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Scripts/QonversionConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Scripts/QonversionConfig.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Scripts/QonversionConfigBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Scripts/QonversionConfigBuilder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/QonversionWrapperIOS.cs" beforeDir="false" afterPath="$PROJECT_DIR$/QonversionWrapperIOS.cs" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/QonversionWrapperIOS.cs" root0="SKIP_HIGHLIGHTING" />
+  </component>
+  <component name="ProjectId" id="2MbvfJUdn4PEPQpMHZHXDzScNXJ" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="17712b4d-b3a0-43cc-a6a1-885934727d13" name="Changes" comment="" />
+      <created>1678049197970</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1678049197970</updated>
+      <workItem from="1678049199944" duration="5000" />
+    </task>
+    <servers />
+  </component>
+  <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
+  <component name="VcsManagerConfiguration">
+    <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+</project>
