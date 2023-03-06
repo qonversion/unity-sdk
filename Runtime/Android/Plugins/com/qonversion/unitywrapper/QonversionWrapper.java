@@ -53,7 +53,7 @@ public class QonversionWrapper {
             @Nullable String environmentKey,
             @Nullable String entitlementsCacheLifetimeKey,
             @Nullable String proxyUrl,
-            Boolean kidsMode
+            boolean kidsMode
     ) {
         qonversionSandwich.initialize(
                 UnityPlayer.currentActivity,

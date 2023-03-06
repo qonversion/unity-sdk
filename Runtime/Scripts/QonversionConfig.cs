@@ -9,7 +9,7 @@ namespace QonversionUnity
         public readonly Environment Environment;
         public readonly EntitlementsCacheLifetime EntitlementsCacheLifetime;
         [CanBeNull] public readonly string ProxyUrl;
-        public readonly bool KidsMode = false;
+        public readonly bool KidsMode;
 
         public QonversionConfig(
             string projectKey,
