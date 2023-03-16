@@ -11,6 +11,10 @@ namespace QonversionUnity
         {
         }
 
+        public void SyncHistoricalData()
+        {
+        }
+
         public void SetUserProperty(string key, string value)
         {
         }

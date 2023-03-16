@@ -49,6 +49,10 @@ void _storeSdkInfo(const char* version, const char* source) {
     [qonversionSandwich storeSdkInfoWithSource:sourceStr version:versionStr];
 }
 
+void _syncHistoricalData() {
+    [qonversionSandwich syncHistoricalData];
+}
+
 void _setAdvertisingID() {
     [qonversionSandwich collectAdvertisingId];
 }

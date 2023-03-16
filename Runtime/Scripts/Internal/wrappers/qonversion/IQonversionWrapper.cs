@@ -7,6 +7,7 @@ namespace QonversionUnity
         void Initialize(string gameObjectName);
         void InitializeSdk(string projectKey, string launchMode, [CanBeNull] string environment, [CanBeNull] string entitlementsCacheLifetime, [CanBeNull] string proxyUrl, bool kidsMode);
         void StoreSdkInfo(string version, string source);
+        void SyncHistoricalData()
         void SetAdvertisingID();
         void SetUserProperty(string key, string value);
         void SetProperty(UserProperty key, string value);
