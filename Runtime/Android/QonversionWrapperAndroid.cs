@@ -22,6 +22,11 @@ namespace QonversionUnity
             CallQonversion("initializeSdk", projectKey, launchMode, environment, entitlementsCacheLifetime, proxyUrl, kidsMode);
         }
 
+        public void SyncHistoricalData() 
+        {
+            CallQonversion("syncHistoricalData");
+        }
+
         public void SetDebugMode()
         {
             using (var purchases = new AndroidJavaClass("com.qonversion.unitywrapper.QonversionWrapper"))

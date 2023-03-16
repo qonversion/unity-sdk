@@ -66,6 +66,10 @@ public class QonversionWrapper {
         );
     }
 
+    public static synchronized void syncHistoricalData() {
+        qonversionSandwich.syncHistoricalData();
+    }
+
     public static synchronized void syncPurchases() {
         qonversionSandwich.syncPurchases();
     }

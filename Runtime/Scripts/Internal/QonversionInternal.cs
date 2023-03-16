@@ -87,6 +87,12 @@ namespace QonversionUnity
             instance.InitializeSdk(config.ProjectKey, launchModeKey, environmentKey, cacheLifetimeKey, config.ProxyUrl, config.KidsMode);
         }
 
+        public void SyncHistoricalData()
+        {
+            IQonversionWrapper instance = GetNativeWrapper();
+            instance.SyncHistoricalData();
+        }
+
         public void Purchase(string productId, Qonversion.OnPurchaseResultReceived callback)
         {
             PurchaseCallback = callback;
