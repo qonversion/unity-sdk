@@ -93,14 +93,14 @@ namespace QonversionUnity
             string proxyUrl, bool kidsMode)
         {
 #if UNITY_IOS
-        _initializeSdk(projectKey, launchMode, environment, entitlementsCacheLifetime, proxyUrl);
+            _initializeSdk(projectKey, launchMode, environment, entitlementsCacheLifetime, proxyUrl);
 #endif
         }
 
         public void SyncHistoricalData()
         {
 #if UNITY_IOS
-        _syncHistoricalData();
+            _syncHistoricalData();
 #endif  
         }
 
