@@ -19,6 +19,11 @@ namespace QonversionUnity
         public event Qonversion.OnUpdatedEntitlementsReceived UpdatedEntitlementsReceived;
 
         /// <summary>
+        /// Call this function to sync the subscriber data with the first launch when Qonversion is implemented.
+        /// </summary>
+        public void SyncHistoricalData();
+
+        /// <summary>
         /// Make a purchase and validate it through server-to-server using Qonversion's Backend.
         /// </summary>
         /// <param name="productId">Qonversion product identifier for purchase.</param>

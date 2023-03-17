@@ -21,7 +21,7 @@ namespace QonversionUnity
         private const string OnEligibilitiesMethodName = "OnEligibilities";
         private const string OnUserInfoMethodName = "OnUserInfo";
 
-        private const string SdkVersion = "4.2.0";
+        private const string SdkVersion = "4.3.0";
         private const string SdkSource = "unity";
 
         private IQonversionWrapper _nativeWrapperInstance;
@@ -85,6 +85,12 @@ namespace QonversionUnity
             string cacheLifetimeKey = Enum.GetName(typeof(EntitlementsCacheLifetime), config.EntitlementsCacheLifetime);
 
             instance.InitializeSdk(config.ProjectKey, launchModeKey, environmentKey, cacheLifetimeKey, config.ProxyUrl, config.KidsMode);
+        }
+
+        public void SyncHistoricalData()
+        {
+            IQonversionWrapper instance = GetNativeWrapper();
+            instance.SyncHistoricalData();
         }
 
         public void Purchase(string productId, Qonversion.OnPurchaseResultReceived callback)

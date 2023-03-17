@@ -21,6 +21,9 @@ namespace QonversionUnity
         private static extern void _storeSdkInfo(string version, string source);
 
         [DllImport("__Internal")]
+        private static extern void _syncHistoricalData();
+
+        [DllImport("__Internal")]
         private static extern void _setAdvertisingID();
 
         [DllImport("__Internal")]
@@ -90,8 +93,15 @@ namespace QonversionUnity
             string proxyUrl, bool kidsMode)
         {
 #if UNITY_IOS
-        _initializeSdk(projectKey, launchMode, environment, entitlementsCacheLifetime, proxyUrl);
+            _initializeSdk(projectKey, launchMode, environment, entitlementsCacheLifetime, proxyUrl);
 #endif
+        }
+
+        public void SyncHistoricalData()
+        {
+#if UNITY_IOS
+            _syncHistoricalData();
+#endif  
         }
 
         public void SyncPurchases()
