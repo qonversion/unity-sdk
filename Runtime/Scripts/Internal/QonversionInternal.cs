@@ -93,6 +93,12 @@ namespace QonversionUnity
             instance.SyncHistoricalData();
         }
 
+        public void SyncStoreKit2Purchases()
+        {
+            IQonversionWrapper instance = GetNativeWrapper();
+            instance.SyncStoreKit2Purchases();
+        }
+
         public void Purchase(string productId, Qonversion.OnPurchaseResultReceived callback)
         {
             PurchaseCallback = callback;

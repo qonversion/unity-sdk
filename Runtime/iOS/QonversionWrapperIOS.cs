@@ -24,6 +24,9 @@ namespace QonversionUnity
         private static extern void _syncHistoricalData();
 
         [DllImport("__Internal")]
+        private static extern void _syncStoreKit2Purchases();
+
+        [DllImport("__Internal")]
         private static extern void _setAdvertisingID();
 
         [DllImport("__Internal")]
@@ -101,6 +104,13 @@ namespace QonversionUnity
         {
 #if UNITY_IOS
             _syncHistoricalData();
+#endif  
+        }
+
+        public void SyncStoreKit2Purchases()
+        {
+#if UNITY_IOS
+            _syncStoreKit2Purchases();
 #endif  
         }
 

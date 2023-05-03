@@ -15,6 +15,10 @@ namespace QonversionUnity
         {
         }
 
+        public void SyncStoreKit2Purchases()
+        {
+        }
+
         public void SetUserProperty(string key, string value)
         {
         }
