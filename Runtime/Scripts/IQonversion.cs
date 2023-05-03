@@ -24,6 +24,13 @@ namespace QonversionUnity
         public void SyncHistoricalData();
 
         /// <summary>
+        /// This method works for iOS only.
+        /// Contact us before you start using this function.
+        /// Call this function to sync purchases if you are using StoreKit2.
+        /// </summary>
+        public void SyncStoreKit2Purchases();
+
+        /// <summary>
         /// Make a purchase and validate it through server-to-server using Qonversion's Backend.
         /// </summary>
         /// <param name="productId">Qonversion product identifier for purchase.</param>

@@ -8,6 +8,7 @@ namespace QonversionUnity
         void InitializeSdk(string projectKey, string launchMode, [CanBeNull] string environment, [CanBeNull] string entitlementsCacheLifetime, [CanBeNull] string proxyUrl, bool kidsMode);
         void StoreSdkInfo(string version, string source);
         void SyncHistoricalData();
+        void SyncStoreKit2Purchases();
         void SetAdvertisingID();
         void SetUserProperty(string key, string value);
         void SetProperty(UserProperty key, string value);
