@@ -53,6 +53,10 @@ void _syncHistoricalData() {
     [qonversionSandwich syncHistoricalData];
 }
 
+void _syncStoreKit2Purchases() {
+    [qonversionSandwich syncStoreKit2Purchases];
+}
+
 void _setAdvertisingID() {
     [qonversionSandwich collectAdvertisingId];
 }

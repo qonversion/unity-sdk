@@ -27,6 +27,10 @@ namespace QonversionUnity
             CallQonversion("syncHistoricalData");
         }
 
+        public void SyncStoreKit2Purchases()
+        {
+        }
+
         public void SetDebugMode()
         {
             using (var purchases = new AndroidJavaClass("com.qonversion.unitywrapper.QonversionWrapper"))
