@@ -21,7 +21,7 @@ namespace QonversionUnity
         private const string OnEligibilitiesMethodName = "OnEligibilities";
         private const string OnUserInfoMethodName = "OnUserInfo";
 
-        private const string SdkVersion = "4.4.1";
+        private const string SdkVersion = "4.4.2";
         private const string SdkSource = "unity";
 
         private IQonversionWrapper _nativeWrapperInstance;
