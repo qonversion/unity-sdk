@@ -69,6 +69,15 @@ namespace QonversionUnity
         private static extern void _offerings(string callbackName);
 
         [DllImport("__Internal")]
+        private static extern void _remoteConfig(string callbackName);
+
+        [DllImport("__Internal")]
+        private static extern void _attachUserToExperiment(string experimentId, string groupId, string callbackName);
+
+        [DllImport("__Internal")]
+        private static extern void _detachUserFromExperiment(string experimentId, string callbackName);
+
+        [DllImport("__Internal")]
         private static extern void _checkTrialIntroEligibility(string productIdsJson, string callbackName);
 
         [DllImport("__Internal")]
@@ -229,6 +238,27 @@ namespace QonversionUnity
         {
 #if UNITY_IOS
             _offerings(callbackName);
+#endif
+        }
+
+        public void RemoteConfig(string callbackName)
+        {
+#if UNITY_IOS
+            _remoteConfig(callbackName);
+#endif
+        }
+
+        public void AttachUserToExperiment(string experimentId, string groupId, string callbackName)
+        {
+#if UNITY_IOS
+            _attachUserToExperiment(experimentId, groupId,callbackName);
+#endif
+        }
+
+        public void DetachUserFromExperiment(string experimentId, string callbackName)
+        {
+#if UNITY_IOS
+            _detachUserFromExperiment(experimentId, callbackName);
 #endif
         }
 

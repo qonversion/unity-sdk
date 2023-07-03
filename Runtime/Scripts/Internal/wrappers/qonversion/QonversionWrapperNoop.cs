@@ -71,6 +71,18 @@ namespace QonversionUnity
         {
         }
 
+        public void RemoteConfig(string callbackName)
+        {
+        }
+
+        public void AttachUserToExperiment(string experimentId, string groupId, string callbackName)
+        {
+        }
+
+        public void DetachUserFromExperiment(string experimentId, string groupId, string callbackName)
+        {
+        }
+
         public void StoreSdkInfo(string version, string source)
         {
         }
