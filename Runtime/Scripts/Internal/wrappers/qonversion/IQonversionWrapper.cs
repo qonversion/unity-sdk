@@ -24,7 +24,7 @@ namespace QonversionUnity
         void Offerings(string callbackName);
         void RemoteConfig(string callbackName);
         void AttachUserToExperiment(string experimentId, string groupId, string callbackName);
-        void DetachUserFromExperiment(string experimentId, string groupId, string callbackName);
+        void DetachUserFromExperiment(string experimentId, string callbackName);
         void CheckTrialIntroEligibility(string productIdsJson, string callbackName);
         void SetAppleSearchAdsAttributionEnabled(bool enable);
         void Identify(string userID);

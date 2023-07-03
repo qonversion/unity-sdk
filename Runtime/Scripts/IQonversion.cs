@@ -98,6 +98,28 @@ namespace QonversionUnity
         public void Offerings(Qonversion.OnOfferingsReceived callback);
 
         /// <summary>
+        /// Returns Qonversion remote config object
+        /// Use this function to get the remote config with specific payload and experiment info.
+        /// </summary>
+        /// <see href="https://documentation.qonversion.io/docs/experiments-overview">Experiments</see>
+        public void RemoteConfig(Qonversion.OnRemoteConfigReceived callback);
+
+        /// <summary>
+        /// This function should be used for the test purposes only. Do not forget to delete the usage of this function before the release.
+        /// Use this function to attach the user to the experiment.
+        /// </summary>
+        /// <param name="experimentId">Experiment identifier</param>
+        /// <param name="groupId">Group identifier</param>
+        public void AttachUserToExperiment(string experimentId, string groupId, Qonversion.OnAttachUserResponseReceived callback);
+
+        /// <summary>
+        /// This function should be used for the test purposes only. Do not forget to delete the usage of this function before the release.
+        /// Use this function to detach the user from the experiment.
+        /// </summary>
+        /// <param name="experimentId">Experiment identifier</param>
+        public void DetachUserFromExperiment(string experimentId, Qonversion.OnAttachUserResponseReceived callback);
+
+        /// <summary>
         /// You can check if a user is eligible for an introductory offer, including a free trial.
         /// You can show only a regular price for users who are not eligible for an introductory offer.
         /// </summary>
