@@ -168,7 +168,7 @@ void _remoteConfig(const char* unityCallbackName) {
     }];
 }
 
-void _attachuserToExperiment(const char* experimentId, const char* groupId, const char* unityCallbackName) {
+void _attachUserToExperiment(const char* experimentId, const char* groupId, const char* unityCallbackName) {
     NSString *experimentIdStr = [UtilityBridge сonvertCStringToNSString:experimentId];
     NSString *groupIdStr = [UtilityBridge сonvertCStringToNSString:groupId];
     NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
@@ -178,7 +178,7 @@ void _attachuserToExperiment(const char* experimentId, const char* groupId, cons
     }];
 }
 
-void _detachuserFromExperiment(const char* experimentId, const char* unityCallbackName) {
+void _detachUserFromExperiment(const char* experimentId, const char* unityCallbackName) {
     NSString *experimentIdStr = [UtilityBridge сonvertCStringToNSString:experimentId];
     NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
     
