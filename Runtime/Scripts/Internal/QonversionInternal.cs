@@ -383,7 +383,7 @@ namespace QonversionUnity
             RemoteConfigCallbacks.Clear();
         }
 
-        private void onAttachUser(string jsonString)
+        private void OnAttachUser(string jsonString)
         {
             if (AttachUserCallback == null) return;
             var error = Mapper.ErrorFromJson(jsonString);
@@ -397,7 +397,7 @@ namespace QonversionUnity
             }
         }
 
-        private void onDetachUser(string jsonString)
+        private void OnDetachUser(string jsonString)
         {
             if (DetachUserCallback == null) return;
             var error = Mapper.ErrorFromJson(jsonString);
