@@ -13,18 +13,19 @@ namespace QonversionUnity
         public ExperimentGroup(Dictionary<string, object> dict)
         {
             if (dict.TryGetValue("id", out object value)) Id = value as string;
-            if (dict.TryGetValue("name", out object value)) Name = value as string;
-            if (dict.TryGetValue("tag", out value)) Type = FormatGroupType(value);
+            if (dict.TryGetValue("name", out value)) Name = value as string;
+            if (dict.TryGetValue("type", out value)) Type = FormatGroupType(value);
         }
 
-        public ExperimentGroupType FormatGroupType(object type) {
+        public ExperimentGroupType FormatGroupType(object typeValue) {
+            string type = typeValue as string;
             if (type == "control") {
                 return ExperimentGroupType.Control;
             } else if (type == "treatment") {
                 return ExperimentGroupType.Treatment;
-            } else {
-                return ExperimentGroupType.Unknown;
             }
+
+            return ExperimentGroupType.Unknown;
         }
 
         public override string ToString()

@@ -11,10 +11,10 @@ namespace QonversionUnity
 
         public RemoteConfig(Dictionary<string, object> dict)
         {
-            if (dict.TryGetValue("payload", out object value)) Id = value as Dictionary<object, object>;
-            if (dict.TryGetValue("products", out value))
+            if (dict.TryGetValue("payload", out object value)) Payload = value as Dictionary<object, object>;
+            if (dict.TryGetValue("experiment", out value) && value is Dictionary<string, object> experimentInfo)
             {
-                if (value is List<object> products) Products = Mapper.ConvertObjectsList<Product>(products);
+                Experiment= new Experiment(experimentInfo);
             }
         }
 

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using JetBrains.Annotations;
+﻿using System.Collections.Generic;
 
 namespace QonversionUnity
 {
@@ -14,10 +12,10 @@ namespace QonversionUnity
         public Experiment(Dictionary<string, object> dict)
         {
             if (dict.TryGetValue("id", out object value)) Id = value as string;
-            if (dict.TryGetValue("name", out object value)) Name = value as string;
-            if (dict.TryGetValue("group", out object value) && value is Dictionary<string, object> group)
+            if (dict.TryGetValue("name", out value)) Name = value as string;
+            if (dict.TryGetValue("group", out value) && value is Dictionary<string, object> group)
             {
-                ExperimentGroup = new ExperimentGroup(group);
+                Group = new ExperimentGroup(group);
             }
         }
 
