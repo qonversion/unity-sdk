@@ -364,7 +364,7 @@ namespace QonversionUnity
             OfferingsCallbacks.Clear();
         }
 
-        // Called from the native SDK - Called when remoteConfigreceived from the remoteConfig() method 
+        // Called from the native SDK - Called when remoteConfig received from the remoteConfig() method 
         private void OnRemoteConfig(string jsonString)
         {
             if (RemoteConfigCallbacks.Count == 0) return;
