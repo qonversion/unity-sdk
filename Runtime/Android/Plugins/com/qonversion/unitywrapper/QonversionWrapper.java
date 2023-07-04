@@ -145,11 +145,11 @@ public class QonversionWrapper {
     }
 
     public static synchronized void attachUserToExperiment(String experimentId, String groupId, String unityCallbackName) {
-        qonversionSandwich.attachUserToExperiment(experimentId, groupId, getPurchaseResultListener(unityCallbackName));
+        qonversionSandwich.attachUserToExperiment(experimentId, groupId, getResultListener(unityCallbackName));
     }
 
     public static synchronized void detachUserFromExperiment(String experimentId, String unityCallbackName) {
-        qonversionSandwich.detachUserFromExperiment(experimentId, getPurchaseResultListener(unityCallbackName));
+        qonversionSandwich.detachUserFromExperiment(experimentId, getResultListener(unityCallbackName));
     }
 
 
