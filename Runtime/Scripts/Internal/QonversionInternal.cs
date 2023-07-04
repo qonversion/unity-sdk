@@ -383,6 +383,34 @@ namespace QonversionUnity
             RemoteConfigCallbacks.Clear();
         }
 
+        private void onAttachUser(string jsonString)
+        {
+            if (AttachUserCallback == null) return;
+            var error = Mapper.ErrorFromJson(jsonString);
+            if (error != null)
+            {
+                AttachUserCallback(false, error);
+            }
+            else
+            {
+                AttachUserCallback(true, null);
+            }
+        }
+
+        private void onDetachUser(string jsonString)
+        {
+            if (DetachUserCallback == null) return;
+            var error = Mapper.ErrorFromJson(jsonString);
+            if (error != null)
+            {
+                DetachUserCallback(false, error);
+            }
+            else
+            {
+                DetachUserCallback(true, null);
+            }
+        }
+
         // Called from the native SDK - Called when eligibilities received from the checkTrialIntroEligibilityForProductIds() method 
         private void OnEligibilities(string jsonString)
         {
