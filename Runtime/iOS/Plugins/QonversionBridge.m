@@ -160,6 +160,33 @@ void _offerings(const char* unityCallbackName) {
     }];
 }
 
+void _remoteConfig(const char* unityCallbackName) {
+    NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
+    
+    [qonversionSandwich remoteConfig:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
+        [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
+    }];
+}
+
+void _attachUserToExperiment(const char* experimentId, const char* groupId, const char* unityCallbackName) {
+    NSString *experimentIdStr = [UtilityBridge сonvertCStringToNSString:experimentId];
+    NSString *groupIdStr = [UtilityBridge сonvertCStringToNSString:groupId];
+    NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
+    
+    [qonversionSandwich attachUserToExperimentWith:experimentIdStr groupId:groupIdStr completion:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
+        [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
+    }];
+}
+
+void _detachUserFromExperiment(const char* experimentId, const char* unityCallbackName) {
+    NSString *experimentIdStr = [UtilityBridge сonvertCStringToNSString:experimentId];
+    NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
+    
+    [qonversionSandwich detachUserFromExperimentWith:experimentIdStr completion:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
+        [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
+    }];
+}
+
 void _checkTrialIntroEligibility(const char* productIdsJson, const char* unityCallbackName) {
     NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
     NSString *productIdsJsonStr = [UtilityBridge сonvertCStringToNSString:productIdsJson];

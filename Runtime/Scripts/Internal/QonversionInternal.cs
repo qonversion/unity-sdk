@@ -18,10 +18,13 @@ namespace QonversionUnity
         private const string OnRestoreMethodName = "OnRestore";
         private const string OnProductsMethodName = "OnProducts";
         private const string OnOfferingsMethodName = "OnOfferings";
+        private const string OnRemoteConfigMethodName = "OnRemoteConfig";
         private const string OnEligibilitiesMethodName = "OnEligibilities";
         private const string OnUserInfoMethodName = "OnUserInfo";
+        private const string OnAttachUserMethodName = "OnAttachUser";
+        private const string OnDetachUserMethodName = "OnDetachUser";
 
-        private const string SdkVersion = "4.4.2";
+        private const string SdkVersion = "5.0.0";
         private const string SdkSource = "unity";
 
         private IQonversionWrapper _nativeWrapperInstance;
@@ -38,9 +41,12 @@ namespace QonversionUnity
         private Qonversion.OnPurchaseResultReceived UpdatePurchaseWithProductCallback { get; set; }
         private List<Qonversion.OnProductsReceived> ProductsCallbacks { get; } = new List<Qonversion.OnProductsReceived>();
         private List<Qonversion.OnOfferingsReceived> OfferingsCallbacks { get; } = new List<Qonversion.OnOfferingsReceived>();
+        private List<Qonversion.OnRemoteConfigReceived> RemoteConfigCallbacks { get; } = new List<Qonversion.OnRemoteConfigReceived>();
         private Qonversion.OnEligibilitiesReceived EligibilitiesCallback { get; set; }
         private Qonversion.OnEntitlementsReceived PromoPurchaseCallback { get; set; }
         private Qonversion.OnUserInfoReceived UserInfoCallback { get; set; }
+        private Qonversion.OnAttachUserResponseReceived AttachUserCallback { get; set; }
+        private Qonversion.OnAttachUserResponseReceived DetachUserCallback { get; set; }
 
         public event Qonversion.OnPromoPurchasesReceived PromoPurchasesReceived
         {
@@ -151,6 +157,27 @@ namespace QonversionUnity
             OfferingsCallbacks.Add(callback);
             IQonversionWrapper instance = GetNativeWrapper();
             instance.Offerings(OnOfferingsMethodName);
+        }
+
+        public void RemoteConfig(Qonversion.OnRemoteConfigReceived callback)
+        {
+            RemoteConfigCallbacks.Add(callback);
+            IQonversionWrapper instance = GetNativeWrapper();
+            instance.RemoteConfig(OnRemoteConfigMethodName);
+        }
+
+        public void AttachUserToExperiment(string experimentId, string groupId, Qonversion.OnAttachUserResponseReceived callback)
+        {
+            AttachUserCallback = callback;
+            IQonversionWrapper instance = GetNativeWrapper();
+            instance.AttachUserToExperiment(experimentId, groupId, OnAttachUserMethodName);
+        }
+
+        public void DetachUserFromExperiment(string experimentId, Qonversion.OnAttachUserResponseReceived callback)
+        {
+            DetachUserCallback = callback;
+            IQonversionWrapper instance = GetNativeWrapper();
+            instance.DetachUserFromExperiment(experimentId, OnDetachUserMethodName);
         }
 
         public void CheckTrialIntroEligibility(IList<string> productIds, Qonversion.OnEligibilitiesReceived callback)
@@ -335,6 +362,53 @@ namespace QonversionUnity
             }
 
             OfferingsCallbacks.Clear();
+        }
+
+        // Called from the native SDK - Called when remoteConfig received from the remoteConfig() method 
+        private void OnRemoteConfig(string jsonString)
+        {
+            if (RemoteConfigCallbacks.Count == 0) return;
+
+            var error = Mapper.ErrorFromJson(jsonString);
+            if (error != null)
+            {
+                RemoteConfigCallbacks.ForEach(callback => callback(null, error));
+            }
+            else
+            {
+                var remoteConfig = Mapper.RemoteConfigFromJson(jsonString);
+                RemoteConfigCallbacks.ForEach(callback => callback(remoteConfig, null));
+            }
+
+            RemoteConfigCallbacks.Clear();
+        }
+
+        private void OnAttachUser(string jsonString)
+        {
+            if (AttachUserCallback == null) return;
+            var error = Mapper.ErrorFromJson(jsonString);
+            if (error != null)
+            {
+                AttachUserCallback(false, error);
+            }
+            else
+            {
+                AttachUserCallback(true, null);
+            }
+        }
+
+        private void OnDetachUser(string jsonString)
+        {
+            if (DetachUserCallback == null) return;
+            var error = Mapper.ErrorFromJson(jsonString);
+            if (error != null)
+            {
+                DetachUserCallback(false, error);
+            }
+            else
+            {
+                DetachUserCallback(true, null);
+            }
         }
 
         // Called from the native SDK - Called when eligibilities received from the checkTrialIntroEligibilityForProductIds() method 
