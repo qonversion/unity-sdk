@@ -60,6 +60,8 @@ namespace QonversionUnity
         public delegate void OnEntitlementsReceived(Dictionary<string, Entitlement> entitlements, QonversionError error);
         public delegate void OnProductsReceived(Dictionary<string, Product> products, QonversionError error);
         public delegate void OnOfferingsReceived(Offerings offerings, QonversionError error);
+        public delegate void OnRemoteConfigReceived(RemoteConfig remoteConfig, QonversionError error);
+        public delegate void OnAttachUserResponseReceived(bool success, QonversionError error);
         public delegate void OnEligibilitiesReceived(Dictionary<string, Eligibility> eligibilities, QonversionError error);
         public delegate void OnUserInfoReceived(User userInfo, QonversionError error);
 
