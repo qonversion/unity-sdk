@@ -140,6 +140,19 @@ public class QonversionWrapper {
         qonversionSandwich.offerings(getResultListener(unityCallbackName));
     }
 
+    public static synchronized void remoteConfig(String unityCallbackName) {
+        qonversionSandwich.remoteConfig(getResultListener(unityCallbackName));
+    }
+
+    public static synchronized void attachUserToExperiment(String experimentId, String groupId, String unityCallbackName) {
+        qonversionSandwich.attachUserToExperiment(experimentId, groupId, getResultListener(unityCallbackName));
+    }
+
+    public static synchronized void detachUserFromExperiment(String experimentId, String unityCallbackName) {
+        qonversionSandwich.detachUserFromExperiment(experimentId, getResultListener(unityCallbackName));
+    }
+
+
     public static synchronized void checkTrialIntroEligibility(String productIds, String unityCallbackName) {
         try {
             ObjectMapper mapper = new ObjectMapper();
