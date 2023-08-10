@@ -50,15 +50,7 @@ namespace QonversionUnity
         {
             if (dict.TryGetValue("properties", out var value) && value is List<object> properties)
             {
-                Properties = properties.ConvertAll(propertyData =>
-                {
-                    if (propertyData is Dictionary<string, object> property)
-                    {
-                        return new UserProperty(property);
-                    }
-                
-                    return null;
-                }).FindAll(property => property != null);
+                Properties = Mapper.ConvertObjectsList<UserProperty>(properties);
             }
             else
             {

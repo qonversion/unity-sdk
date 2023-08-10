@@ -169,8 +169,6 @@ namespace QonversionUnity
 
             foreach (Dictionary<string, object> objectDict in objects)
             {
-                Debug.Log("Object dict: " + Json.Serialize(objectDict));
-                Debug.Log("Type of instance: " + typeof(T));
                 T obj = (T)Activator.CreateInstance(typeof(T), objectDict);
                 result.Add(obj);
             }

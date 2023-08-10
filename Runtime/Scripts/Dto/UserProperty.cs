@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine.Scripting;
 
 namespace QonversionUnity
 {
@@ -8,6 +9,9 @@ namespace QonversionUnity
         public readonly string Value;
         public readonly UserPropertyKey DefinedKey;
 
+        // Informs compiler to save this method from removal via optimization,
+        // as even if it has no direct calls, it is called via reflection while mapping.
+        [Preserve]
         public UserProperty(Dictionary<string, object> dict)
         {
             if (dict.TryGetValue("key", out var key) && key != null)
