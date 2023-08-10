@@ -10,8 +10,9 @@ namespace QonversionUnity
         void SyncHistoricalData();
         void SyncStoreKit2Purchases();
         void SetAdvertisingID();
-        void SetUserProperty(string key, string value);
-        void SetProperty(UserProperty key, string value);
+        void SetUserProperty(UserPropertyKey key, string value);
+        void SetCustomUserProperty(string key, string value);
+        void UserProperties(string callbackName);
         void SyncPurchases();
         void AddAttributionData(string conversionData, string providerName);
         void CheckEntitlements(string callbackName);
