@@ -71,18 +71,26 @@ void _setAppleSearchAdsAttributionEnabled(const bool enable) {
     [qonversionSandwich collectAppleSearchAdsAttribution];
 }
 
-void _setProperty(const char* propertyName, const char* value) {
+void _setUserProperty(const char* propertyName, const char* value) {
     NSString *propertyStr = [UtilityBridge сonvertCStringToNSString:propertyName];
     NSString *valueStr = [UtilityBridge сonvertCStringToNSString:value];
     
     [qonversionSandwich setDefinedProperty:propertyStr value:valueStr];
 }
 
-void _setUserProperty(const char* key, const char* value) {
+void _setCustomUserProperty(const char* key, const char* value) {
     NSString *keyStr = [UtilityBridge сonvertCStringToNSString:key];
     NSString *valueStr = [UtilityBridge сonvertCStringToNSString:value];
     
     [qonversionSandwich setCustomProperty:keyStr value:valueStr];
+}
+
+void _userProperties(const char* unityCallbackName) {
+    NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
+
+    [qonversionSandwich userProperties:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
+        [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
+    }];
 }
 
 void _addAttributionData(const char* conversionData, const char* provider) {

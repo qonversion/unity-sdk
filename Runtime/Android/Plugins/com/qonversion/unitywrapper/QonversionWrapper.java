@@ -74,12 +74,16 @@ public class QonversionWrapper {
         qonversionSandwich.syncPurchases();
     }
 
-    public static synchronized void setProperty(String key, String value) {
+    public static synchronized void setUserProperty(String key, String value) {
         qonversionSandwich.setDefinedProperty(key, value);
     }
 
-    public static synchronized void setUserProperty(String key, String value) {
+    public static synchronized void setCustomUserProperty(String key, String value) {
         qonversionSandwich.setCustomProperty(key, value);
+    }
+
+    public static synchronized void userProperties(String unityCallbackName) {
+        qonversionSandwich.userProperties(getResultListener(unityCallbackName));
     }
 
     public static synchronized void attribution(String conversionData, String attributionProvider) {

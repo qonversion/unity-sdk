@@ -16,7 +16,8 @@ namespace QonversionUnity
             return $"{nameof(Status)}: {Status}";
         }
 
-        private EligibilityStatus FormatEligibilityStatus(object status) {
+        private EligibilityStatus FormatEligibilityStatus(object status)
+        {
             string value = status as string;
             EligibilityStatus result;
             switch (value)
