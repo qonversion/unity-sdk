@@ -19,11 +19,15 @@ namespace QonversionUnity
         {
         }
 
-        public void SetUserProperty(string key, string value)
+        public void SetUserProperty(UserPropertyKey key, string value)
         {
         }
 
-        public void SetProperty(UserProperty key, string value)
+        public void SetCustomUserProperty(string key, string value)
+        {
+        }
+
+        public void UserProperties(string callbackName)
         {
         }
 

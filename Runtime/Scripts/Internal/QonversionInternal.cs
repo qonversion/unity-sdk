@@ -21,6 +21,7 @@ namespace QonversionUnity
         private const string OnRemoteConfigMethodName = "OnRemoteConfig";
         private const string OnEligibilitiesMethodName = "OnEligibilities";
         private const string OnUserInfoMethodName = "OnUserInfo";
+        private const string OnUserPropertiesMethodName = "OnUserProperties";
         private const string OnAttachUserMethodName = "OnAttachUser";
         private const string OnDetachUserMethodName = "OnDetachUser";
 
@@ -45,6 +46,7 @@ namespace QonversionUnity
         private Qonversion.OnEligibilitiesReceived EligibilitiesCallback { get; set; }
         private Qonversion.OnEntitlementsReceived PromoPurchaseCallback { get; set; }
         private Qonversion.OnUserInfoReceived UserInfoCallback { get; set; }
+        private Qonversion.OnUserPropertiesReceived UserPropertiesCallback { get; set; }
         private Qonversion.OnAttachUserResponseReceived AttachUserCallback { get; set; }
         private Qonversion.OnAttachUserResponseReceived DetachUserCallback { get; set; }
 
@@ -242,16 +244,27 @@ namespace QonversionUnity
             instance.AddAttributionData(conversionData, providerName);
         }
   
-        public void SetProperty(UserProperty key, string value)
+        public void SetUserProperty(UserPropertyKey key, string value)
         {
-            IQonversionWrapper instance = GetNativeWrapper();
-            instance.SetProperty(key, value);
-        }
-
-        public void SetUserProperty(string key, string value)
-        {
+            if (key == UserPropertyKey.Custom) {
+                Debug.LogWarning("Can not set user property with the key `UserPropertyKey.Custom`. " + 
+                                 "To set custom user property, use the `SetCustomUserProperty` method.");
+                return;
+            }
             IQonversionWrapper instance = GetNativeWrapper();
             instance.SetUserProperty(key, value);
+        }
+
+        public void SetCustomUserProperty(string key, string value)
+        {
+            IQonversionWrapper instance = GetNativeWrapper();
+            instance.SetCustomUserProperty(key, value);
+        }
+
+        public void UserProperties(Qonversion.OnUserPropertiesReceived callback) {
+            UserPropertiesCallback = callback;
+            IQonversionWrapper instance = GetNativeWrapper();
+            instance.UserProperties(OnUserPropertiesMethodName);
         }
 
         public void CollectAdvertisingId()
@@ -447,6 +460,25 @@ namespace QonversionUnity
             }
 
             UserInfoCallback = null;
+        }
+
+        // Called from the native SDK - Called when user properties received from the UserProperties() method 
+        private void OnUserProperties(string jsonString)
+        {
+            if (UserPropertiesCallback == null) return;
+
+            var error = Mapper.ErrorFromJson(jsonString);
+            if (error != null)
+            {
+                UserPropertiesCallback(null, error);
+            }
+            else
+            {
+                UserProperties userProperties = Mapper.UserPropertiesFromJson(jsonString);
+                UserPropertiesCallback(userProperties, null);
+            }
+
+            UserPropertiesCallback = null;
         }
 
         // Called from the native SDK - Called when entitlements update. For example, when pending purchases like SCA, Ask to buy, etc., happen.

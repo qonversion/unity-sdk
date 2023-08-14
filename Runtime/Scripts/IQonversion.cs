@@ -195,16 +195,19 @@ namespace QonversionUnity
         public void Attribution(string conversionData, AttributionProvider attributionProvider);
 
         /// <summary>
-        /// Sets user property for pre-defined case property.
+        /// Sets Qonversion reserved user properties, like email or user id.
         ///
         /// User properties are attributes you can set on a user level.
         /// You can send user properties to third party platforms as well as use them in Qonversion for customer segmentation
         /// and analytics.
+        ///
+        /// Note that using <see cref="UserPropertyKey.Custom"/> here will do nothing.
+        /// To set custom user property, use <see cref="SetCustomUserProperty"/> method instead.
         /// </summary>
         /// <param name="key">Defined enum key that will be transformed to string.</param>
         /// <param name="value">Property value.</param>
         /// <see href="https://documentation.qonversion.io/docs/user-properties">User Properties</see>
-        public void SetProperty(UserProperty key, string value);
+        public void SetUserProperty(UserPropertyKey key, string value);
 
         /// <summary>
         /// Adds custom user property.
@@ -216,7 +219,16 @@ namespace QonversionUnity
         /// <param name="key">Custom user property key.</param>
         /// <param name="value">Property value.</param>
         /// <see href="https://documentation.qonversion.io/docs/user-properties">User Properties</see>
-        public void SetUserProperty(string key, string value);
+        public void SetCustomUserProperty(string key, string value);
+
+        /// <summary>
+        /// This method returns all the properties, set for the current Qonversion user.
+        /// All set properties are sent to the server with delay, so if you call
+        /// this function right after setting some property, it may not be included
+        /// in the result.
+        /// </summary>
+        /// <param name="callback">Callback that will be called when response is received</param>
+        public void UserProperties(Qonversion.OnUserPropertiesReceived callback);
 
         /// <summary>
         /// iOS only.

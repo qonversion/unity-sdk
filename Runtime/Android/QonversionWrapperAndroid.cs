@@ -39,15 +39,20 @@ namespace QonversionUnity
             }
         }
 
-        public void SetUserProperty(string key, string value)
+        public void SetUserProperty(UserPropertyKey key, string value)
         {
-            CallQonversion("setUserProperty", key, value);
+            string propertyName = Enum.GetName(typeof(UserPropertyKey), key);
+            CallQonversion("setUserProperty", propertyName, value);
         }
 
-        public void SetProperty(UserProperty key, string value)
+        public void SetCustomUserProperty(string key, string value)
         {
-            string propertyName = Enum.GetName(typeof(UserProperty), key);
-            CallQonversion("setProperty", propertyName, value);
+            CallQonversion("setCustomUserProperty", key, value);
+        }
+
+        public void UserProperties(string callbackName)
+        {
+            CallQonversion("userProperties", callbackName);
         }
 
         public void SyncPurchases()

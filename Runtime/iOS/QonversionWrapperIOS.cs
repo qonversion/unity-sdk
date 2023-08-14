@@ -30,7 +30,13 @@ namespace QonversionUnity
         private static extern void _setAdvertisingID();
 
         [DllImport("__Internal")]
-        private static extern void _setProperty(string propertyName, string value);
+        private static extern void _setUserProperty(string propertyName, string value);
+
+        [DllImport("__Internal")]
+        private static extern void _setCustomUserProperty(string key, string value);
+
+        [DllImport("__Internal")]
+        private static extern void _userProperties(string callbackName);
 
         [DllImport("__Internal")]
         private static extern void _setAppleSearchAdsAttributionEnabled(bool enable);
@@ -40,9 +46,6 @@ namespace QonversionUnity
 
         [DllImport("__Internal")]
         private static extern void _logout();
-
-        [DllImport("__Internal")]
-        private static extern void _setUserProperty(string key, string value);
 
         [DllImport("__Internal")]
         private static extern void _addAttributionData(string conversionData, string providerName);
@@ -134,18 +137,24 @@ namespace QonversionUnity
 #endif
         }
 
-        public void SetUserProperty(string key, string value)
+        public void SetUserProperty(UserPropertyKey key, string value)
         {
 #if UNITY_IOS
-            _setUserProperty(key, value);
+            string propertyName = Enum.GetName(typeof(UserPropertyKey), key);
+            _setUserProperty(propertyName, value);
 #endif
         }
 
-        public void SetProperty(UserProperty key, string value)
+        public void SetCustomUserProperty(string key, string value)
         {
 #if UNITY_IOS
-            string propertyName = Enum.GetName(typeof(UserProperty), key);
-            _setProperty(propertyName, value);
+            _setCustomUserProperty(key, value);
+#endif
+        }
+
+        public void UserProperties(string callbackName) {
+#if UNITY_IOS
+            _userProperties(callbackName);
 #endif
         }
 

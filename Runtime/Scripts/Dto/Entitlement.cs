@@ -53,8 +53,10 @@ namespace QonversionUnity
                    $"{nameof(IsActive)}: {IsActive}";
         }
 
-        private DateTime FormatDate(object time) {
-            if (time is double) {
+        private DateTime FormatDate(object time)
+        {
+            if (time is double)
+            {
                 return Utils.FormatDate(Convert.ToInt64((double)time));
             } 
 
