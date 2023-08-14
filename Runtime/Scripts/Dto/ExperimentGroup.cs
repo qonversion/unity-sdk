@@ -17,11 +17,15 @@ namespace QonversionUnity
             if (dict.TryGetValue("type", out value)) Type = FormatGroupType(value);
         }
 
-        public ExperimentGroupType FormatGroupType(object typeValue) {
+        public ExperimentGroupType FormatGroupType(object typeValue)
+        {
             string type = typeValue as string;
-            if (type == "control") {
+            if (type == "control")
+            {
                 return ExperimentGroupType.Control;
-            } else if (type == "treatment") {
+            }
+            else if (type == "treatment")
+            {
                 return ExperimentGroupType.Treatment;
             }
 

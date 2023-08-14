@@ -139,6 +139,17 @@ namespace QonversionUnity
             return new User(userInfo);
         }
 
+        internal static UserProperties UserPropertiesFromJson(string jsonStr)
+        {
+            if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> userProperties))
+            {
+                Debug.LogError("Could not parse user properties");
+                return null;
+            }
+
+            return new UserProperties(userProperties);
+        }
+
         internal static QonversionError ErrorFromJson(string jsonStr)
         {
             if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> dict)) return null;

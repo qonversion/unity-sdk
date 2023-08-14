@@ -20,7 +20,8 @@ namespace QonversionUnity
                    $"{nameof(Date)}: {Date}";
         }
 
-        private AutomationsEventType FormatAutomationsEventType(object type) {
+        private AutomationsEventType FormatAutomationsEventType(object type)
+        {
             string value = type as string;
             AutomationsEventType result;
             switch (value)

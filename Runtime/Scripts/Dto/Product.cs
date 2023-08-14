@@ -49,7 +49,7 @@ namespace QonversionUnity
         [CanBeNull] public readonly string StoreDescription;
 
         /// Price of the product
-        [CanBeNull] public readonly double Price;
+        public readonly double Price;
 
         /// Store Product currency code, such as USD
         [CanBeNull] public readonly string CurrencyCode;
@@ -101,7 +101,8 @@ namespace QonversionUnity
                     CurrencyCode = SkProduct.CurrencyCode;
                     StoreTitle = SkProduct.LocalizedTitle;
                     StoreDescription = SkProduct.LocalizedDescription;
-                    if (SkProduct.IntroductoryPrice != null) {
+                    if (SkProduct.IntroductoryPrice != null)
+                    {
                         PrettyIntroductoryPrice = SkProduct.IntroductoryPrice.CurrencySymbol +
                                                   SkProduct.IntroductoryPrice.Price;
                     }

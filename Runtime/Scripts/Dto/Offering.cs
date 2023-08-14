@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using UnityEngine.Scripting;
 
 namespace QonversionUnity
 {
@@ -9,7 +10,10 @@ namespace QonversionUnity
         public readonly string Id;
         public readonly QOfferingTag Tag;
         public readonly List<Product> Products;
-
+        
+        // Informs compiler to save this method from removal via optimization,
+        // as even if it has no direct calls, it is called via reflection while mapping.
+        [Preserve]
         public Offering(Dictionary<string, object> dict)
         {
             if (dict.TryGetValue("id", out object value)) Id = value as string;
