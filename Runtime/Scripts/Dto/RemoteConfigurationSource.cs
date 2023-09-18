@@ -58,7 +58,7 @@ namespace QonversionUnity
         {
             return $"{nameof(Id)}: {Id}, " +
                    $"{nameof(Name)}: {Name}, " +
-                   $"{nameof(Type)}: {AssignmentType}, " +
+                   $"{nameof(AssignmentType)}: {AssignmentType}, " +
                    $"{nameof(Type)}: {Type}";
         }
     }
