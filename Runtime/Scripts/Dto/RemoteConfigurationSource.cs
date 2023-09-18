@@ -65,16 +65,16 @@ namespace QonversionUnity
 
     public enum RemoteConfigurationAssignmentType
     {
-        Unknown = -1,
-        Auto = 0,
-        Manual = 1
+        Unknown,
+        Auto,
+        Manual
     }
 
     public enum RemoteConfigurationSourceType
     {
-        Unknown = -1,
-        ExperimentControlGroup = 0,
-        ExperimentTreatmentGroup = 1,
-        RemoteConfiguration = 2
+        Unknown,
+        ExperimentControlGroup,
+        ExperimentTreatmentGroup,
+        RemoteConfiguration
     }
 }
