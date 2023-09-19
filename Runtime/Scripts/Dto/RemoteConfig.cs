@@ -9,6 +9,7 @@ namespace QonversionUnity
     {
         public readonly Dictionary<string, object> Payload;
         [CanBeNull] public readonly Experiment Experiment;
+        public readonly RemoteConfigurationSource Source;
 
         public RemoteConfig(Dictionary<string, object> dict)
         {
@@ -17,12 +18,17 @@ namespace QonversionUnity
             {
                 Experiment = new Experiment(experimentInfo);
             }
+            if (dict.TryGetValue("source", out value) && value is Dictionary<string, object> sourceInfo)
+            {
+                Source = new RemoteConfigurationSource(sourceInfo);
+            }
         }
 
         public override string ToString()
         {
             return $"{nameof(Payload)}: {Payload}, " +
-                   $"{nameof(Experiment)}: {Experiment}";
+                   $"{nameof(Experiment)}: {Experiment}, " +
+                   $"{nameof(Source)}: {Source}";
         }
     }
 }
