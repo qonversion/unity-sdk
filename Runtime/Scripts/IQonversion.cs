@@ -120,6 +120,20 @@ namespace QonversionUnity
         public void DetachUserFromExperiment(string experimentId, Qonversion.OnAttachUserResponseReceived callback);
 
         /// <summary>
+        /// This function should be used for the test purposes only. Do not forget to delete the usage of this function before the release.
+        /// Use this function to attach the user to the remote configuration.
+        /// </summary>
+        /// <param name="remoteConfigurationId">Remote configurationidentifier</param>
+        public void AttachUserToRemoteConfiguration(string remoteConfigurationId, Qonversion.OnAttachUserResponseReceived callback);
+
+        /// <summary>
+        /// This function should be used for the test purposes only. Do not forget to delete the usage of this function before the release.
+        /// Use this function to detach the user from the remote configuration.
+        /// </summary>
+        /// <param name="remoteConfigurationId">Remote configuration identifier</param>
+        public void DetachUserFromRemoteConfiguration(string remoteConfigurationId, Qonversion.OnAttachUserResponseReceived callback);
+
+        /// <summary>
         /// You can check if a user is eligible for an introductory offer, including a free trial.
         /// You can show only a regular price for users who are not eligible for an introductory offer.
         /// </summary>

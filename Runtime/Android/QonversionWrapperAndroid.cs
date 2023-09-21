@@ -157,6 +157,16 @@ namespace QonversionUnity
             CallQonversion("detachUserFromExperiment", experimentId, callbackName);
         }
 
+        public void AttachUserToRemoteConfiguration(string remoteConfigurationId, string callbackName)
+        {
+            CallQonversion("attachUserToRemoteConfiguration", remoteConfigurationId, callbackName);
+        }
+
+        public void DetachUserFromRemoteConfiguration(string remoteConfigurationId, string callbackName)
+        {
+            CallQonversion("detachUserFromRemoteConfiguration", remoteConfigurationId, callbackName);
+        }
+
         public void CheckTrialIntroEligibility(string productIdsJson, string callbackName)
         {
             CallQonversion("checkTrialIntroEligibility", productIdsJson, callbackName);

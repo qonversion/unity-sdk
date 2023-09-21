@@ -87,6 +87,14 @@ namespace QonversionUnity
         {
         }
 
+        public void AttachUserToRemoteConfiguration(string remoteConfigurationId, string callbackName)
+        {
+        }
+
+        public void DetachUserFromRemoteConfiguration(string remoteConfigurationId, string callbackName)
+        {
+        }
+
         public void StoreSdkInfo(string version, string source)
         {
         }
