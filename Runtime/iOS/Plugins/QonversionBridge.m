@@ -199,7 +199,7 @@ void _attachUserToRemoteConfiguration(const char* remoteConfigurationId, const c
     NSString *remoteConfigurationIdStr = [UtilityBridge сonvertCStringToNSString:remoteConfigurationId];
     NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
     
-    [qonversionSandwich attachUserToRemoteConfigurationWith:remoteConfigurationId completion:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
+    [qonversionSandwich attachUserToRemoteConfigurationWith:remoteConfigurationIdStr completion:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
         [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
     }];
 }
@@ -208,7 +208,7 @@ void _detachUserFromRemoteConfiguration(const char* remoteConfigurationId, const
     NSString *remoteConfigurationIdStr = [UtilityBridge сonvertCStringToNSString:remoteConfigurationId];
     NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
     
-    [qonversionSandwich detachUserFromRemoteConfigurationWith:remoteConfigurationId completion:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
+    [qonversionSandwich detachUserFromRemoteConfigurationWith:remoteConfigurationIdStr completion:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
         [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
     }];
 }
