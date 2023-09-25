@@ -182,6 +182,20 @@ namespace QonversionUnity
             instance.DetachUserFromExperiment(experimentId, OnDetachUserMethodName);
         }
 
+        public void AttachUserToRemoteConfiguration(string remoteConfigurationId, Qonversion.OnAttachUserResponseReceived callback)
+        {
+            AttachUserCallback = callback;
+            IQonversionWrapper instance = GetNativeWrapper();
+            instance.AttachUserToRemoteConfiguration(remoteConfigurationId, OnAttachUserMethodName);
+        }
+
+        public void DetachUserFromRemoteConfiguration(string remoteConfigurationId, Qonversion.OnAttachUserResponseReceived callback)
+        {
+            DetachUserCallback = callback;
+            IQonversionWrapper instance = GetNativeWrapper();
+            instance.DetachUserFromRemoteConfiguration(remoteConfigurationId, OnDetachUserMethodName);
+        }
+
         public void CheckTrialIntroEligibility(IList<string> productIds, Qonversion.OnEligibilitiesReceived callback)
         {
             var productIdsJson = Json.Serialize(productIds);

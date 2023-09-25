@@ -195,6 +195,24 @@ void _detachUserFromExperiment(const char* experimentId, const char* unityCallba
     }];
 }
 
+void _attachUserToRemoteConfiguration(const char* remoteConfigurationId, const char* unityCallbackName) {
+    NSString *remoteConfigurationIdStr = [UtilityBridge сonvertCStringToNSString:remoteConfigurationId];
+    NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
+    
+    [qonversionSandwich attachUserToRemoteConfigurationWith:remoteConfigurationIdStr completion:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
+        [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
+    }];
+}
+
+void _detachUserFromRemoteConfiguration(const char* remoteConfigurationId, const char* unityCallbackName) {
+    NSString *remoteConfigurationIdStr = [UtilityBridge сonvertCStringToNSString:remoteConfigurationId];
+    NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
+    
+    [qonversionSandwich detachUserFromRemoteConfigurationWith:remoteConfigurationIdStr completion:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
+        [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
+    }];
+}
+
 void _checkTrialIntroEligibility(const char* productIdsJson, const char* unityCallbackName) {
     NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
     NSString *productIdsJsonStr = [UtilityBridge сonvertCStringToNSString:productIdsJson];
