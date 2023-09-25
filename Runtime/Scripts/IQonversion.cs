@@ -93,6 +93,7 @@ namespace QonversionUnity
         /// set of products with discounts later on if a user has not converted.
         /// Offerings allow changing the products offered remotely without releasing app updates.
         /// </summary>
+        /// <param name="callback">Callback that will be called when response is received.</param>
         /// <see href="https://qonversion.io/docs/offerings">Offerings</see>
         /// <see href="https://qonversion.io/docs/product-center">Product Center</see>
         public void Offerings(Qonversion.OnOfferingsReceived callback);
@@ -101,6 +102,7 @@ namespace QonversionUnity
         /// Returns Qonversion remote config object
         /// Use this function to get the remote config with specific payload and experiment info.
         /// </summary>
+        /// <param name="callback">Callback that will be called when response is received.</param>
         /// <see href="https://documentation.qonversion.io/docs/experiments-overview">Experiments</see>
         public void RemoteConfig(Qonversion.OnRemoteConfigReceived callback);
 
@@ -110,6 +112,7 @@ namespace QonversionUnity
         /// </summary>
         /// <param name="experimentId">Experiment identifier</param>
         /// <param name="groupId">Group identifier</param>
+        /// <param name="callback">Callback that will be called when response is received.</param>
         public void AttachUserToExperiment(string experimentId, string groupId, Qonversion.OnAttachUserResponseReceived callback);
 
         /// <summary>
@@ -117,7 +120,24 @@ namespace QonversionUnity
         /// Use this function to detach the user from the experiment.
         /// </summary>
         /// <param name="experimentId">Experiment identifier</param>
+        /// <param name="callback">Callback that will be called when response is received.</param>
         public void DetachUserFromExperiment(string experimentId, Qonversion.OnAttachUserResponseReceived callback);
+
+        /// <summary>
+        /// This function should be used for the test purposes only. Do not forget to delete the usage of this function before the release.
+        /// Use this function to attach the user to the remote configuration.
+        /// </summary>
+        /// <param name="remoteConfigurationId">Remote configurationidentifier</param>
+        /// <param name="callback">Callback that will be called when response is received.</param>
+        public void AttachUserToRemoteConfiguration(string remoteConfigurationId, Qonversion.OnAttachUserResponseReceived callback);
+
+        /// <summary>
+        /// This function should be used for the test purposes only. Do not forget to delete the usage of this function before the release.
+        /// Use this function to detach the user from the remote configuration.
+        /// </summary>
+        /// <param name="remoteConfigurationId">Remote configuration identifier</param>
+        /// <param name="callback">Callback that will be called when response is received.</param>
+        public void DetachUserFromRemoteConfiguration(string remoteConfigurationId, Qonversion.OnAttachUserResponseReceived callback);
 
         /// <summary>
         /// You can check if a user is eligible for an introductory offer, including a free trial.

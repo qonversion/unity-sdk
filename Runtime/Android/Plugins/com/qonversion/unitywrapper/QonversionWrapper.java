@@ -156,6 +156,13 @@ public class QonversionWrapper {
         qonversionSandwich.detachUserFromExperiment(experimentId, getResultListener(unityCallbackName));
     }
 
+    public static synchronized void attachUserToRemoteConfiguration(String remoteConfigurationId, String unityCallbackName) {
+        qonversionSandwich.attachUserToRemoteConfiguration(remoteConfigurationId, getResultListener(unityCallbackName));
+    }
+
+    public static synchronized void detachUserFromRemoteConfiguration(String remoteConfigurationId, String unityCallbackName) {
+        qonversionSandwich.detachUserFromRemoteConfiguration(remoteConfigurationId, getResultListener(unityCallbackName));
+    }
 
     public static synchronized void checkTrialIntroEligibility(String productIds, String unityCallbackName) {
         try {
