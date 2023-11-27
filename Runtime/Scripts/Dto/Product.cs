@@ -42,6 +42,10 @@ namespace QonversionUnity
         /// Available for Android only.
         [CanBeNull] public readonly SkuDetails SkuDetails;
 
+        /// Associated ProductStoreDetails.
+        /// Available for Android only.
+        [CanBeNull] public readonly ProductStoreDetails ProductStoreDetails; 
+
         /// Store product title
         [CanBeNull] public readonly string StoreTitle;
 
@@ -67,9 +71,9 @@ namespace QonversionUnity
             if (dict.TryGetValue("prettyPrice", out value)) PrettyPrice = value as string;
             if (dict.TryGetValue("offeringId", out value)) OfferingId = value as string;
 
-            if (Application.platform == RuntimePlatform.Android && dict.TryGetValue("skuDetails", out value))
+            if (Application.platform == RuntimePlatform.Android)
             {
-                if (value is Dictionary<string, object> skuDetails)
+                if (dict.TryGetValue("skuDetails", out value) && value is Dictionary<string, object> skuDetails)
                 {
                     SkuDetails = new SkuDetails(skuDetails);
 
@@ -80,6 +84,10 @@ namespace QonversionUnity
 
                     string introPrice = SkuDetails.IntroductoryPrice;
                     PrettyIntroductoryPrice = (introPrice.Length != 0) ? introPrice : null;
+                }
+                if (dict.TryGetValue("productStoreDetails", out value) && value is Dictionary<string, object> productStoreDetails)
+                {
+                    ProductStoreDetails = new ProductStoreDetails(productStoreDetails);
                 }
             }
             else if (Application.platform == RuntimePlatform.IPhonePlayer && dict.TryGetValue("skProduct", out value))
