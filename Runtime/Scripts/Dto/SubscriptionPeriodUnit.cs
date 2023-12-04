@@ -1,6 +1,6 @@
 namespace QonversionUnity
 {
-    public enum ProductPeriodUnit
+    public enum SubscriptionPeriodUnit
     {
         Day,
         Week,
