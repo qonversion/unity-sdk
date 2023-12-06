@@ -13,7 +13,7 @@ namespace QonversionUnity
         /// Interval unit.
         public readonly SubscriptionPeriodUnit Unit;
 
-        /// ISO 8601 representation of the period.
+        /// ISO 8601 representation of the period, e.g. "P7D", meaning 7 days period.
         public readonly string Iso;
         
         public SubscriptionPeriod(Dictionary<string, object> dict)
