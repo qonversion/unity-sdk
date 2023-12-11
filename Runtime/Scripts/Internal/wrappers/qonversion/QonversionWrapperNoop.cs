@@ -47,11 +47,7 @@ namespace QonversionUnity
         {
         }
 
-        public void Purchase(string productId, string callbackName)
-        {
-        }
-
-        public void PurchaseProduct(string productId, string offeringId, string callbackName)
+        public void Purchase(PurchaseModel purchaseModel, string callbackName)
         {
         }
 
@@ -59,11 +55,7 @@ namespace QonversionUnity
         {
         }
 
-        public void UpdatePurchase(string productId, string oldProductId, ProrationMode prorationMode, string callbackName)
-        {
-        }
-
-        public void UpdatePurchaseWithProduct(string productId, string offeringId, string oldProductId, ProrationMode prorationMode, string callbackName)
+        public void UpdatePurchase(PurchaseUpdateModel purchaseUpdateModel, string callbackName)
         {
         }
 

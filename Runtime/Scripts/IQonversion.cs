@@ -33,50 +33,21 @@ namespace QonversionUnity
         /// <summary>
         /// Make a purchase and validate it through server-to-server using Qonversion's Backend.
         /// </summary>
-        /// <param name="productId">Qonversion product identifier for purchase.</param>
+        /// <param name="purchaseModel">Necessary information for purchase.</param>
         /// <param name="callback">Callback that will be called when response is received.</param>
-        /// <see href="https://documentation.qonversion.io/docs/making-purchases#1-make-a-purchase"/>
-        public void Purchase(string productId, Qonversion.OnPurchaseResultReceived callback);
+        /// <see href="https://documentation.qonversion.io/docs/making-purchases">Making Purchases</see>
+        public void Purchase(PurchaseModel purchaseModel, Qonversion.OnPurchaseResultReceived callback);
 
         /// <summary>
-        /// Make a purchase and validate it through server-to-server using Qonversion's Backend.
+        /// Android only. Returns `null` if called on iOS.
+        /// 
+        /// Update (upgrade/downgrade) subscription on Google Play Store and validate it through server-to-server using Qonversion's Backend.
         /// </summary>
-        /// <param name="product">Qonversion product for purchase.</param>
+        /// <param name="purchaseUpdateModel">Necessary information for purchase update.</param>
         /// <param name="callback">Callback that will be called when response is received.</param>
-        /// <see href="https://documentation.qonversion.io/docs/making-purchases#1-make-a-purchase"/>
-        public void PurchaseProduct([NotNull] Product product, Qonversion.OnPurchaseResultReceived callback);
-
-        /// <summary>
-        /// Update (upgrade/downgrade) subscription and validate it through server-to-server using Qonversion's Backend.
-        /// </summary>
-        /// <param name="productId">Qonversion product identifier for purchase</param>
-        /// <param name="oldProductId">Qonversion product identifier from which the upgrade/downgrade will be initialized</param>
-        /// <param name="callback">Callback that will be called when response is received</param>
-        /// <param name="prorationMode">Proration Mode</param>
-        /// <see href="https://developer.android.com/google/play/billing/subscriptions#proration">Proration Mode</see>
-        /// <see href="https://documentation.qonversion.io/docs/making-purchases#3-update-purchases-android-only">Update Purchase</see>
-        public void UpdatePurchase(
-            string productId,
-            string oldProductId,
-            Qonversion.OnPurchaseResultReceived callback,
-            ProrationMode prorationMode = ProrationMode.UnknownSubscriptionUpgradeDowngradePolicy
-        );
-
-        /// <summary>
-        /// Update (upgrade/downgrade) subscription and validate it through server-to-server using Qonversion's Backend.
-        /// </summary>
-        /// <param name="product">Qonversion product for purchase</param>
-        /// <param name="oldProductId">Qonversion product identifier from which the upgrade/downgrade will be initialized</param>
-        /// <param name="callback">Callback that will be called when response is received</param>
-        /// <param name="prorationMode">Proration Mode</param>
-        /// <see href="https://developer.android.com/google/play/billing/subscriptions#proration">Proration Mode</see>
-        /// <see href="https://documentation.qonversion.io/docs/making-purchases#3-update-purchases-android-only">Update Purchase</see>
-        public void UpdatePurchaseWithProduct(
-            [NotNull] Product product,
-            string oldProductId,
-            Qonversion.OnPurchaseResultReceived callback,
-            ProrationMode prorationMode = ProrationMode.UnknownSubscriptionUpgradeDowngradePolicy
-        );
+        /// <see href="https://developer.android.com/google/play/billing/subscriptions#replacement-modes">Update policy</see>
+        /// <see href="https://documentation.qonversion.io/docs/making-purchases">Making Purchases</see>
+        public void UpdatePurchase(PurchaseUpdateModel purchaseUpdateModel, Qonversion.OnPurchaseResultReceived callback);
 
         /// <summary>
         /// Returns Qonversion products in association with Apple and Google Play Store Products.
