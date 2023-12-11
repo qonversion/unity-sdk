@@ -14,20 +14,20 @@ namespace QonversionUnity
         /// Null for in-app products.
         public readonly string BasePlanId;
 
-        /// Identifier of a subscription or an in-app product.
+        /// Identifier of the subscription or the in-app product.
         public readonly string ProductId;
         
-        /// Name of a subscription or an in-app product.
+        /// Name of the subscription or the in-app product.
         public readonly string Name;
         
-        /// Title of a subscription or an in-app product.
+        /// Title of the subscription or the in-app product.
         /// The title includes the name of the app.
         public readonly string Title;
         
-        /// Description of a subscription or an in-app product.        
+        /// Description of the subscription or the in-app product.        
         public readonly string Description;
         
-        /// Offer details for a subscription.
+        /// Offer details for the subscription.
         /// Offer details contain all the available variations of purchase offers,
         /// including both base plan and eligible base plan + offer combinations
         /// from Google Play Console for current <see cref="BasePlanId"/>.
@@ -42,7 +42,7 @@ namespace QonversionUnity
         /// Subscription offer details containing only the base plan without any offer.
         [CanBeNull] public readonly ProductOfferDetails BasePlanSubscriptionOfferDetails;
         
-        /// Offer details for an in-app product.
+        /// Offer details for the in-app product.
         /// Null for subscriptions.
         [CanBeNull] public readonly ProductInAppDetails InAppOfferDetails;
         

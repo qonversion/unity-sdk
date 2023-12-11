@@ -115,11 +115,17 @@ namespace QonversionUnity
                     StoreDescription = StoreDetails.Description;
 
                     ProductOfferDetails defaultOffer = StoreDetails.DefaultSubscriptionOfferDetails;
+                    ProductInAppDetails inAppOffer = StoreDetails.InAppOfferDetails;
                     if (defaultOffer != null)
                     {
                         priceMicros = defaultOffer.BasePlan?.Price?.PriceAmountMicros ?? 0;
                         CurrencyCode = defaultOffer.BasePlan?.Price?.PriceCurrencyCode;
                         PrettyIntroductoryPrice = defaultOffer.IntroPhase?.Price?.FormattedPrice;
+                    } else if (inAppOffer != null)
+                    {
+                        priceMicros = inAppOffer.Price.PriceAmountMicros;
+                        CurrencyCode = inAppOffer.Price.PriceCurrencyCode;
+                        PrettyIntroductoryPrice = null;
                     }
                 }
 

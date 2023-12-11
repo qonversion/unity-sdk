@@ -5,6 +5,7 @@ namespace QonversionUnity
         /// Provides access to content on a recurring basis with a free offer
         Trial,
         /// Provides access to content on a recurring basis with an introductory offer
+        /// Currently works for Android only. iOS support will be added soon.
         Intro,
         /// Provides access to content on a recurring basis
         Subscription,

@@ -8,7 +8,7 @@ namespace QonversionUnity
     /// </summary>
     public class ProductInAppDetails
     {
-        /// The price of an in-app product.
+        /// The price of the in-app product.
         public readonly ProductPrice Price;
 
         public ProductInAppDetails(Dictionary<string, object> dict)
