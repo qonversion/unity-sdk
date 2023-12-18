@@ -70,6 +70,10 @@ namespace QonversionUnity
         /// True if the product type is Subscription.
         public readonly bool IsSubscription;
 
+        /// True if the subscription product is prepaid, which means that users pay in advance -
+        /// they will need to make a new payment to extend their plan.
+        public readonly bool IsPrepaid;
+
         public ProductStoreDetails(Dictionary<string, object> dict)
         {
             if (dict.TryGetValue("productId", out object value)) ProductId = value as string;
@@ -114,6 +118,7 @@ namespace QonversionUnity
             if (dict.TryGetValue("productType", out value)) ProductType = Mapper.FormatType(value);
             if (dict.TryGetValue("isInApp", out value)) IsInApp = (bool)value;
             if (dict.TryGetValue("isSubscription", out value)) IsSubscription = (bool)value;
+            if (dict.TryGetValue("isPrepaid", out value)) IsPrepaid = (bool)value;
         }
 
         public override string ToString()
@@ -137,7 +142,8 @@ namespace QonversionUnity
                    $"{nameof(HasTrialOrIntroOffer)}: {HasTrialOrIntroOffer}, " +
                    $"{nameof(ProductType)}: {ProductType}, " +
                    $"{nameof(IsInApp)}: {IsInApp}, " +
-                   $"{nameof(IsSubscription)}: {IsSubscription}";
+                   $"{nameof(IsSubscription)}: {IsSubscription}, " +
+                   $"{nameof(IsPrepaid)}: {IsPrepaid}";
         }
     }
 }
