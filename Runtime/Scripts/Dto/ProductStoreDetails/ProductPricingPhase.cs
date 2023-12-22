@@ -10,7 +10,7 @@ namespace QonversionUnity
         /// Price for the current phase.
         public readonly ProductPrice Price;
        
-        /// Billing period for which the given price applies.
+        /// The billing period for which the given price applies.
         public readonly SubscriptionPeriod BillingPeriod;
         
         /// Number of cycles for which the billing period is applied.
@@ -22,14 +22,14 @@ namespace QonversionUnity
         /// Type of the pricing phase.
         public readonly PricingPhaseType Type;
 
-        /// True if the current phase is a trial period. False otherwise.
+        /// True, if the current phase is a trial period. False otherwise.
         public readonly bool IsTrial;
 
-        /// True if the current phase is an intro period. False otherwise.
-        /// Intro phase is one of single or recurrent discounted payments.
+        /// True, if the current phase is an intro period. False otherwise.
+        /// The intro phase is one of single or recurrent discounted payments.
         public readonly bool IsIntro;
         
-        /// True if the current phase represents the base plan. False otherwise.
+        /// True, if the current phase represents the base plan. False otherwise.
         public readonly bool IsBasePlan;
 
         public ProductPricingPhase(Dictionary<string, object> dict)
