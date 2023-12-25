@@ -6,7 +6,7 @@ namespace QonversionUnity
 {
     /// <summary>
     /// This class contains all the information about the Google subscription offer details.
-    /// It might be either a plain base plan details or a base plan with a concrete offer details.
+    /// It might be either a plain base plan details or a base plan with the concrete offer details.
     /// </summary>
     public class ProductOfferDetails
     {
@@ -23,7 +23,7 @@ namespace QonversionUnity
         /// List of tags set for the current offer.
         public readonly string[] Tags;
 
-        /// A time ordered list of pricing phases for the current offer.
+        /// A time-ordered list of pricing phases for the current offer.
         public readonly ProductPricingPhase[] PricingPhases;
 
         /// A base plan phase details.
@@ -33,18 +33,18 @@ namespace QonversionUnity
         [CanBeNull] public readonly ProductPricingPhase IntroPhase;
         
         /// An intro phase details, if exists.
-        /// Intro phase is one of single or recurrent discounted payments.
+        /// The intro phase is one of single or recurrent discounted payments.
         [CanBeNull] public readonly ProductPricingPhase TrialPhase;
 
-        /// True if there is a trial phase in the current offer. False otherwise.
+        /// True, if there is a trial phase in the current offer. False otherwise.
         public readonly bool HasTrial;
         
-        /// True if there is any intro phase in the current offer. False otherwise.
-        /// Intro phase is one of single or recurrent discounted payments.
+        /// True, if there is any intro phase in the current offer. False otherwise.
+        /// The intro phase is one of single or recurrent discounted payments.
         public readonly bool HasIntro;
         
-        /// True if there is any trial or intro phase in the current offer. False otherwise./
-        /// Intro phase is one of single or recurrent discounted payments.
+        /// True, if there is any trial or intro phase in the current offer. False otherwise.
+        /// The intro phase is one of single or recurrent discounted payments.
         public readonly bool HasTrialOrIntro;
 
         public ProductOfferDetails(Dictionary<string, object> dict)

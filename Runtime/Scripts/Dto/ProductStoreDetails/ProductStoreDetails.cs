@@ -36,7 +36,7 @@ namespace QonversionUnity
         
         /// The most profitable subscription offer for the client in our opinion from all the available offers.
         /// We calculate the cheapest price for the client by comparing all the trial or intro phases
-        /// along with the base plan.
+        /// and the base plan.
         [CanBeNull] public readonly ProductOfferDetails DefaultSubscriptionOfferDetails;
         
         /// Subscription offer details containing only the base plan without any offer.
@@ -46,17 +46,17 @@ namespace QonversionUnity
         /// Null for subscriptions.
         [CanBeNull] public readonly ProductInAppDetails InAppOfferDetails;
         
-        /// True if there is any eligible offer with trial
+        /// True, if there is any eligible offer with a trial
         /// for this subscription and base plan combination.
         /// False otherwise or for an in-app product.
         public readonly bool HasTrialOffer;
         
-        /// True if there is any eligible offer with intro price
+        /// True, if there is any eligible offer with an intro price
         /// for this subscription and base plan combination.
         /// False otherwise or for an in-app product.
         public readonly bool HasIntroOffer;
         
-        /// True if there is any eligible offer with trial or intro price
+        /// True, if there is any eligible offer with a trial or an intro price
         /// for this subscription and base plan combination.
         /// False otherwise or for an in-app product.
         public readonly bool HasTrialOrIntroOffer;
@@ -64,13 +64,13 @@ namespace QonversionUnity
         /// The calculated type of the current product.
         public readonly QProductType ProductType;
         
-        /// True if the product type is InApp.
+        /// True, if the product type is InApp.
         public readonly bool IsInApp;
         
-        /// True if the product type is Subscription.
+        /// True, if the product type is Subscription.
         public readonly bool IsSubscription;
 
-        /// True if the subscription product is prepaid, which means that users pay in advance -
+        /// True, if the subscription product is prepaid, which means that users pay in advance -
         /// they will need to make a new payment to extend their plan.
         public readonly bool IsPrepaid;
 

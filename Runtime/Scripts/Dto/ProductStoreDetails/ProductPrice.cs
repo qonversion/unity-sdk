@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 namespace QonversionUnity
 {
     /// <summary>
-    /// Information about Google product's price.
+    /// Information about the Google product's price.
     /// </summary>
     public class ProductPrice
     {
