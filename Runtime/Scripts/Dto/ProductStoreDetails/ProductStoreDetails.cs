@@ -124,7 +124,8 @@ namespace QonversionUnity
         public override string ToString()
         {
             string subscriptionOfferDetails = "";
-            if (SubscriptionOfferDetails != null) {
+            if (SubscriptionOfferDetails != null)
+            {
                 subscriptionOfferDetails = string.Join(", ", SubscriptionOfferDetails.Select(obj => obj.ToString()));
             }
 

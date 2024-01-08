@@ -97,14 +97,17 @@ namespace QonversionUnity
             if (dict.TryGetValue("hasTrialOrIntro", out value)) HasTrialOrIntro = (bool)value;
         }
 
-        public override string ToString() {
+        public override string ToString()
+        {
             string tags = "";
-            if (Tags != null) {
+            if (Tags != null)
+            {
                 tags = string.Join(", ", Tags.Select(tag => tag));
             }
 
             string pricingPhases = "";
-            if (PricingPhases != null) {
+            if (PricingPhases != null)
+            {
                 pricingPhases = string.Join(", ", PricingPhases.Select(phase => phase.ToString()));
             }
             

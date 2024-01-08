@@ -33,7 +33,8 @@ namespace QonversionUnity
             if (dict.TryGetValue("currencySymbol", out value)) CurrencySymbol = value as string;
         }
 
-        public override string ToString() {
+        public override string ToString()
+        {
             return $"{nameof(PriceAmountMicros)}: {PriceAmountMicros}, " +
                    $"{nameof(PriceCurrencyCode)}: {PriceCurrencyCode}, " +
                    $"{nameof(FormattedPrice)}: {FormattedPrice}, " +
