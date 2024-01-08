@@ -58,7 +58,7 @@ namespace QonversionUnity
             switch (type) {
                 case "Regular": return PricingPhaseType.Regular;
                 case "FreeTrial": return PricingPhaseType.FreeTrial; 
-                case "SinglePayment": return PricingPhaseType.SinglePayment;
+                case "DiscountedSinglePayment": return PricingPhaseType.DiscountedSinglePayment;
                 case "DiscountedRecurringPayment": return PricingPhaseType.DiscountedRecurringPayment;
                 default: return PricingPhaseType.Unknown;
             }

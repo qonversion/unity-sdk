@@ -12,7 +12,7 @@ namespace QonversionUnity
         FreeTrial,
         
         /// A phase with a discounted payment for a single period.
-        SinglePayment,
+        DiscountedSinglePayment,
         
         /// A phase with a discounted payment for several periods, described in <see cref="ProductPricingPhase.BillingCycleCount"/>.
         DiscountedRecurringPayment,
