@@ -25,7 +25,7 @@ namespace QonversionUnity
         private const string OnAttachUserMethodName = "OnAttachUser";
         private const string OnDetachUserMethodName = "OnDetachUser";
 
-        private const string SdkVersion = "6.2.0";
+        private const string SdkVersion = "6.2.1";
         private const string SdkSource = "unity";
 
         private IQonversionWrapper _nativeWrapperInstance;
