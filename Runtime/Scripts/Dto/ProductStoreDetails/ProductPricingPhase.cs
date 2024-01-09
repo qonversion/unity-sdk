@@ -55,10 +55,11 @@ namespace QonversionUnity
         private PricingPhaseType FormatType(object typeValue)
         {
             string type = typeValue as string;
-            switch (type) {
+            switch (type)
+            {
                 case "Regular": return PricingPhaseType.Regular;
                 case "FreeTrial": return PricingPhaseType.FreeTrial; 
-                case "SinglePayment": return PricingPhaseType.SinglePayment;
+                case "DiscountedSinglePayment": return PricingPhaseType.DiscountedSinglePayment;
                 case "DiscountedRecurringPayment": return PricingPhaseType.DiscountedRecurringPayment;
                 default: return PricingPhaseType.Unknown;
             }
@@ -75,7 +76,8 @@ namespace QonversionUnity
             }
         }
 
-        public override string ToString() {
+        public override string ToString()
+        {
             return $"{nameof(Price)}: {Price}, " +
                    $"{nameof(BillingPeriod)}: {BillingPeriod}, " +
                    $"{nameof(BillingCycleCount)}: {BillingCycleCount}, " +
