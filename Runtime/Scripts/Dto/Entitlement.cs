@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using JetBrains.Annotations;
 
 namespace QonversionUnity
 {
@@ -19,7 +20,7 @@ namespace QonversionUnity
 
         /// A source determining where this entitlement is originally from - App Store, Play Store, Stripe, etc.
         public readonly QEntitlementSource Source;
-        
+
         /// Purchase date
         public readonly DateTime StartedDate;
 
@@ -31,6 +32,32 @@ namespace QonversionUnity
         /// Subscription could be canceled, but the user could still have a entitlement
         public readonly bool IsActive;
 
+        /// Renews count for the entitlement. Renews count starts from the second paid subscription.
+        /// For example, we have 20 transactions.One is the trial, and one is the first paid transaction after the trial.
+        /// Renews count is equal to 18.
+        public readonly int RenewsCount;
+
+        /// Trial start date.
+        public readonly DateTime? TrialStartDate;
+
+        /// First purchase date.
+        public readonly DateTime? FirstPurchaseDate;
+
+        /// Last purchase date.
+        public readonly DateTime? LastPurchaseDate;
+
+        /// Last activated offer code.
+        [CanBeNull] public readonly string LastActivatedOfferCode;
+
+        /// Grant type of the entitlement.
+        public readonly QEntitlementGrantType GrantType;
+
+        /// Auto-renew disable date.
+        public readonly DateTime? AutoRenewDisableDate;
+
+        /// Array of the transactions that unlocked current entitlement.
+        public readonly List<Transaction> Transactions;
+
         public Entitlement(Dictionary<string, object> dict)
         {
             if (dict.TryGetValue("id", out object value)) Id = value as string;
@@ -40,6 +67,20 @@ namespace QonversionUnity
             if (dict.TryGetValue("active", out value)) IsActive = (bool)value;
             if (dict.TryGetValue("startedTimestamp", out value)) StartedDate = FormatDate(value);
             if (dict.TryGetValue("expirationTimestamp", out value) && value != null) ExpirationDate = FormatDate(value);
+            if (dict.TryGetValue("trialStartTimestamp", out value) && value != null) TrialStartDate = FormatDate(value);
+            if (dict.TryGetValue("firstPurchaseTimestamp", out value) && value != null) FirstPurchaseDate = FormatDate(value);
+            if (dict.TryGetValue("lastPurchaseTimestamp", out value) && value != null) LastPurchaseDate = FormatDate(value);
+            if (dict.TryGetValue("autoRenewDisableTimestamp", out value) && value != null) AutoRenewDisableDate = FormatDate(value);
+            if (dict.TryGetValue("lastActivatedOfferCode", out value)) LastActivatedOfferCode = value as string;
+
+            GrantType = dict.TryGetValue("grantType", out value) ? FormatGrantType(value) : QEntitlementGrantType.Purchase;
+
+            if (dict.TryGetValue("transactions", out value) && value is List<object> transactions)
+            {
+                Transactions = Mapper.ConvertObjectsList<Transaction>(transactions);
+            }
+
+            RenewsCount = dict.TryGetValue("renewsCount", out value) ? (int)(long)value : 0;
         }
 
         public override string ToString()
@@ -50,7 +91,15 @@ namespace QonversionUnity
                    $"{nameof(Source)}: {Source}, " +
                    $"{nameof(StartedDate)}: {StartedDate}, " +
                    $"{nameof(ExpirationDate)}: {ExpirationDate}, " +
-                   $"{nameof(IsActive)}: {IsActive}";
+                   $"{nameof(IsActive)}: {IsActive}, " +
+                   $"{nameof(RenewsCount)}: {RenewsCount}, " +
+                   $"{nameof(TrialStartDate)}: {TrialStartDate}, " +
+                   $"{nameof(FirstPurchaseDate)}: {FirstPurchaseDate}, " +
+                   $"{nameof(LastPurchaseDate)}: {LastPurchaseDate}, " +
+                   $"{nameof(LastActivatedOfferCode)}: {LastActivatedOfferCode}, " +
+                   $"{nameof(GrantType)}: {GrantType}, " +
+                   $"{nameof(AutoRenewDisableDate)}: {AutoRenewDisableDate}, " +
+                   $"{nameof(Transactions)}: {Utils.PrintObjectList(Transactions)}";
         }
 
         private DateTime FormatDate(object time)
@@ -58,9 +107,9 @@ namespace QonversionUnity
             if (time is double)
             {
                 return Utils.FormatDate(Convert.ToInt64((double)time));
-            } 
+            }
 
-            return Utils.FormatDate((long) time);
+            return Utils.FormatDate((long)time);
         }
 
         private QEntitlementRenewState FormatRenewState(object renewState)
@@ -95,6 +144,32 @@ namespace QonversionUnity
                 ? parsedSource
                 : QEntitlementSource.Unknown;
         }
+
+        private QEntitlementGrantType FormatGrantType(object grantType)
+        {
+            string value = grantType as string;
+            QEntitlementGrantType result;
+            switch (value)
+            {
+                case "Purchase":
+                    result = QEntitlementGrantType.Purchase;
+                    break;
+                case "FamilySharing":
+                    result = QEntitlementGrantType.FamilySharing;
+                    break;
+                case "OfferCode":
+                    result = QEntitlementGrantType.OfferCode;
+                    break;
+                case "Manual":
+                    result = QEntitlementGrantType.Manual;
+                    break;
+                default:
+                    result = QEntitlementGrantType.Purchase;
+                    break;
+            }
+
+            return result;
+        }
     }
 
     public enum QEntitlementRenewState
@@ -119,6 +194,14 @@ namespace QonversionUnity
         AppStore,
         PlayStore,
         Stripe,
+        Manual
+    }
+
+    public enum QEntitlementGrantType
+    {
+        Purchase,
+        FamilySharing,
+        OfferCode,
         Manual
     }
 }
