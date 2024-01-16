@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine.Scripting;
+using JetBrains.Annotations;
 
 namespace QonversionUnity
 {
@@ -13,7 +14,7 @@ namespace QonversionUnity
         public readonly string TransactionId;
 
         /// Offer code.
-        public readonly string OfferCode;
+        [CanBeNull] public readonly string OfferCode;
 
         /// Transaction date.
         public readonly DateTime TransactionDate;

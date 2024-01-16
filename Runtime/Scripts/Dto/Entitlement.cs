@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using JetBrains.Annotations;
 
 namespace QonversionUnity
 {
@@ -46,7 +47,7 @@ namespace QonversionUnity
         public readonly DateTime? LastPurchaseDate;
 
         /// Last activated offer code.
-        public readonly string? LastActivatedOfferCode;
+        [CanBeNull] public readonly string LastActivatedOfferCode;
 
         /// Grant type of the entitlement.
         public readonly QEntitlementGrantType GrantType;
@@ -80,11 +81,6 @@ namespace QonversionUnity
             }
 
             RenewsCount = dict.TryGetValue("renewsCount", out value) ? (int)(long)value : 0;
-
-            //if (dict.TryGetValue("products", out value))
-            //{
-            //    if (value is List<object> products) Products = Mapper.ConvertObjectsList<Product>(products);
-            //}
         }
 
         public override string ToString()
