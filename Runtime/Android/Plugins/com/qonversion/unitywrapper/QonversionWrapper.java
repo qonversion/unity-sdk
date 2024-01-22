@@ -116,20 +116,19 @@ public class QonversionWrapper {
         qonversionSandwich.checkEntitlements(getResultListener(unityCallbackName));
     }
 
-    public static synchronized void purchase(String productId, String unityCallbackName) {
-        qonversionSandwich.purchase(productId, getPurchaseResultListener(unityCallbackName));
+    public static synchronized void purchase(String productId, @Nullable String offerId, boolean applyOffer, String unityCallbackName) {
+        qonversionSandwich.purchase(productId, offerId, applyOffer, getPurchaseResultListener(unityCallbackName));
     }
 
-    public static synchronized void purchaseProduct(String productId, String offeringId, String unityCallbackName) {
-        qonversionSandwich.purchaseProduct(productId, offeringId, getPurchaseResultListener(unityCallbackName));
-    }
-
-    public static synchronized void updatePurchase(String productId, String oldProductId, int prorationMode, String unityCallbackName) {
-        qonversionSandwich.updatePurchase(productId, oldProductId, prorationMode, getPurchaseResultListener(unityCallbackName));
-    }
-
-    public static synchronized void updatePurchaseWithProduct(String productId, String offeringId, String oldProductId, int prorationMode, String unityCallbackName) {
-        qonversionSandwich.updatePurchaseWithProduct(productId, offeringId, oldProductId, prorationMode, getPurchaseResultListener(unityCallbackName));
+    public static synchronized void updatePurchase(
+        String productId,
+        @Nullable String offerId,
+        boolean applyOffer,
+        String oldProductId,
+        @Nullable String updatePolicyKey,
+        String unityCallbackName
+    ) {
+        qonversionSandwich.updatePurchase(productId, offerId, applyOffer, oldProductId, updatePolicyKey, getPurchaseResultListener(unityCallbackName));
     }
 
     public static synchronized void restore(String unityCallbackName) {

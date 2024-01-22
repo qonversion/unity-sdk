@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <dependencies>
     <androidPackages>
-        <androidPackage spec="io.qonversion.sandwich:sandwich:3.3.3" />
+        <androidPackage spec="io.qonversion.sandwich:sandwich:4.0.0" />
         <androidPackage spec="com.fasterxml.jackson.core:jackson-databind:2.11.1" />
         <androidPackage spec="org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.61" />
     </androidPackages>

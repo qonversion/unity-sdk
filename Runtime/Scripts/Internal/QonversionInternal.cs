@@ -25,7 +25,7 @@ namespace QonversionUnity
         private const string OnAttachUserMethodName = "OnAttachUser";
         private const string OnDetachUserMethodName = "OnDetachUser";
 
-        private const string SdkVersion = "6.3.0";
+        private const string SdkVersion = "7.0.0";
         private const string SdkSource = "unity";
 
         private IQonversionWrapper _nativeWrapperInstance;
@@ -37,9 +37,7 @@ namespace QonversionUnity
         private List<Qonversion.OnEntitlementsReceived> CheckEntitlementsCallbacks { get; } = new List<Qonversion.OnEntitlementsReceived>();
         private List<Qonversion.OnEntitlementsReceived> RestoreCallbacks { get; } = new List<Qonversion.OnEntitlementsReceived>();
         private Qonversion.OnPurchaseResultReceived PurchaseCallback { get; set; }
-        private Qonversion.OnPurchaseResultReceived PurchaseProductCallback { get; set; }
         private Qonversion.OnPurchaseResultReceived UpdatePurchaseCallback { get; set; }
-        private Qonversion.OnPurchaseResultReceived UpdatePurchaseWithProductCallback { get; set; }
         private List<Qonversion.OnProductsReceived> ProductsCallbacks { get; } = new List<Qonversion.OnProductsReceived>();
         private List<Qonversion.OnOfferingsReceived> OfferingsCallbacks { get; } = new List<Qonversion.OnOfferingsReceived>();
         private List<Qonversion.OnRemoteConfigReceived> RemoteConfigCallbacks { get; } = new List<Qonversion.OnRemoteConfigReceived>();
@@ -107,44 +105,18 @@ namespace QonversionUnity
             instance.SyncStoreKit2Purchases();
         }
 
-        public void Purchase(string productId, Qonversion.OnPurchaseResultReceived callback)
+        public void Purchase(PurchaseModel purchaseModel, Qonversion.OnPurchaseResultReceived callback)
         {
             PurchaseCallback = callback;
             IQonversionWrapper instance = GetNativeWrapper();
-            instance.Purchase(productId, OnPurchaseMethodName);
+            instance.Purchase(purchaseModel, OnPurchaseMethodName);
         }
 
-        public void PurchaseProduct([NotNull] Product product, Qonversion.OnPurchaseResultReceived callback)
-        {
-            if (product == null)
-            {
-                callback(null, new QonversionError("PurchaseInvalid", "Product is null"), false);
-                return;
-            }
-
-            PurchaseProductCallback = callback;
-            IQonversionWrapper instance = GetNativeWrapper();
-            instance.PurchaseProduct(product.QonversionId, product.OfferingId, OnPurchaseProductMethodName);
-        }
-
-        public void UpdatePurchase(string productId, string oldProductId, Qonversion.OnPurchaseResultReceived callback, ProrationMode prorationMode = ProrationMode.UnknownSubscriptionUpgradeDowngradePolicy)
+        public void UpdatePurchase(PurchaseUpdateModel purchaseUpdateModel, Qonversion.OnPurchaseResultReceived callback)
         {
             UpdatePurchaseCallback = callback;
             IQonversionWrapper instance = GetNativeWrapper();
-            instance.UpdatePurchase(productId, oldProductId, prorationMode, OnUpdatePurchaseMethodName);
-        }
-
-        public void UpdatePurchaseWithProduct([NotNull] Product product, string oldProductId, Qonversion.OnPurchaseResultReceived callback, ProrationMode prorationMode = ProrationMode.UnknownSubscriptionUpgradeDowngradePolicy)
-        {
-            if (product == null)
-            {
-                callback(null, new QonversionError("PurchaseInvalid", "Product is null"), false);
-                return;
-            }
-
-            UpdatePurchaseWithProductCallback = callback;
-            IQonversionWrapper instance = GetNativeWrapper();
-            instance.UpdatePurchaseWithProduct(product.QonversionId, product.OfferingId, oldProductId, prorationMode, OnUpdatePurchaseWithProductMethodName);
+            instance.UpdatePurchase(purchaseUpdateModel, OnUpdatePurchaseMethodName);
         }
 
         public void Products(Qonversion.OnProductsReceived callback)
@@ -313,13 +285,6 @@ namespace QonversionUnity
             PurchaseCallback = null;
         }
 
-        // Called from the native SDK - Called when purchase result received from the purchaseProduct() method 
-        private void OnPurchaseProduct(string jsonString)
-        {
-            HandlePurchaseResult(PurchaseProductCallback, jsonString);
-            PurchaseProductCallback = null;
-        }
-
         // Called from the native SDK - Called when entitlements received from the restore() method 
         private void OnRestore(string jsonString)
         {
@@ -332,13 +297,6 @@ namespace QonversionUnity
         {
             HandlePurchaseResult(UpdatePurchaseCallback, jsonString);
             UpdatePurchaseCallback = null;
-        }
-        
-        // Called from the native SDK - Called when purchase result received from the updatePurchaseWithProduct() method 
-        private void OnUpdatePurchaseWithProduct(string jsonString)
-        {
-            HandlePurchaseResult(UpdatePurchaseWithProductCallback, jsonString);
-            UpdatePurchaseWithProductCallback = null;
         }
 
         // Called from the native SDK - Called when entitlements received from the promoPurchase() method 

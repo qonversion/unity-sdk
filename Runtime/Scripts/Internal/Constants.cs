@@ -2,6 +2,6 @@
 {
     internal static class Constants
     {
-        public const int SkuDetailsPriceRatio = 1000000;
+        public const int PriceMicrosRatio = 1000000;
     }
 }

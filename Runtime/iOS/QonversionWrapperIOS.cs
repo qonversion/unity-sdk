@@ -63,9 +63,6 @@ namespace QonversionUnity
         private static extern void _purchase(string productID, string callbackName);
 
         [DllImport("__Internal")]
-        private static extern void _purchaseProduct(string productId, string offeringId, string callbackName);
-
-        [DllImport("__Internal")]
         private static extern void _products(string callbackName);
 
         [DllImport("__Internal")]
@@ -213,17 +210,10 @@ namespace QonversionUnity
 #endif
         }
 
-        public void Purchase(string productId, string callbackName)
+        public void Purchase(PurchaseModel purchaseModel, string callbackName)
         {
 #if UNITY_IOS
-            _purchase(productId, callbackName);
-#endif
-        }
-
-        public void PurchaseProduct(string productId, string offeringId, string callbackName)
-        {
-#if UNITY_IOS
-            _purchaseProduct(productId, offeringId, callbackName);
+            _purchase(purchaseModel.ProductId, callbackName);
 #endif
         }
 
@@ -234,11 +224,7 @@ namespace QonversionUnity
 #endif
         }
 
-        public void UpdatePurchase(string productId, string oldProductId, ProrationMode prorationMode, string callbackName)
-        {
-        }
-
-        public void UpdatePurchaseWithProduct(string productId, string offeringId, string oldProductId, ProrationMode prorationMode, string callbackName)
+        public void UpdatePurchase(PurchaseUpdateModel purchaseUpdateModel, string callbackName)
         {
         }
 

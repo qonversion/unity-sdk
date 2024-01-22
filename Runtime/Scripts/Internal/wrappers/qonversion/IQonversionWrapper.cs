@@ -16,11 +16,9 @@ namespace QonversionUnity
         void SyncPurchases();
         void AddAttributionData(string conversionData, string providerName);
         void CheckEntitlements(string callbackName);
-        void Purchase(string productId, string callbackName);
-        void PurchaseProduct(string productId, string offeringId, string callbackName);
+        void Purchase(PurchaseModel purchaseModel, string callbackName);
         void Restore(string callbackName);
-        void UpdatePurchase(string productId, string oldProductId, ProrationMode prorationMode, string callbackName);
-        void UpdatePurchaseWithProduct(string productId, string offeringId, string oldProductId, ProrationMode prorationMode, string callbackName);
+        void UpdatePurchase(PurchaseUpdateModel purchaseUpdateModel, string callbackName);
         void Products(string callbackName);
         void Offerings(string callbackName);
         void RemoteConfig(string callbackName);

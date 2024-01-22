@@ -175,5 +175,18 @@ namespace QonversionUnity
 
             return result;
         }
+
+        internal static QProductType FormatType(object productType)
+        {
+            string value = productType as string;
+
+            switch (value) {
+                case "Trial": return QProductType.Trial;
+                case "Intro": return QProductType.Intro;
+                case "Subscription": return QProductType.Subscription;
+                case "InApp": return QProductType.InApp;
+                default: return QProductType.Unknown;
+            }
+        }
     }
 }

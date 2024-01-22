@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace QonversionUnity
 {
+    [Obsolete("Consider using ProductStoreDetails instead.")]
     public class SkuDetails
     {
         /// Textual description of the product.
