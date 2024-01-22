@@ -142,16 +142,6 @@ void _purchase(const char* productId, const char* unityCallbackName) {
     }];
 }
 
-void _purchaseProduct(const char* productId, const char* offeringId, const char* unityCallbackName) {
-    NSString *productIdStr = [UtilityBridge сonvertCStringToNSString:productId];
-    NSString *offeringIdStr = [UtilityBridge сonvertCStringToNSString:offeringId];
-    NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
-    
-    [qonversionSandwich purchaseProduct:productIdStr offeringId:offeringIdStr completion:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
-        [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
-    }];
-}
-
 void _products(const char* unityCallbackName) {
     NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
     

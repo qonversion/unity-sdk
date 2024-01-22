@@ -1,5 +1,4 @@
 using System;
-using JetBrains.Annotations;
 using UnityEngine;
 
 namespace QonversionUnity
@@ -107,14 +106,15 @@ namespace QonversionUnity
             CallQonversion("checkEntitlements", callbackName);
         }
 
-        public void Purchase(string productId, string callbackName)
+        public void Purchase(PurchaseModel purchaseModel, string callbackName)
         {
-            CallQonversion("purchase", productId, callbackName);
-        }
-
-        public void PurchaseProduct(string productId, string offeringId, string callbackName)
-        {
-            CallQonversion("purchaseProduct", productId, offeringId, callbackName);
+            CallQonversion(
+                "purchase",
+                purchaseModel.ProductId,
+                purchaseModel.OfferId,
+                purchaseModel.ApplyOffer,
+                callbackName
+            );
         }
 
         public void Restore(string callbackName)
@@ -122,14 +122,20 @@ namespace QonversionUnity
             CallQonversion("restore", callbackName);
         }
 
-        public void UpdatePurchase(string productId, string oldProductId, ProrationMode prorationMode, string callbackName)
-        {
-            CallQonversion("updatePurchase", productId, oldProductId, (int)prorationMode, callbackName);
-        }
+        public void UpdatePurchase(PurchaseUpdateModel purchaseUpdateModel, string callbackName) {
+            string updatePolicyKey = purchaseUpdateModel.UpdatePolicy == null
+                ? null
+                : Enum.GetName(typeof(PurchaseUpdatePolicy), purchaseUpdateModel.UpdatePolicy);
 
-        public void UpdatePurchaseWithProduct(string productId, string offeringId, string oldProductId, ProrationMode prorationMode, string callbackName)
-        {
-            CallQonversion("updatePurchaseWithProduct", productId, offeringId, oldProductId, (int)prorationMode, callbackName);
+            CallQonversion(
+                "updatePurchase",
+                purchaseUpdateModel.ProductId,
+                purchaseUpdateModel.OfferId,
+                purchaseUpdateModel.ApplyOffer,
+                purchaseUpdateModel.OldProductId,
+                updatePolicyKey,
+                callbackName
+            );
         }
 
         public void Products(string callbackName)
