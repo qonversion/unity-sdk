@@ -56,6 +56,14 @@ namespace QonversionUnity
                     return UserPropertyKey.AppSetId;
                 case "_q_advertising_id":
                     return UserPropertyKey.AdvertisingId;
+                case "_q_appmetrica_device_id":
+                    return UserPropertyKey.AppMetricaDeviceId;
+                case "_q_appmetrica_user_profile_id":
+                    return UserPropertyKey.AppMetricaUserProfileId;
+                case "_q_pushwoosh_hwid":
+                    return UserPropertyKey.PushWooshHwId;
+                case "_q_pushwoosh_user_id":
+                    return UserPropertyKey.PushWooshUserId;
             }
 
             return UserPropertyKey.Custom;
