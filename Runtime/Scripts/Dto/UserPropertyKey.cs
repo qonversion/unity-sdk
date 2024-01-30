@@ -12,6 +12,10 @@ namespace QonversionUnity
         FirebaseAppInstanceId,
         AppSetId, // Android only
         AdvertisingId, // iOS only
+        AppMetricaDeviceId,
+        AppMetricaUserProfileId,
+        PushWooshHwId,
+        PushWooshUserId,
         Custom,
     }
 }
