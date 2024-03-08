@@ -148,9 +148,9 @@ namespace QonversionUnity
             CallQonversion("offerings", callbackName);
         }
 
-        public void RemoteConfig(string callbackName)
+        public void RemoteConfig(string contextKey, string callbackName)
         {
-            CallQonversion("remoteConfig", callbackName);
+            CallQonversion("remoteConfig", contextKey, callbackName);
         }
 
         public void AttachUserToExperiment(string experimentId, string groupId, string callbackName)

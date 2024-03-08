@@ -69,7 +69,7 @@ namespace QonversionUnity
         private static extern void _offerings(string callbackName);
 
         [DllImport("__Internal")]
-        private static extern void _remoteConfig(string callbackName);
+        private static extern void _remoteConfig(string contextKey, string callbackName);
 
         [DllImport("__Internal")]
         private static extern void _attachUserToExperiment(string experimentId, string groupId, string callbackName);
@@ -242,10 +242,10 @@ namespace QonversionUnity
 #endif
         }
 
-        public void RemoteConfig(string callbackName)
+        public void RemoteConfig(string contextKey, string callbackName)
         {
 #if UNITY_IOS
-            _remoteConfig(callbackName);
+            _remoteConfig(callbackName, contextKey);
 #endif
         }
 

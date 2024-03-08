@@ -21,7 +21,7 @@ namespace QonversionUnity
         void UpdatePurchase(PurchaseUpdateModel purchaseUpdateModel, string callbackName);
         void Products(string callbackName);
         void Offerings(string callbackName);
-        void RemoteConfig(string callbackName);
+        void RemoteConfig([CanBeNull] string contextKey, string callbackName);
         void AttachUserToExperiment(string experimentId, string groupId, string callbackName);
         void DetachUserFromExperiment(string experimentId, string callbackName);
         void AttachUserToRemoteConfiguration(string remoteConfigurationId, string callbackName);

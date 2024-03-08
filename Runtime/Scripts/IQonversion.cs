@@ -70,12 +70,21 @@ namespace QonversionUnity
         public void Offerings(Qonversion.OnOfferingsReceived callback);
 
         /// <summary>
-        /// Returns Qonversion remote config object
+        /// Returns default Qonversion remote config object
         /// Use this function to get the remote config with specific payload and experiment info.
         /// </summary>
         /// <param name="callback">Callback that will be called when response is received.</param>
         /// <see href="https://documentation.qonversion.io/docs/experiments-overview">Experiments</see>
         public void RemoteConfig(Qonversion.OnRemoteConfigReceived callback);
+
+        /// <summary>
+        /// Returns Qonversion remote config object by {@link contextKey}
+        /// Use this function to get the remote config with specific payload and experiment info.
+        /// </summary>
+        /// <param name="contextKey">Context key to get remote config for.</param>
+        /// <param name="callback">Callback that will be called when response is received.</param>
+        /// <see href="https://documentation.qonversion.io/docs/experiments-overview">Experiments</see>
+        public void RemoteConfig(string contextKey, Qonversion.OnRemoteConfigReceived callback);
 
         /// <summary>
         /// This function should be used for the test purposes only. Do not forget to delete the usage of this function before the release.
