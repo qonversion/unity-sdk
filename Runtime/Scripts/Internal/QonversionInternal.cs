@@ -23,7 +23,7 @@ namespace QonversionUnity
         private const string OnAttachUserMethodName = "OnAttachUser";
         private const string OnDetachUserMethodName = "OnDetachUser";
 
-        private const string SdkVersion = "7.1.0";
+        private const string SdkVersion = "7.2.0";
         private const string SdkSource = "unity";
 
         private const string DefaultRemoteConfigContextKey = "";
