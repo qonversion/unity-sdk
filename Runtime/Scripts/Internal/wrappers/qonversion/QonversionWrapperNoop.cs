@@ -67,7 +67,7 @@ namespace QonversionUnity
         {
         }
 
-        public void RemoteConfig(string callbackName)
+        public void RemoteConfig(string contextKey, string callbackName)
         {
         }
 

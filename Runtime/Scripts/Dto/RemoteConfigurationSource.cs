@@ -10,6 +10,7 @@ namespace QonversionUnity
         public readonly string Name;
         public readonly RemoteConfigurationSourceType Type;
         public readonly RemoteConfigurationAssignmentType AssignmentType;
+        [CanBeNull] public readonly string ContextKey;
 
 
         public RemoteConfigurationSource(Dictionary<string, object> dict)
@@ -18,6 +19,7 @@ namespace QonversionUnity
             if (dict.TryGetValue("name", out value)) Name = value as string;
             if (dict.TryGetValue("assignmentType", out value)) AssignmentType = FormatAssignmentType(value);
             if (dict.TryGetValue("type", out value)) Type = FormatSourceType(value);
+            if (dict.TryGetValue("contextKey", out value)) ContextKey = value as string;
         }
 
         public RemoteConfigurationAssignmentType FormatAssignmentType(object typeValue)
@@ -59,7 +61,8 @@ namespace QonversionUnity
             return $"{nameof(Id)}: {Id}, " +
                    $"{nameof(Name)}: {Name}, " +
                    $"{nameof(AssignmentType)}: {AssignmentType}, " +
-                   $"{nameof(Type)}: {Type}";
+                   $"{nameof(Type)}: {Type}, " + 
+                   $"{nameof(ContextKey)}: {ContextKey}";
         }
     }
 

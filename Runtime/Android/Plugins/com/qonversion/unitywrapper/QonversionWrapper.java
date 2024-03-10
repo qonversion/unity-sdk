@@ -121,12 +121,12 @@ public class QonversionWrapper {
     }
 
     public static synchronized void updatePurchase(
-        String productId,
-        @Nullable String offerId,
-        boolean applyOffer,
-        String oldProductId,
-        @Nullable String updatePolicyKey,
-        String unityCallbackName
+            String productId,
+            @Nullable String offerId,
+            boolean applyOffer,
+            String oldProductId,
+            @Nullable String updatePolicyKey,
+            String unityCallbackName
     ) {
         qonversionSandwich.updatePurchase(productId, offerId, applyOffer, oldProductId, updatePolicyKey, getPurchaseResultListener(unityCallbackName));
     }
@@ -143,8 +143,8 @@ public class QonversionWrapper {
         qonversionSandwich.offerings(getResultListener(unityCallbackName));
     }
 
-    public static synchronized void remoteConfig(String unityCallbackName) {
-        qonversionSandwich.remoteConfig(getResultListener(unityCallbackName));
+    public static synchronized void remoteConfig(String contextKey, String unityCallbackName) {
+        qonversionSandwich.remoteConfig(contextKey, getRemoteConfigResultListener(contextKey, unityCallbackName));
     }
 
     public static synchronized void attachUserToExperiment(String experimentId, String groupId, String unityCallbackName) {
@@ -202,6 +202,23 @@ public class QonversionWrapper {
                 final ObjectNode rootNode = Utils.createErrorNode(error);
                 final JsonNode isCancelledNode = mapper.convertValue(isCancelled, JsonNode.class);
                 rootNode.set("isCancelled", isCancelledNode);
+                sendMessageToUnity(rootNode, methodName);
+            }
+        };
+    }
+
+    private static ResultListener getRemoteConfigResultListener(@Nullable String contextKey, @NotNull String methodName) {
+        return new ResultListener() {
+            @Override
+            public void onSuccess(@NonNull Map<String, ?> data) {
+                sendMessageToUnity(data, methodName);
+            }
+
+            @Override
+            public void onError(@NonNull SandwichError error) {
+                final ObjectNode rootNode = Utils.createErrorNode(error);
+                rootNode.put("contextKey", contextKey);
+
                 sendMessageToUnity(rootNode, methodName);
             }
         };
