@@ -372,10 +372,15 @@ namespace QonversionUnity
             if (error != null)
             {
                 if (
-                    !(Json.Deserialize(jsonString) is Dictionary<string, object> dict) ||
-                    !dict.TryGetValue("contextKey", out object contextKey)
-                )
-                {
+                    Json.Deserialize(jsonString) is not Dictionary<string, object> dict ||
+                    !dict.TryGetValue("contextKey", out var contextKey)
+                ) {
+                    foreach (var (_, callbacks) in RemoteConfigCallbacks)
+                    {
+                        callbacks.ForEach(callback => callback(null, error));
+                    }
+
+                    RemoteConfigCallbacks.Clear();
                     return;
                 }
 
