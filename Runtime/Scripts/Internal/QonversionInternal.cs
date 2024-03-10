@@ -12,9 +12,7 @@ namespace QonversionUnity
         private const string OnCheckEntitlementsMethodName = "OnCheckEntitlements";
         private const string OnPurchaseMethodName = "OnPurchase";
         private const string OnPromoPurchaseMethodName = "OnPromoPurchase";
-        private const string OnPurchaseProductMethodName = "OnPurchaseProduct";
         private const string OnUpdatePurchaseMethodName = "OnUpdatePurchase";
-        private const string OnUpdatePurchaseWithProductMethodName = "OnUpdatePurchaseWithProduct";
         private const string OnRestoreMethodName = "OnRestore";
         private const string OnProductsMethodName = "OnProducts";
         private const string OnOfferingsMethodName = "OnOfferings";
