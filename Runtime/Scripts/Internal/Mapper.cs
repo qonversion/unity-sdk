@@ -84,6 +84,17 @@ namespace QonversionUnity
             return new RemoteConfig(remoteConfig);
         }
 
+        internal static RemoteConfigList RemoteConfigListFromJson(string jsonStr)
+        {
+            if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> remoteConfigList))
+            {
+                Debug.LogError("Could not parse RemoteConfigList");
+                return null;
+            }
+
+            return new RemoteConfigList(remoteConfigList);
+        }
+
         internal static ActionResult ActionResultFromJson(string jsonStr)
         {
             if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> actionResult))

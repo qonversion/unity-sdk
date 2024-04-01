@@ -15,12 +15,12 @@ void _initializeAutomations(const char* unityListener) {
 }
 
 void _setNotificationsToken(const char* token) {
-    NSString *tokenStr = [UtilityBridge сonvertCStringToNSString:token];
+    NSString *tokenStr = [UtilityBridge convertCStringToNSString:token];
     [automationsBridge setNotificationsToken:tokenStr];
 }
 
 bool _handleNotification(const char* notification) {
-    NSDictionary *notificationInfo = [UtilityBridge dictionaryFromJsonString:[UtilityBridge сonvertCStringToNSString:notification]];
+    NSDictionary *notificationInfo = [UtilityBridge dictionaryFromJsonString:[UtilityBridge convertCStringToNSString:notification]];
     
     BOOL isQonversionNotification = [automationsBridge handleNotification:notificationInfo];
     
@@ -28,7 +28,7 @@ bool _handleNotification(const char* notification) {
 }
 
 char* _getNotificationCustomPayload(const char* notification) {
-  NSDictionary *notificationInfo = [UtilityBridge dictionaryFromJsonString:[UtilityBridge сonvertCStringToNSString:notification]];
+  NSDictionary *notificationInfo = [UtilityBridge dictionaryFromJsonString:[UtilityBridge convertCStringToNSString:notification]];
   
   NSDictionary *payload = [automationsBridge getNotificationCustomPayload:notificationInfo];
   
@@ -45,8 +45,8 @@ char* _getNotificationCustomPayload(const char* notification) {
 }
 
 void _showScreen(const char* screenId, const char* unityCallbackName) {
-    NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
-    NSString *screenIdStr = [UtilityBridge сonvertCStringToNSString:screenId];
+    NSString *callbackName = [UtilityBridge convertCStringToNSString:unityCallbackName];
+    NSString *screenIdStr = [UtilityBridge convertCStringToNSString:screenId];
     [automationsBridge showScreenWithId:screenIdStr callbackName:callbackName];
 }
 
@@ -55,7 +55,7 @@ void _subscribeOnAutomationEvents() {
 }
 
 void _setScreenPresentationConfig(const char* configData, const char* screenId) {
-    NSDictionary *config = [UtilityBridge dictionaryFromJsonString:[UtilityBridge сonvertCStringToNSString:configData]];
-    NSString *screenIdStr = [UtilityBridge сonvertCStringToNSString:screenId];
+    NSDictionary *config = [UtilityBridge dictionaryFromJsonString:[UtilityBridge convertCStringToNSString:configData]];
+    NSString *screenIdStr = [UtilityBridge convertCStringToNSString:screenId];
     [automationsBridge setScreenPresentationConfig:config screenId:screenIdStr];
 }

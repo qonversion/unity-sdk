@@ -4,7 +4,6 @@ using System.Runtime.InteropServices;
 
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace QonversionUnity
 {
@@ -70,6 +69,12 @@ namespace QonversionUnity
 
         [DllImport("__Internal")]
         private static extern void _remoteConfig(string contextKey, string callbackName);
+
+        [DllImport("__Internal")]
+        private static extern void _remoteConfigList(string callbackName);
+
+        [DllImport("__Internal")]
+        private static extern void _remoteConfigListForContextKeys(string contextKeysJson, bool includeEmptyContextKey, string callbackName);
 
         [DllImport("__Internal")]
         private static extern void _attachUserToExperiment(string experimentId, string groupId, string callbackName);
@@ -245,7 +250,21 @@ namespace QonversionUnity
         public void RemoteConfig(string contextKey, string callbackName)
         {
 #if UNITY_IOS
-            _remoteConfig(callbackName, contextKey);
+            _remoteConfig(contextKey, callbackName);
+#endif
+        }
+
+        public void RemoteConfigList(string callbackName)
+        {
+#if UNITY_IOS
+            _remoteConfigList(callbackName);
+#endif
+        }
+
+        public void RemoteConfigList(string contextKeysJson, bool includeEmptyContextKey, string callbackName) 
+        {
+#if UNITY_IOS
+            _remoteConfigListForContextKeys(contextKeysJson, includeEmptyContextKey, callbackName);
 #endif
         }
 

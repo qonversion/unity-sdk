@@ -71,6 +71,14 @@ namespace QonversionUnity
         {
         }
 
+        public void RemoteConfigList(string callbackName)
+        {
+        }
+
+        public void RemoteConfigList(string contextKeysJson, bool includeEmptyContextKey, string callbackName)
+        {
+        }
+
         public void AttachUserToExperiment(string experimentId, string groupId, string callbackName)
         {
         }
