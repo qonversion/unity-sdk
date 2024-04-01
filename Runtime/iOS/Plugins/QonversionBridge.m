@@ -171,7 +171,6 @@ void _remoteConfig(const char* contextKey, const char* unityCallbackName) {
         } else {
             [UtilityBridge sendUnityMessage:result toMethod:callbackName unityListener:unityListenerName];
         }
-        [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
     }];
 }
 
