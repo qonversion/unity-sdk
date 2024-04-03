@@ -3,8 +3,9 @@
 
 @interface UtilityBridge : NSObject
 
-+ (NSString*)сonvertCStringToNSString:(const char *)string;
++ (NSString*)convertCStringToNSString:(const char *)string;
 + (NSDictionary*)dictionaryFromJsonString:(NSString*) jsonString;
++ (NSArray*)arrayFromJsonString:(NSString*) jsonString;
 + (NSDictionary *)convertError:(SandwichError *)error;
 + (NSDictionary *)convertSandwichError:(SandwichError *)error;
 + (const char *)jsonStringFromObject:(NSObject *)objectToConvert;

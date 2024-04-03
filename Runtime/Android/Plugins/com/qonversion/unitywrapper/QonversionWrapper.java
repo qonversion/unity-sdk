@@ -147,6 +147,23 @@ public class QonversionWrapper {
         qonversionSandwich.remoteConfig(contextKey, getRemoteConfigResultListener(contextKey, unityCallbackName));
     }
 
+    public static synchronized void remoteConfigList(String unityCallbackName) {
+        qonversionSandwich.remoteConfigList(getResultListener(unityCallbackName));
+    }
+
+    public static synchronized void remoteConfigList(String contextKeysJson, boolean includeEmptyContextKey, String unityCallbackName) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+
+            TypeReference<List<String>> typeRef = new TypeReference<List<String>>() {};
+            List<String> contextKeys = mapper.readValue(contextKeysJson, typeRef);
+
+            qonversionSandwich.remoteConfigList(contextKeys, includeEmptyContextKey, getResultListener(unityCallbackName));
+        } catch (JsonProcessingException e) {
+            handleSerializationException(e);
+        }
+    }
+
     public static synchronized void attachUserToExperiment(String experimentId, String groupId, String unityCallbackName) {
         qonversionSandwich.attachUserToExperiment(experimentId, groupId, getResultListener(unityCallbackName));
     }

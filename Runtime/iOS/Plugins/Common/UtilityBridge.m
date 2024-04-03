@@ -2,7 +2,7 @@
 
 @implementation UtilityBridge
 
-+ (NSString*)сonvertCStringToNSString:(const char *)string {
++ (NSString*)convertCStringToNSString:(const char *)string {
     if (string == NULL) {
         return nil;
     }
@@ -19,6 +19,17 @@
     NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:jsonData options:kNilOptions error:nil];
     
     return dictionary;
+}
+
++ (NSArray*)arrayFromJsonString:(NSString*) jsonString {
+    if (!jsonString) {
+        return @[];
+    }
+
+    NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    NSArray *array = [NSJSONSerialization JSONObjectWithData:jsonData options:kNilOptions error:nil];
+    
+    return array;
 }
 
 + (NSDictionary *)convertError:(SandwichError *)error {

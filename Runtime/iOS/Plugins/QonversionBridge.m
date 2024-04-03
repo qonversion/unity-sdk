@@ -33,18 +33,18 @@ void _initialize(const char* unityListener) {
 }
 
 void _initializeSdk(const char* projectKey, const char* launchMode, const char* environment, const char* entitlementsCacheLifetime, const char* proxyUrl) {
-    NSString *keyStr = [UtilityBridge сonvertCStringToNSString:projectKey];
-    NSString *launchModeStr = [UtilityBridge сonvertCStringToNSString:launchMode];
-    NSString *envStr = [UtilityBridge сonvertCStringToNSString:environment];
-    NSString *cacheLifetimeStr = [UtilityBridge сonvertCStringToNSString:entitlementsCacheLifetime];
-    NSString *proxyUrlStr = [UtilityBridge сonvertCStringToNSString:proxyUrl];
+    NSString *keyStr = [UtilityBridge convertCStringToNSString:projectKey];
+    NSString *launchModeStr = [UtilityBridge convertCStringToNSString:launchMode];
+    NSString *envStr = [UtilityBridge convertCStringToNSString:environment];
+    NSString *cacheLifetimeStr = [UtilityBridge convertCStringToNSString:entitlementsCacheLifetime];
+    NSString *proxyUrlStr = [UtilityBridge convertCStringToNSString:proxyUrl];
 
     [qonversionSandwich initializeWithProjectKey:keyStr launchModeKey:launchModeStr environmentKey:envStr entitlementsCacheLifetimeKey:cacheLifetimeStr proxyUrl:proxyUrlStr];
 }
 
 void _storeSdkInfo(const char* version, const char* source) {
-    NSString *versionStr = [UtilityBridge сonvertCStringToNSString:version];
-    NSString *sourceStr = [UtilityBridge сonvertCStringToNSString:source];
+    NSString *versionStr = [UtilityBridge convertCStringToNSString:version];
+    NSString *sourceStr = [UtilityBridge convertCStringToNSString:source];
     
     [qonversionSandwich storeSdkInfoWithSource:sourceStr version:versionStr];
 }
@@ -72,21 +72,21 @@ void _setAppleSearchAdsAttributionEnabled(const bool enable) {
 }
 
 void _setUserProperty(const char* propertyName, const char* value) {
-    NSString *propertyStr = [UtilityBridge сonvertCStringToNSString:propertyName];
-    NSString *valueStr = [UtilityBridge сonvertCStringToNSString:value];
+    NSString *propertyStr = [UtilityBridge convertCStringToNSString:propertyName];
+    NSString *valueStr = [UtilityBridge convertCStringToNSString:value];
     
     [qonversionSandwich setDefinedProperty:propertyStr value:valueStr];
 }
 
 void _setCustomUserProperty(const char* key, const char* value) {
-    NSString *keyStr = [UtilityBridge сonvertCStringToNSString:key];
-    NSString *valueStr = [UtilityBridge сonvertCStringToNSString:value];
+    NSString *keyStr = [UtilityBridge convertCStringToNSString:key];
+    NSString *valueStr = [UtilityBridge convertCStringToNSString:value];
     
     [qonversionSandwich setCustomProperty:keyStr value:valueStr];
 }
 
 void _userProperties(const char* unityCallbackName) {
-    NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
+    NSString *callbackName = [UtilityBridge convertCStringToNSString:unityCallbackName];
 
     [qonversionSandwich userProperties:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
         [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
@@ -94,19 +94,19 @@ void _userProperties(const char* unityCallbackName) {
 }
 
 void _addAttributionData(const char* conversionData, const char* provider) {
-    NSDictionary *conversionInfo = [UtilityBridge dictionaryFromJsonString: [UtilityBridge сonvertCStringToNSString: conversionData]];
-    NSString *providerStr = [UtilityBridge сonvertCStringToNSString:provider];
+    NSDictionary *conversionInfo = [UtilityBridge dictionaryFromJsonString: [UtilityBridge convertCStringToNSString: conversionData]];
+    NSString *providerStr = [UtilityBridge convertCStringToNSString:provider];
 
     [qonversionSandwich attributionWithProviderKey:providerStr value:conversionInfo];
 }
 
 void _identify(const char* userId) {
-    NSString *userIdStr = [UtilityBridge сonvertCStringToNSString:userId];
+    NSString *userIdStr = [UtilityBridge convertCStringToNSString:userId];
     [qonversionSandwich identify:userIdStr];
 }
 
 void _userInfo(const char* unityCallbackName) {
-    NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
+    NSString *callbackName = [UtilityBridge convertCStringToNSString:unityCallbackName];
 
     [qonversionSandwich userInfo:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
         [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
@@ -118,7 +118,7 @@ void _logout() {
 }
 
 void _checkPermissions(const char* unityCallbackName) {
-    NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
+    NSString *callbackName = [UtilityBridge convertCStringToNSString:unityCallbackName];
     
     [qonversionSandwich checkEntitlements:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
         [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
@@ -126,7 +126,7 @@ void _checkPermissions(const char* unityCallbackName) {
 }
 
 void _restore(const char* unityCallbackName) {
-    NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
+    NSString *callbackName = [UtilityBridge convertCStringToNSString:unityCallbackName];
 
     [qonversionSandwich restore:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
         [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
@@ -134,8 +134,8 @@ void _restore(const char* unityCallbackName) {
 }
 
 void _purchase(const char* productId, const char* unityCallbackName) {
-    NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
-    NSString *productIdStr = [UtilityBridge сonvertCStringToNSString:productId];
+    NSString *callbackName = [UtilityBridge convertCStringToNSString:unityCallbackName];
+    NSString *productIdStr = [UtilityBridge convertCStringToNSString:productId];
     
     [qonversionSandwich purchase:productIdStr completion:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
         [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
@@ -143,7 +143,7 @@ void _purchase(const char* productId, const char* unityCallbackName) {
 }
 
 void _products(const char* unityCallbackName) {
-    NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
+    NSString *callbackName = [UtilityBridge convertCStringToNSString:unityCallbackName];
     
     [qonversionSandwich products:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
         [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
@@ -151,25 +151,50 @@ void _products(const char* unityCallbackName) {
 }
 
 void _offerings(const char* unityCallbackName) {
-    NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
+    NSString *callbackName = [UtilityBridge convertCStringToNSString:unityCallbackName];
     
     [qonversionSandwich offerings:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
         [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
     }];
 }
 
-void _remoteConfig(const char* unityCallbackName) {
-    NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
+void _remoteConfig(const char* contextKey, const char* unityCallbackName) {
+    NSString *contextKeyStr = [UtilityBridge convertCStringToNSString:contextKey];
+    NSString *callbackName = [UtilityBridge convertCStringToNSString:unityCallbackName];
+
+    [qonversionSandwich remoteConfig:contextKeyStr :^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
+        if (error) {
+            NSDictionary *errorDict = [UtilityBridge convertError:error];
+            NSMutableDictionary *mutableErrorDict = [errorDict mutableCopy];
+            mutableErrorDict[@"contextKey"] = contextKeyStr;
+            [UtilityBridge sendUnityMessage:mutableErrorDict toMethod:callbackName unityListener:unityListenerName];
+        } else {
+            [UtilityBridge sendUnityMessage:result toMethod:callbackName unityListener:unityListenerName];
+        }
+    }];
+}
+
+void _remoteConfigList(const char* unityCallbackName) {
+    NSString *callbackName = [UtilityBridge convertCStringToNSString:unityCallbackName];
     
-    [qonversionSandwich remoteConfig:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
+    [qonversionSandwich remoteConfigList:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
+        [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
+    }];
+}
+
+void _remoteConfigListForContextKeys(const char* contextKeysJson, const char* includeEmptyContextKey, const char* unityCallbackName) {
+    NSString *callbackName = [UtilityBridge convertCStringToNSString:unityCallbackName];
+    NSArray *contextKeys = [UtilityBridge arrayFromJsonString:[UtilityBridge convertCStringToNSString:contextKeysJson]];
+
+    [qonversionSandwich remoteConfigList:contextKeys includeEmptyContextKey:includeEmptyContextKey :^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
         [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
     }];
 }
 
 void _attachUserToExperiment(const char* experimentId, const char* groupId, const char* unityCallbackName) {
-    NSString *experimentIdStr = [UtilityBridge сonvertCStringToNSString:experimentId];
-    NSString *groupIdStr = [UtilityBridge сonvertCStringToNSString:groupId];
-    NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
+    NSString *experimentIdStr = [UtilityBridge convertCStringToNSString:experimentId];
+    NSString *groupIdStr = [UtilityBridge convertCStringToNSString:groupId];
+    NSString *callbackName = [UtilityBridge convertCStringToNSString:unityCallbackName];
     
     [qonversionSandwich attachUserToExperimentWith:experimentIdStr groupId:groupIdStr completion:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
         [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
@@ -177,8 +202,8 @@ void _attachUserToExperiment(const char* experimentId, const char* groupId, cons
 }
 
 void _detachUserFromExperiment(const char* experimentId, const char* unityCallbackName) {
-    NSString *experimentIdStr = [UtilityBridge сonvertCStringToNSString:experimentId];
-    NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
+    NSString *experimentIdStr = [UtilityBridge convertCStringToNSString:experimentId];
+    NSString *callbackName = [UtilityBridge convertCStringToNSString:unityCallbackName];
     
     [qonversionSandwich detachUserFromExperimentWith:experimentIdStr completion:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
         [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
@@ -186,8 +211,8 @@ void _detachUserFromExperiment(const char* experimentId, const char* unityCallba
 }
 
 void _attachUserToRemoteConfiguration(const char* remoteConfigurationId, const char* unityCallbackName) {
-    NSString *remoteConfigurationIdStr = [UtilityBridge сonvertCStringToNSString:remoteConfigurationId];
-    NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
+    NSString *remoteConfigurationIdStr = [UtilityBridge convertCStringToNSString:remoteConfigurationId];
+    NSString *callbackName = [UtilityBridge convertCStringToNSString:unityCallbackName];
     
     [qonversionSandwich attachUserToRemoteConfigurationWith:remoteConfigurationIdStr completion:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
         [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
@@ -195,8 +220,8 @@ void _attachUserToRemoteConfiguration(const char* remoteConfigurationId, const c
 }
 
 void _detachUserFromRemoteConfiguration(const char* remoteConfigurationId, const char* unityCallbackName) {
-    NSString *remoteConfigurationIdStr = [UtilityBridge сonvertCStringToNSString:remoteConfigurationId];
-    NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
+    NSString *remoteConfigurationIdStr = [UtilityBridge convertCStringToNSString:remoteConfigurationId];
+    NSString *callbackName = [UtilityBridge convertCStringToNSString:unityCallbackName];
     
     [qonversionSandwich detachUserFromRemoteConfigurationWith:remoteConfigurationIdStr completion:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
         [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
@@ -204,8 +229,8 @@ void _detachUserFromRemoteConfiguration(const char* remoteConfigurationId, const
 }
 
 void _checkTrialIntroEligibility(const char* productIdsJson, const char* unityCallbackName) {
-    NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
-    NSString *productIdsJsonStr = [UtilityBridge сonvertCStringToNSString:productIdsJson];
+    NSString *callbackName = [UtilityBridge convertCStringToNSString:unityCallbackName];
+    NSString *productIdsJsonStr = [UtilityBridge convertCStringToNSString:productIdsJson];
     
     NSError *error = nil;
     NSData *data = [productIdsJsonStr dataUsingEncoding:NSUTF8StringEncoding];
@@ -223,8 +248,8 @@ void _checkTrialIntroEligibility(const char* productIdsJson, const char* unityCa
 }
 
 void _promoPurchase(const char* storeProductId, const char* unityCallbackName) {
-    NSString *callbackName = [UtilityBridge сonvertCStringToNSString:unityCallbackName];
-    NSString *storeProductIdStr = [UtilityBridge сonvertCStringToNSString:storeProductId];
+    NSString *callbackName = [UtilityBridge convertCStringToNSString:unityCallbackName];
+    NSString *storeProductIdStr = [UtilityBridge convertCStringToNSString:storeProductId];
     
     [qonversionSandwich promoPurchase:storeProductIdStr completion:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
         [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];

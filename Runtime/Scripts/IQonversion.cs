@@ -74,7 +74,7 @@ namespace QonversionUnity
         /// Use this function to get the remote config with specific payload and experiment info.
         /// </summary>
         /// <param name="callback">Callback that will be called when response is received.</param>
-        /// <see href="https://documentation.qonversion.io/docs/experiments-overview">Experiments</see>
+        /// <see href="https://documentation.qonversion.io/docs/remote-config">Remote Configs</see>
         public void RemoteConfig(Qonversion.OnRemoteConfigReceived callback);
 
         /// <summary>
@@ -83,8 +83,26 @@ namespace QonversionUnity
         /// </summary>
         /// <param name="contextKey">Context key to get remote config for.</param>
         /// <param name="callback">Callback that will be called when response is received.</param>
-        /// <see href="https://documentation.qonversion.io/docs/experiments-overview">Experiments</see>
+        /// <see href="https://documentation.qonversion.io/docs/remote-config">Remote Configs</see>
         public void RemoteConfig(string contextKey, Qonversion.OnRemoteConfigReceived callback);
+
+        /// <summary>
+        /// Returns Qonversion remote config objects for all existing context key (including empty one).
+        /// Use this function to get the remote configs with specific payload and experiment info.
+        /// </summary>
+        /// <param name="callback">Callback that will be called when response is received.</param>
+        /// <see href="https://documentation.qonversion.io/docs/remote-config">Remote Configs</see>
+        public void RemoteConfigList(Qonversion.OnRemoteConfigListReceived callback);
+        
+        /// <summary>
+        /// Returns Qonversion remote config objects by a list of context keys.
+        /// Use this function to get the remote configs with specific payload and experiment info.
+        /// </summary>
+        /// <param name="contextKeys">List of context keys to load remote configs for</param>
+        /// <param name="includeEmptyContextKey">Set to true if you want to include remote config with empty context key to the result.</param>
+        /// <param name="callback">Callback that will be called when response is received.</param>
+        /// <see href="https://documentation.qonversion.io/docs/remote-config">Remote Configs</see>
+        public void RemoteConfigList(string[] contextKeys, bool includeEmptyContextKey, Qonversion.OnRemoteConfigListReceived callback);
 
         /// <summary>
         /// This function should be used for the test purposes only. Do not forget to delete the usage of this function before the release.
