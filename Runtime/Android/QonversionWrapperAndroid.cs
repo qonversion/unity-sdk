@@ -153,6 +153,16 @@ namespace QonversionUnity
             CallQonversion("remoteConfig", contextKey, callbackName);
         }
 
+        public void RemoteConfigList(string callbackName)
+        {
+            CallQonversion("remoteConfigList", callbackName);
+        }
+
+        public void RemoteConfigList(string contextKeysJson, bool includeEmptyContextKey, string callbackName)
+        {
+            CallQonversion("remoteConfigList", contextKeysJson, includeEmptyContextKey, callbackName);
+        }
+
         public void AttachUserToExperiment(string experimentId, string groupId, string callbackName)
         {
             CallQonversion("attachUserToExperiment", experimentId, groupId, callbackName);
