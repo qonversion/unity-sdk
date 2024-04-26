@@ -10,7 +10,6 @@ on:
 jobs:
   upgrade:
     name: Upgrade Sandwich version
-    needs: [ release_pull_requests ]
     runs-on: ubuntu-latest
     env:
       sandwich_version: ${{ github.event.inputs.sandwich_version }}
