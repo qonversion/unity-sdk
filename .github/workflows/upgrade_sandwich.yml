@@ -9,6 +9,25 @@ on:
 
 jobs:
   upgrade:
-    uses: qonversion/shared-sdk-workflows/.github/workflows/upgrade_sandwich.yml@main
-    with:
+    name: Upgrade Sandwich version
+    needs: [ release_pull_requests ]
+    runs-on: ubuntu-latest
+    env:
       sandwich_version: ${{ github.event.inputs.sandwich_version }}
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+        with:
+          ref: release/7.3.2
+
+      - name: Bump Sandwich version
+        run: |
+          fastlane upgrade_sandwich version:$sandwich_version
+
+      - name: Commit changes
+        run: |
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+          git config --global user.name "${{ github.actor }}"
+          git commit -am "Sandwich version upgraded to $sandwich_version"
+          git push
