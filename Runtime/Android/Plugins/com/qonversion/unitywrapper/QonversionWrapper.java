@@ -100,8 +100,8 @@ public class QonversionWrapper {
         }
     }
 
-    public static synchronized void identify(String value) {
-        qonversionSandwich.identify(value);
+    public static synchronized void identify(String value, String unityCallbackName) {
+        qonversionSandwich.identify(value, getResultListener(unityCallbackName));
     }
 
     public static synchronized void logout() {

@@ -31,7 +31,7 @@ namespace QonversionUnity
         void DetachUserFromRemoteConfiguration(string remoteConfigurationId, string callbackName);
         void CheckTrialIntroEligibility(string productIdsJson, string callbackName);
         void SetAppleSearchAdsAttributionEnabled(bool enable);
-        void Identify(string userID);
+        void Identify(string userID, string callbackName);
         void Logout();
         void UserInfo(string callbackName);
         void PromoPurchase(string storeProductId, string callbackName);
