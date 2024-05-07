@@ -107,7 +107,7 @@ namespace QonversionUnity
         {
         }
 
-        public void Identify(string userID)
+        public void Identify(string userID, string callbackName)
         {
         }
 

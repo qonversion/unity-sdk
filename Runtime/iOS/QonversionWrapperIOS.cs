@@ -41,7 +41,7 @@ namespace QonversionUnity
         private static extern void _setAppleSearchAdsAttributionEnabled(bool enable);
 
         [DllImport("__Internal")]
-        private static extern void _identify(string userID);
+        private static extern void _identify(string userID, string callbackName);
 
         [DllImport("__Internal")]
         private static extern void _logout();
@@ -180,10 +180,10 @@ namespace QonversionUnity
 #endif
         }
 
-        public void Identify(string userID)
+        public void Identify(string userID, string callbackName)
         {
 #if UNITY_IOS
-            _identify(userID);
+            _identify(userID, callbackName);
 #endif
         }
 

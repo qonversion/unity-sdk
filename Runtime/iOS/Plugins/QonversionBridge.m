@@ -100,9 +100,13 @@ void _addAttributionData(const char* conversionData, const char* provider) {
     [qonversionSandwich attributionWithProviderKey:providerStr value:conversionInfo];
 }
 
-void _identify(const char* userId) {
+void _identify(const char* userId, const char* unityCallbackName) {
     NSString *userIdStr = [UtilityBridge convertCStringToNSString:userId];
-    [qonversionSandwich identify:userIdStr];
+    NSString *callbackName = [UtilityBridge convertCStringToNSString:unityCallbackName];
+
+    [qonversionSandwich identify:userIdStr :^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
+        [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
+    }];
 }
 
 void _userInfo(const char* unityCallbackName) {

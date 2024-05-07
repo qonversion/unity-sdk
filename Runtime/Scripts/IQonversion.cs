@@ -184,6 +184,14 @@ namespace QonversionUnity
         public void Identify(string userID);
 
         /// <summary>
+        /// Call this function to link a user to his unique ID in your system and share purchase data.
+        /// </summary>
+        /// <param name="userID">An unique user ID in your system.</param>
+        /// <param name="callback">Callback that will be called when response is received</param>
+        /// <see href="https://documentation.qonversion.io/docs/user-identifiers#3-user-identity"/>
+        public void Identify(string userID, Qonversion.OnUserInfoReceived callback);
+
+        /// <summary>
         /// Call this function to unlink a user from his unique ID in your system and his purchase data.
         /// </summary>
         /// <see href="https://documentation.qonversion.io/docs/user-identifiers#logging-out"/>

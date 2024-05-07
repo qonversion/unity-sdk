@@ -86,9 +86,9 @@ namespace QonversionUnity
             }
         }
 
-        public void Identify(string userID)
+        public void Identify(string userID, string callbackName)
         {
-            CallQonversion("identify", userID);
+            CallQonversion("identify", userID, callbackName);
         }
 
         public void Logout()
