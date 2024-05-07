@@ -20,6 +20,7 @@ namespace QonversionUnity
         private const string OnRemoteConfigListMethodName = "OnRemoteConfigList";
         private const string OnRemoteConfigListForContextKeysMethodName = "OnRemoteConfigListForContextKeys";
         private const string OnEligibilitiesMethodName = "OnEligibilities";
+        private const string OnIdentityMethodName = "OnIdentity";
         private const string OnUserInfoMethodName = "OnUserInfo";
         private const string OnUserPropertiesMethodName = "OnUserProperties";
         private const string OnAttachUserMethodName = "OnAttachUser";
@@ -47,6 +48,7 @@ namespace QonversionUnity
         private Qonversion.OnRemoteConfigListReceived RemoteConfigListForContextKeysCallback { get; set; }
         private Qonversion.OnEligibilitiesReceived EligibilitiesCallback { get; set; }
         private Qonversion.OnEntitlementsReceived PromoPurchaseCallback { get; set; }
+        private Qonversion.OnUserInfoReceived IdentityCallback { get; set; }
         private Qonversion.OnUserInfoReceived UserInfoCallback { get; set; }
         private Qonversion.OnUserPropertiesReceived UserPropertiesCallback { get; set; }
         private Qonversion.OnAttachUserResponseReceived AttachUserCallback { get; set; }
@@ -235,7 +237,14 @@ namespace QonversionUnity
         public void Identify(string userID)
         {
             IQonversionWrapper instance = GetNativeWrapper();
-            instance.Identify(userID);
+            instance.Identify(userID, OnIdentityMethodName);
+        }
+
+        public void Identify(string userID, Qonversion.OnUserInfoReceived callback)
+        {
+            IdentityCallback = callback;
+            IQonversionWrapper instance = GetNativeWrapper();
+            instance.Identify(userID, OnIdentityMethodName);
         }
 
         public void Logout()
@@ -502,6 +511,25 @@ namespace QonversionUnity
             }
 
             EligibilitiesCallback = null;
+        }
+
+        // Called from the native SDK - Called when user info received from the Identify() method 
+        private void OnIdentity(string jsonString)
+        {
+            if (IdentityCallback == null) return;
+
+            var error = Mapper.ErrorFromJson(jsonString);
+            if (error != null)
+            {
+                IdentityCallback(null, error);
+            }
+            else
+            {
+                User userInfo = Mapper.UserFromJson(jsonString);
+                IdentityCallback(userInfo, null);
+            }
+
+            IdentityCallback = null;
         }
 
         // Called from the native SDK - Called when user info received from the UserInfo() method 
