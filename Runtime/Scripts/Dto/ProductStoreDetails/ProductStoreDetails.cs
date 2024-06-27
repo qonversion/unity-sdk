@@ -74,6 +74,10 @@ namespace QonversionUnity
         /// they will need to make a new payment to extend their plan.
         public readonly bool IsPrepaid;
 
+        /// True, if the subscription product is installment, which means that users commit
+        /// to pay for a specified amount of periods every month.
+        public readonly bool IsInstallment;
+
         public ProductStoreDetails(Dictionary<string, object> dict)
         {
             if (dict.TryGetValue("productId", out object value)) ProductId = value as string;
@@ -119,6 +123,7 @@ namespace QonversionUnity
             if (dict.TryGetValue("isInApp", out value)) IsInApp = (bool)value;
             if (dict.TryGetValue("isSubscription", out value)) IsSubscription = (bool)value;
             if (dict.TryGetValue("isPrepaid", out value)) IsPrepaid = (bool)value;
+            if (dict.TryGetValue("isInstallment", out value)) IsInstallment = (bool)value;
         }
 
         public override string ToString()
@@ -144,7 +149,8 @@ namespace QonversionUnity
                    $"{nameof(ProductType)}: {ProductType}, " +
                    $"{nameof(IsInApp)}: {IsInApp}, " +
                    $"{nameof(IsSubscription)}: {IsSubscription}, " +
-                   $"{nameof(IsPrepaid)}: {IsPrepaid}";
+                   $"{nameof(IsPrepaid)}: {IsPrepaid}" +
+                   $"{nameof(IsInstallment)}: {IsInstallment}";
         }
     }
 }
