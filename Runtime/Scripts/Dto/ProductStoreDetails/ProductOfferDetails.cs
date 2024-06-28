@@ -28,8 +28,9 @@ namespace QonversionUnity
 
         /// A base plan phase details.
         [CanBeNull] public readonly ProductPricingPhase BasePlan;
-
-		[CanBeNull] public readonly ProductInstallmentPlanDetails InstallmentPlanDetails;
+        
+        /// Additional details of an installment plan, if exists.
+        [CanBeNull] public readonly ProductInstallmentPlanDetails InstallmentPlanDetails;
         
         /// A trial phase details, if exists.
         [CanBeNull] public readonly ProductPricingPhase IntroPhase;
