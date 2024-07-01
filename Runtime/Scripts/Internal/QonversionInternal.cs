@@ -623,7 +623,7 @@ namespace QonversionUnity
             var error = Mapper.ErrorFromJson(jsonString);
             if (error != null)
             {
-                var isCancelled = Mapper.GetIsCancelledFromJson(jsonString);
+                var isCancelled = error.Code == QErrorCode.PurchaseCanceled;
                 callback(null, error, isCancelled);
             }
             else

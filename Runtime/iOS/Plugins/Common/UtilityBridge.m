@@ -37,7 +37,6 @@
     
     NSMutableDictionary *result = [NSMutableDictionary new];
     result[@"error"] = errorDict;
-    result[@"isCancelled"] = error.additionalInfo[@"isCancelled"];
     
     return [result copy];
 }

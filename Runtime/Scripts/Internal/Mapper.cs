@@ -7,17 +7,6 @@ namespace QonversionUnity
 {
     internal class Mapper
     {
-        internal static bool GetIsCancelledFromJson(string jsonStr)
-        {
-            if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> result))
-            {
-                Debug.LogError("Could not parse purchase result");
-                return false;
-            }
-            
-            return result.TryGetValue("isCancelled", out var isCancelled) && Convert.ToBoolean(isCancelled);
-        }
-
         internal static Dictionary<string, Entitlement> EntitlementsFromJson(string jsonStr)
         {
             var result = new Dictionary<string, Entitlement>();

@@ -117,7 +117,7 @@ public class QonversionWrapper {
     }
 
     public static synchronized void purchase(String productId, @Nullable String offerId, boolean applyOffer, String unityCallbackName) {
-        qonversionSandwich.purchase(productId, offerId, applyOffer, getPurchaseResultListener(unityCallbackName));
+        qonversionSandwich.purchase(productId, offerId, applyOffer, getResultListener(unityCallbackName));
     }
 
     public static synchronized void updatePurchase(
@@ -128,7 +128,7 @@ public class QonversionWrapper {
             @Nullable String updatePolicyKey,
             String unityCallbackName
     ) {
-        qonversionSandwich.updatePurchase(productId, offerId, applyOffer, oldProductId, updatePolicyKey, getPurchaseResultListener(unityCallbackName));
+        qonversionSandwich.updatePurchase(productId, offerId, applyOffer, oldProductId, updatePolicyKey, getResultListener(unityCallbackName));
     }
 
     public static synchronized void restore(String unityCallbackName) {
@@ -202,24 +202,6 @@ public class QonversionWrapper {
             @Override
             public void onError(@NonNull SandwichError error) {
                 handleErrorResponse(error, methodName);
-            }
-        };
-    }
-
-    private static PurchaseResultListener getPurchaseResultListener(@NotNull String methodName) {
-        return new PurchaseResultListener() {
-            @Override
-            public void onSuccess(@NonNull Map<String, ?> data) {
-                sendMessageToUnity(data, methodName);
-            }
-
-            @Override
-            public void onError(@NonNull SandwichError error, boolean isCancelled) {
-                final ObjectMapper mapper = new ObjectMapper();
-                final ObjectNode rootNode = Utils.createErrorNode(error);
-                final JsonNode isCancelledNode = mapper.convertValue(isCancelled, JsonNode.class);
-                rootNode.set("isCancelled", isCancelledNode);
-                sendMessageToUnity(rootNode, methodName);
             }
         };
     }
