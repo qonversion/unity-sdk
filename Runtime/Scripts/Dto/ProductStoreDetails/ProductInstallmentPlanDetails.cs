@@ -20,14 +20,14 @@ namespace QonversionUnity
 
         public ProductInstallmentPlanDetails(Dictionary<string, object> dict)
         {
-            if (dict.TryGetValue("commitmentPaymentsCount", out object value)) CommitmentPaymentsCount = (int)value;
-            if (dict.TryGetValue("subsequentCommitmentPaymentsCount", out value)) SubsequentCommitmentPaymentsCount = (int)value;
+            if (dict.TryGetValue("commitmentPaymentsCount", out object value)) CommitmentPaymentsCount = (int)(long)value;
+            if (dict.TryGetValue("subsequentCommitmentPaymentsCount", out value)) SubsequentCommitmentPaymentsCount = (int)(long)value;
         }
 
         public override string ToString()
         {
-            return $"{nameof(CommitmentPaymentsCount)}: {CommitmentPaymentsCount}";
-            return $"{nameof(SubsequentCommitmentPaymentsCount)}: {SubsequentCommitmentPaymentsCount}";
+            return $"{nameof(CommitmentPaymentsCount)}: {CommitmentPaymentsCount}, " + 
+                   $"{nameof(SubsequentCommitmentPaymentsCount)}: {SubsequentCommitmentPaymentsCount}";
         }
     }
 }

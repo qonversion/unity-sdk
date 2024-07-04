@@ -17,7 +17,6 @@ import java.util.List;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.qonversion.sandwich.PurchaseResultListener;
 import io.qonversion.sandwich.QonversionSandwich;
 import io.qonversion.sandwich.ResultListener;
 import io.qonversion.sandwich.SandwichError;
