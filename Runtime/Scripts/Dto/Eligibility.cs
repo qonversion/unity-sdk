@@ -23,7 +23,7 @@ namespace QonversionUnity
             switch (value)
             {
                 case "non_intro_or_trial_product":
-                    result = EligibilityStatus.NonIntroProduct;
+                    result = EligibilityStatus.NonIntroOrTrialProduct;
                     break;
                 case "intro_or_trial_ineligible":
                     result = EligibilityStatus.Ineligible;
