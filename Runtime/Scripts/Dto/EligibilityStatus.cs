@@ -3,7 +3,7 @@
     public enum EligibilityStatus
     {
         Unknown,
-        NonIntroProduct,
+        NonIntroOrTrialProduct,
         Ineligible,
         Eligible
     }

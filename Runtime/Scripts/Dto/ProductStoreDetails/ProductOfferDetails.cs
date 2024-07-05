@@ -29,6 +29,9 @@ namespace QonversionUnity
         /// A base plan phase details.
         [CanBeNull] public readonly ProductPricingPhase BasePlan;
         
+        /// Additional details of an installment plan, if exists.
+        [CanBeNull] public readonly ProductInstallmentPlanDetails InstallmentPlanDetails;
+        
         /// A trial phase details, if exists.
         [CanBeNull] public readonly ProductPricingPhase IntroPhase;
         
@@ -81,6 +84,11 @@ namespace QonversionUnity
             {
                 BasePlan = new ProductPricingPhase(basePlan);
             }
+            
+            if (dict.TryGetValue("installmentPlanDetails", out value) && value is Dictionary<string, object> installmentPlan)
+            {
+                InstallmentPlanDetails = new ProductInstallmentPlanDetails(installmentPlan);
+            }
 
             if (dict.TryGetValue("introPhase", out value) && value is Dictionary<string, object> introPhase)
             {
@@ -117,6 +125,7 @@ namespace QonversionUnity
                    $"{nameof(Tags)}: {tags}, " +
                    $"{nameof(PricingPhases)}: {pricingPhases}, " +
                    $"{nameof(BasePlan)}: {BasePlan}, " +
+                   $"{nameof(InstallmentPlanDetails)}: {InstallmentPlanDetails}, " +	
                    $"{nameof(IntroPhase)}: {IntroPhase}, " +
                    $"{nameof(TrialPhase)}: {TrialPhase}, " +
                    $"{nameof(HasTrial)}: {HasTrial}, " +
