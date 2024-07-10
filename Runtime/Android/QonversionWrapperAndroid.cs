@@ -183,6 +183,11 @@ namespace QonversionUnity
             CallQonversion("detachUserFromRemoteConfiguration", remoteConfigurationId, callbackName);
         }
 
+        public void IsFallbackFileAccessible(string callbackName)
+        {
+            CallQonversion("isFallbackFileAccessible", callbackName);
+        }
+
         public void CheckTrialIntroEligibility(string productIdsJson, string callbackName)
         {
             CallQonversion("checkTrialIntroEligibility", productIdsJson, callbackName);

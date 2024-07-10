@@ -89,6 +89,9 @@ namespace QonversionUnity
         private static extern void _detachUserFromRemoteConfiguration(string remoteConfigurationId, string callbackName);
 
         [DllImport("__Internal")]
+        private static extern void _isFallbackFileAccessible(string callbackName);
+
+        [DllImport("__Internal")]
         private static extern void _checkTrialIntroEligibility(string productIdsJson, string callbackName);
 
         [DllImport("__Internal")]
@@ -293,6 +296,13 @@ namespace QonversionUnity
         {
 #if UNITY_IOS
             _detachUserFromRemoteConfiguration(remoteConfigurationId, callbackName);
+#endif
+        }
+
+        public void IsFallbackFileAccessible(string callbackName)
+        {
+#if UNITY_IOS
+            _isFallbackFileAccessible(callbackName);
 #endif
         }
 

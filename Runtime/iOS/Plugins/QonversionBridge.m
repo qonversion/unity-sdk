@@ -232,6 +232,14 @@ void _detachUserFromRemoteConfiguration(const char* remoteConfigurationId, const
     }];
 }
 
+void _isFallbackFileAccessible(const char* unityCallbackName) {
+    NSString *callbackName = [UtilityBridge convertCStringToNSString:unityCallbackName];
+    
+    [qonversionSandwich isFallbackFileAccessibleWithCompletion:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
+        [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
+    }];
+}
+
 void _checkTrialIntroEligibility(const char* productIdsJson, const char* unityCallbackName) {
     NSString *callbackName = [UtilityBridge convertCStringToNSString:unityCallbackName];
     NSString *productIdsJsonStr = [UtilityBridge convertCStringToNSString:productIdsJson];
