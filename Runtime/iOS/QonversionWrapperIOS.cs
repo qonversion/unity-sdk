@@ -3,7 +3,8 @@ using System.Runtime.InteropServices;
 #endif
 
 using System;
-using System.Collections.Generic;
+using UnityEngine;
+using System.IO;
 
 namespace QonversionUnity
 {
@@ -104,6 +105,13 @@ namespace QonversionUnity
         public void Initialize(string gameObjectName)
         {
 #if UNITY_IOS
+            string filePath = System.IO.Path.Combine(Application.streamingAssetsPath, "qonversion_ios_fallbacks.json");
+
+            if (System.IO.File.Exists(filePath)) {
+                string result = System.IO.File.ReadAllText(filePath);
+                File.WriteAllText(Application.persistentDataPath + "/qonversion_ios_fallbacks.json", result);
+            }
+            
             _initialize(gameObjectName);
 #endif
         }
@@ -127,14 +135,14 @@ namespace QonversionUnity
         {
 #if UNITY_IOS
             _syncHistoricalData();
-#endif  
+#endif
         }
 
         public void SyncStoreKit2Purchases()
         {
 #if UNITY_IOS
             _syncStoreKit2Purchases();
-#endif  
+#endif
         }
 
         public void SyncPurchases()
