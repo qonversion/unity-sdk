@@ -11,6 +11,8 @@ namespace QonversionUnity
     internal class QonversionWrapperIOS : IQonversionWrapper
     {
 #if UNITY_IOS
+        private const string FallbackFileName = "qonversion_ios_fallbacks.json";
+
         [DllImport("__Internal")]
         private static extern void _initialize(string gameObjectName);
 
@@ -105,11 +107,11 @@ namespace QonversionUnity
         public void Initialize(string gameObjectName)
         {
 #if UNITY_IOS
-            string filePath = System.IO.Path.Combine(Application.streamingAssetsPath, "qonversion_ios_fallbacks.json");
+            string filePath = System.IO.Path.Combine(Application.streamingAssetsPath, FallbackFileName);
 
             if (System.IO.File.Exists(filePath)) {
                 string result = System.IO.File.ReadAllText(filePath);
-                File.WriteAllText(Application.persistentDataPath + "/qonversion_ios_fallbacks.json", result);
+                File.WriteAllText(Application.persistentDataPath + "/" + FallbackFileName, result);
             }
             
             _initialize(gameObjectName);
