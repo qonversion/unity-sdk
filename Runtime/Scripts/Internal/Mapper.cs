@@ -7,17 +7,6 @@ namespace QonversionUnity
 {
     internal class Mapper
     {
-        internal static bool GetIsCancelledFromJson(string jsonStr)
-        {
-            if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> result))
-            {
-                Debug.LogError("Could not parse purchase result");
-                return false;
-            }
-            
-            return result.TryGetValue("isCancelled", out var isCancelled) && Convert.ToBoolean(isCancelled);
-        }
-
         internal static Dictionary<string, Entitlement> EntitlementsFromJson(string jsonStr)
         {
             var result = new Dictionary<string, Entitlement>();
@@ -115,6 +104,19 @@ namespace QonversionUnity
             }
 
             return screenResult.GetString("screenId", "");
+        }
+
+        internal static bool IsFallbackFileAccessibleFromJson(string jsonStr)
+        {
+            var isAccessible = false;
+            if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> rawResult))
+            {
+                Debug.LogError("Could not parse fallback file accessibility");
+                return false;
+            }
+            if (rawResult.TryGetValue("success", out object value)) isAccessible = (bool)value;
+
+            return isAccessible;
         }
 
         internal static Dictionary<string, Eligibility> EligibilitiesFromJson(string jsonStr)

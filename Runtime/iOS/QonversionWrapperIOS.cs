@@ -3,13 +3,16 @@ using System.Runtime.InteropServices;
 #endif
 
 using System;
-using System.Collections.Generic;
+using UnityEngine;
+using System.IO;
 
 namespace QonversionUnity
 {
     internal class QonversionWrapperIOS : IQonversionWrapper
     {
 #if UNITY_IOS
+        private const string FallbackFileName = "qonversion_ios_fallbacks.json";
+
         [DllImport("__Internal")]
         private static extern void _initialize(string gameObjectName);
 
@@ -89,6 +92,9 @@ namespace QonversionUnity
         private static extern void _detachUserFromRemoteConfiguration(string remoteConfigurationId, string callbackName);
 
         [DllImport("__Internal")]
+        private static extern void _isFallbackFileAccessible(string callbackName);
+
+        [DllImport("__Internal")]
         private static extern void _checkTrialIntroEligibility(string productIdsJson, string callbackName);
 
         [DllImport("__Internal")]
@@ -101,6 +107,21 @@ namespace QonversionUnity
         public void Initialize(string gameObjectName)
         {
 #if UNITY_IOS
+            try
+            {
+                string filePath = Path.Combine(Application.streamingAssetsPath, FallbackFileName);
+
+                if (File.Exists(filePath))
+                {
+                    string result = System.IO.File.ReadAllText(filePath);
+                    File.WriteAllText(Application.persistentDataPath + "/" + FallbackFileName, result);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning("Fallback file is not accessible. " + e);
+            }
+            
             _initialize(gameObjectName);
 #endif
         }
@@ -124,14 +145,14 @@ namespace QonversionUnity
         {
 #if UNITY_IOS
             _syncHistoricalData();
-#endif  
+#endif
         }
 
         public void SyncStoreKit2Purchases()
         {
 #if UNITY_IOS
             _syncStoreKit2Purchases();
-#endif  
+#endif
         }
 
         public void SyncPurchases()
@@ -293,6 +314,13 @@ namespace QonversionUnity
         {
 #if UNITY_IOS
             _detachUserFromRemoteConfiguration(remoteConfigurationId, callbackName);
+#endif
+        }
+
+        public void IsFallbackFileAccessible(string callbackName)
+        {
+#if UNITY_IOS
+            _isFallbackFileAccessible(callbackName);
 #endif
         }
 
