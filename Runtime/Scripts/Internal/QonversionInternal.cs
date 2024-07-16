@@ -25,8 +25,9 @@ namespace QonversionUnity
         private const string OnUserPropertiesMethodName = "OnUserProperties";
         private const string OnAttachUserMethodName = "OnAttachUser";
         private const string OnDetachUserMethodName = "OnDetachUser";
+        private const string OnIsFallbackFileAccessibleMethodName = "OnIsFallbackFileAccessible";
 
-        private const string SdkVersion = "7.5.0";
+        private const string SdkVersion = "8.0.0";
         private const string SdkSource = "unity";
 
         private const string DefaultRemoteConfigContextKey = "";
@@ -53,6 +54,7 @@ namespace QonversionUnity
         private Qonversion.OnUserPropertiesReceived UserPropertiesCallback { get; set; }
         private Qonversion.OnAttachUserResponseReceived AttachUserCallback { get; set; }
         private Qonversion.OnAttachUserResponseReceived DetachUserCallback { get; set; }
+        private Qonversion.OnFallbackFileAccessibilityResponseReceived FallbackFileCallback { get; set; }       
 
         public event Qonversion.OnPromoPurchasesReceived PromoPurchasesReceived
         {
@@ -203,6 +205,13 @@ namespace QonversionUnity
             DetachUserCallback = callback;
             IQonversionWrapper instance = GetNativeWrapper();
             instance.DetachUserFromRemoteConfiguration(remoteConfigurationId, OnDetachUserMethodName);
+        }
+
+        public void IsFallbackFileAccessible(Qonversion.OnFallbackFileAccessibilityResponseReceived callback)
+        {
+            FallbackFileCallback = callback;
+            IQonversionWrapper instance = GetNativeWrapper();
+            instance.IsFallbackFileAccessible(OnIsFallbackFileAccessibleMethodName);
         }
 
         public void CheckTrialIntroEligibility(IList<string> productIds, Qonversion.OnEligibilitiesReceived callback)
@@ -492,6 +501,15 @@ namespace QonversionUnity
             {
                 DetachUserCallback(true, null);
             }
+        }
+
+        private void OnIsFallbackFileAccessible(string jsonString)
+        {
+            if (FallbackFileCallback == null) return;
+
+            var isAccessible = Mapper.IsFallbackFileAccessibleFromJson(jsonString);
+
+            FallbackFileCallback(isAccessible);
         }
 
         // Called from the native SDK - Called when eligibilities received from the checkTrialIntroEligibilityForProductIds() method 

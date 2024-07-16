@@ -95,6 +95,10 @@ namespace QonversionUnity
         {
         }
 
+        public void IsFallbackFileAccessible(string callbackName)
+        {
+        }
+
         public void StoreSdkInfo(string version, string source)
         {
         }

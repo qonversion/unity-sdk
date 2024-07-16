@@ -106,6 +106,19 @@ namespace QonversionUnity
             return screenResult.GetString("screenId", "");
         }
 
+        internal static bool IsFallbackFileAccessibleFromJson(string jsonStr)
+        {
+            var isAccessible = false;
+            if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> rawResult))
+            {
+                Debug.LogError("Could not parse fallback file accessibility");
+                return false;
+            }
+            if (rawResult.TryGetValue("success", out object value)) isAccessible = (bool)value;
+
+            return isAccessible;
+        }
+
         internal static Dictionary<string, Eligibility> EligibilitiesFromJson(string jsonStr)
         {
             var result = new Dictionary<string, Eligibility>();

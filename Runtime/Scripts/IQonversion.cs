@@ -138,6 +138,12 @@ namespace QonversionUnity
         public void DetachUserFromRemoteConfiguration(string remoteConfigurationId, Qonversion.OnAttachUserResponseReceived callback);
 
         /// <summary>
+        /// Call this function to check if the fallback file is accessible.
+        /// </summary>
+        /// <param name="callback">Callback that will be called when response is received.</param>
+        public void IsFallbackFileAccessible(Qonversion.OnFallbackFileAccessibilityResponseReceived callback);
+
+        /// <summary>
         /// You can check if a user is eligible for an introductory offer, including a free trial.
         /// You can show only a regular price for users who are not eligible for an introductory offer.
         /// </summary>
