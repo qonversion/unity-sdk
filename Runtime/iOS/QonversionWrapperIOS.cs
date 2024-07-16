@@ -119,7 +119,7 @@ namespace QonversionUnity
             }
             catch (Exception e)
             {
-                Debug.LogWarning("Fallback file is not accessible");
+                Debug.LogWarning("Fallback file is not accessible. " + e);
             }
             
             _initialize(gameObjectName);
