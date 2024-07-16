@@ -141,7 +141,7 @@ namespace QonversionUnity
         /// Call this function to check if the fallback file is accessible.
         /// </summary>
         /// <param name="callback">Callback that will be called when response is received.</param>
-        public void IsFallbackFileAccessible(Qonversion.OnIsFallbackFileAccessibleReceived callback);
+        public void IsFallbackFileAccessible(Qonversion.OnFallbackFileAccessibilityResponseReceived callback);
 
         /// <summary>
         /// You can check if a user is eligible for an introductory offer, including a free trial.

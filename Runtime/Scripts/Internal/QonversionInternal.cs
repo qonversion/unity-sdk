@@ -54,7 +54,7 @@ namespace QonversionUnity
         private Qonversion.OnUserPropertiesReceived UserPropertiesCallback { get; set; }
         private Qonversion.OnAttachUserResponseReceived AttachUserCallback { get; set; }
         private Qonversion.OnAttachUserResponseReceived DetachUserCallback { get; set; }
-        private Qonversion.OnIsFallbackFileAccessibleReceived FallbackFileCallback { get; set; }       
+        private Qonversion.OnFallbackFileAccessibilityResponseReceived FallbackFileCallback { get; set; }       
 
         public event Qonversion.OnPromoPurchasesReceived PromoPurchasesReceived
         {
@@ -207,7 +207,7 @@ namespace QonversionUnity
             instance.DetachUserFromRemoteConfiguration(remoteConfigurationId, OnDetachUserMethodName);
         }
 
-        public void IsFallbackFileAccessible(Qonversion.OnIsFallbackFileAccessibleReceived callback)
+        public void IsFallbackFileAccessible(Qonversion.OnFallbackFileAccessibilityResponseReceived callback)
         {
             FallbackFileCallback = callback;
             IQonversionWrapper instance = GetNativeWrapper();

@@ -107,11 +107,19 @@ namespace QonversionUnity
         public void Initialize(string gameObjectName)
         {
 #if UNITY_IOS
-            string filePath = System.IO.Path.Combine(Application.streamingAssetsPath, FallbackFileName);
+            try
+            {
+                string filePath = Path.Combine(Application.streamingAssetsPath, FallbackFileName);
 
-            if (System.IO.File.Exists(filePath)) {
-                string result = System.IO.File.ReadAllText(filePath);
-                File.WriteAllText(Application.persistentDataPath + "/" + FallbackFileName, result);
+                if (File.Exists(filePath))
+                {
+                    string result = System.IO.File.ReadAllText(filePath);
+                    File.WriteAllText(Application.persistentDataPath + "/" + FallbackFileName, result);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning("Fallback file is not accessible");
             }
             
             _initialize(gameObjectName);
