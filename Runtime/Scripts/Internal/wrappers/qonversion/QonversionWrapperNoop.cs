@@ -51,6 +51,10 @@ namespace QonversionUnity
         {
         }
 
+        public void Purchase(string productId, PurchaseOptions purchaseOptions, string callbackName)
+        {
+        }
+
         public void Restore(string callbackName)
         {
         }

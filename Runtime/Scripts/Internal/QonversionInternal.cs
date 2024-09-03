@@ -120,6 +120,17 @@ namespace QonversionUnity
             instance.Purchase(purchaseModel, OnPurchaseMethodName);
         }
 
+        public void PurchaseProduct(Product product, Qonversion.OnPurchaseResultReceived callback) {
+            var emptyOptions = new PurchaseOptionsBuilder().Build();
+            PurchaseProduct(product, emptyOptions, callback);
+        }
+
+        public void PurchaseProduct(Product product, PurchaseOptions options, Qonversion.OnPurchaseResultReceived callback) {
+            PurchaseCallback = callback;
+            IQonversionWrapper instance = GetNativeWrapper();
+            instance.Purchase(product.QonversionId, options, OnPurchaseMethodName);
+        }
+
         public void UpdatePurchase(PurchaseUpdateModel purchaseUpdateModel, Qonversion.OnPurchaseResultReceived callback)
         {
             UpdatePurchaseCallback = callback;
