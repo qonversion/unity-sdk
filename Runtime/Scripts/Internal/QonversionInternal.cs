@@ -414,12 +414,12 @@ namespace QonversionUnity
             if (error != null)
             {
                 if (
-                    Json.Deserialize(jsonString) is not Dictionary<string, object> dict ||
+                    !(Json.Deserialize(jsonString) is Dictionary<string, object> dict) ||
                     !dict.TryGetValue("contextKey", out var contextKey)
                 ) {
-                    foreach (var (_, callbacks) in RemoteConfigCallbacks)
+                    foreach (var callbacksForKey in RemoteConfigCallbacks)
                     {
-                        callbacks.ForEach(callback => callback(null, error));
+                        callbacksForKey.Value.ForEach(callback => callback(null, error));
                     }
 
                     RemoteConfigCallbacks.Clear();
