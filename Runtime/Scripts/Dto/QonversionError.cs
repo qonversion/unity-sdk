@@ -68,6 +68,7 @@ namespace QonversionUnity
         InvalidCredentials, // Access token is invalid or not set
         InvalidStoreCredentials, // This account does not have access to the requested application
         LaunchError, // There was an error while launching Qonversion SDK
+        NativeModuleError, // Something failed during native iOS or Android modules work or communication between Unity and native
         NetworkConnectionFailed, // There was a network issue. Make sure that the Internet connection is available on the device
         OfferingsNotFound, // No offerings found
         PaymentInvalid, // Purchase identifier was invalid, etc.

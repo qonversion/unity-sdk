@@ -1,4 +1,5 @@
 using System;
+using QonversionUnity.MiniJSON;
 using UnityEngine;
 
 namespace QonversionUnity
@@ -106,6 +107,26 @@ namespace QonversionUnity
             CallQonversion("checkEntitlements", callbackName);
         }
 
+        public void Purchase(string productId, PurchaseOptions purchaseOptions, string callbackName) {
+            var updatePolicyKey = purchaseOptions.UpdatePolicy == null
+                ? null
+                : Enum.GetName(typeof(PurchaseUpdatePolicy), purchaseOptions.UpdatePolicy);
+            var contextKeysJson = purchaseOptions.ContextKeys == null
+                ? null
+                : Json.Serialize(purchaseOptions.ContextKeys);
+
+            CallQonversion(
+                "purchase",
+                productId,
+                purchaseOptions.OfferId,
+                purchaseOptions.ApplyOffer,
+                purchaseOptions.OldProduct?.QonversionId,
+                updatePolicyKey,
+                contextKeysJson,
+                callbackName
+            );
+        }
+
         public void Purchase(PurchaseModel purchaseModel, string callbackName)
         {
             CallQonversion(
@@ -113,6 +134,9 @@ namespace QonversionUnity
                 purchaseModel.ProductId,
                 purchaseModel.OfferId,
                 purchaseModel.ApplyOffer,
+                null,
+                null,
+                null,
                 callbackName
             );
         }
@@ -123,7 +147,7 @@ namespace QonversionUnity
         }
 
         public void UpdatePurchase(PurchaseUpdateModel purchaseUpdateModel, string callbackName) {
-            string updatePolicyKey = purchaseUpdateModel.UpdatePolicy == null
+            var updatePolicyKey = purchaseUpdateModel.UpdatePolicy == null
                 ? null
                 : Enum.GetName(typeof(PurchaseUpdatePolicy), purchaseUpdateModel.UpdatePolicy);
 

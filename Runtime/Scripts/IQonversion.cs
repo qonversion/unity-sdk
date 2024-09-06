@@ -33,6 +33,24 @@ namespace QonversionUnity
         /// <summary>
         /// Make a purchase and validate it through server-to-server using Qonversion's Backend.
         /// </summary>
+        /// <param name="product">Product to purchase.</param>
+        /// <param name="callback">Callback that will be called when response is received.</param>
+        /// <see href="https://documentation.qonversion.io/docs/making-purchases">Making Purchases</see>
+        public void PurchaseProduct(Product product, Qonversion.OnPurchaseResultReceived callback);
+
+        /// <summary>
+        /// Make a purchase and validate it through server-to-server using Qonversion's Backend.
+        /// </summary>
+        /// <param name="product">Product to purchase.</param>
+        /// <param name="options">Additional options for the purchase process.</param>
+        /// <param name="callback">Callback that will be called when response is received.</param>
+        /// <see href="https://documentation.qonversion.io/docs/making-purchases">Making Purchases</see>
+        public void PurchaseProduct(Product product, PurchaseOptions options, Qonversion.OnPurchaseResultReceived callback);
+
+        /// <summary>
+        /// Make a purchase and validate it through server-to-server using Qonversion's Backend.
+        /// </summary>
+        /// <deprecated>Use <see cref="PurchaseProduct"/> function instead.</deprecated>
         /// <param name="purchaseModel">Necessary information for purchase.</param>
         /// <param name="callback">Callback that will be called when response is received.</param>
         /// <see href="https://documentation.qonversion.io/docs/making-purchases">Making Purchases</see>
@@ -43,6 +61,7 @@ namespace QonversionUnity
         /// 
         /// Update (upgrade/downgrade) subscription on Google Play Store and validate it through server-to-server using Qonversion's Backend.
         /// </summary>
+        /// <deprecated>Use <see cref="PurchaseProduct"/> function instead.</deprecated>
         /// <param name="purchaseUpdateModel">Necessary information for purchase update.</param>
         /// <param name="callback">Callback that will be called when response is received.</param>
         /// <see href="https://developer.android.com/google/play/billing/subscriptions#replacement-modes">Update policy</see>
