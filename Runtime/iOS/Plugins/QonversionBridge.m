@@ -137,13 +137,27 @@ void _restore(const char* unityCallbackName) {
     }];
 }
 
-void _purchase(const char* productId, const char* unityCallbackName) {
+void _purchase(const char* productId, int quantity, const char* contextKeysJson, const char* unityCallbackName) {
     NSString *callbackName = [UtilityBridge convertCStringToNSString:unityCallbackName];
     NSString *productIdStr = [UtilityBridge convertCStringToNSString:productId];
     
-    [qonversionSandwich purchase:productIdStr completion:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
-        [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
-    }];
+    NSError *error = nil;
+    NSArray *contextKeys = @[];
+    
+    if (contextKeysJson) {
+        NSString *contextKeysJsonStr = [UtilityBridge convertCStringToNSString:contextKeysJson];
+        NSData *data = [contextKeysJsonStr dataUsingEncoding:NSUTF8StringEncoding];
+        contextKeys = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+    }
+    
+    if (error) {
+        NSLog(@"An error occurred while serializing data: %@", error.localizedDescription);
+        [UtilityBridge handleLocalError:error message:@"An error occurred while serializing data" toMethod:callbackName unityListener:unityListenerName];
+    } else if (contextKeys) {
+        [qonversionSandwich purchase:productIdStr quantity:quantity contextKeys:contextKeys completion:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
+            [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
+        }];
+    }
 }
 
 void _products(const char* unityCallbackName) {
@@ -168,7 +182,7 @@ void _remoteConfig(const char* contextKey, const char* unityCallbackName) {
 
     [qonversionSandwich remoteConfig:contextKeyStr :^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
         if (error) {
-            NSDictionary *errorDict = [UtilityBridge convertError:error];
+            NSDictionary *errorDict = [UtilityBridge serializeSandwichError:error];
             NSMutableDictionary *mutableErrorDict = [errorDict mutableCopy];
             mutableErrorDict[@"contextKey"] = contextKeyStr;
             [UtilityBridge sendUnityMessage:mutableErrorDict toMethod:callbackName unityListener:unityListenerName];
@@ -250,9 +264,8 @@ void _checkTrialIntroEligibility(const char* productIdsJson, const char* unityCa
     
     if (error) {
         NSLog(@"An error occurred while serializing data: %@", error.localizedDescription);
-        return;
-    }
-    if (products) {
+        [UtilityBridge handleLocalError:error message:@"An error occurred while serializing data" toMethod:callbackName unityListener:unityListenerName];
+    } else if (products) {
         [qonversionSandwich checkTrialIntroEligibility:products completion:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
             [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
         }];

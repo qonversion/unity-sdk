@@ -120,6 +120,17 @@ namespace QonversionUnity
             instance.Purchase(purchaseModel, OnPurchaseMethodName);
         }
 
+        public void PurchaseProduct(Product product, Qonversion.OnPurchaseResultReceived callback) {
+            var emptyOptions = new PurchaseOptionsBuilder().Build();
+            PurchaseProduct(product, emptyOptions, callback);
+        }
+
+        public void PurchaseProduct(Product product, PurchaseOptions options, Qonversion.OnPurchaseResultReceived callback) {
+            PurchaseCallback = callback;
+            IQonversionWrapper instance = GetNativeWrapper();
+            instance.Purchase(product.QonversionId, options, OnPurchaseMethodName);
+        }
+
         public void UpdatePurchase(PurchaseUpdateModel purchaseUpdateModel, Qonversion.OnPurchaseResultReceived callback)
         {
             UpdatePurchaseCallback = callback;
@@ -414,12 +425,12 @@ namespace QonversionUnity
             if (error != null)
             {
                 if (
-                    Json.Deserialize(jsonString) is not Dictionary<string, object> dict ||
+                    !(Json.Deserialize(jsonString) is Dictionary<string, object> dict) ||
                     !dict.TryGetValue("contextKey", out var contextKey)
                 ) {
-                    foreach (var (_, callbacks) in RemoteConfigCallbacks)
+                    foreach (var callbacksForKey in RemoteConfigCallbacks)
                     {
-                        callbacks.ForEach(callback => callback(null, error));
+                        callbacksForKey.Value.ForEach(callback => callback(null, error));
                     }
 
                     RemoteConfigCallbacks.Clear();

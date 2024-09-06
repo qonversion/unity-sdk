@@ -27,6 +27,7 @@ import androidx.annotation.Nullable;
 public class QonversionWrapper {
     public static String TAG = "QonversionWrapper";
     public static String ENTITLEMENTS_UPDATE_LISTENER = "OnReceivedUpdatedEntitlements";
+    public static String NATIVE_MODULE_ERROR_CODE = "NativeModuleError";
 
     private static MessageSender messageSender;
     private static QonversionSandwich qonversionSandwich;
@@ -95,7 +96,7 @@ public class QonversionWrapper {
 
             qonversionSandwich.addAttributionData(attributionProvider, conversionInfo);
         } catch (JsonProcessingException e) {
-            handleSerializationException(e);
+            handleSerializationException(e, null);
         }
     }
 
@@ -115,8 +116,34 @@ public class QonversionWrapper {
         qonversionSandwich.checkEntitlements(getResultListener(unityCallbackName));
     }
 
-    public static synchronized void purchase(String productId, @Nullable String offerId, boolean applyOffer, String unityCallbackName) {
-        qonversionSandwich.purchase(productId, offerId, applyOffer, getResultListener(unityCallbackName));
+    public static synchronized void purchase(
+            String productId,
+            @Nullable String offerId,
+            boolean applyOffer,
+            @Nullable String oldProductId,
+            @Nullable String updatePolicyKey,
+            @Nullable String contextKeys,
+            String unityCallbackName
+    ) {
+        try {
+            List<String> contextKeysList = null;
+            if (contextKeys != null) {
+                ObjectMapper mapper = new ObjectMapper();
+                TypeReference<List<String>> typeRef = new TypeReference<List<String>>() {};
+                contextKeysList = mapper.readValue(contextKeys, typeRef);
+            }
+            qonversionSandwich.purchase(
+                    productId,
+                    offerId,
+                    applyOffer,
+                    oldProductId,
+                    updatePolicyKey,
+                    contextKeysList,
+                    getResultListener(unityCallbackName)
+            );
+        } catch (JsonProcessingException e) {
+            handleSerializationException(e, unityCallbackName);
+        }
     }
 
     public static synchronized void updatePurchase(
@@ -127,7 +154,7 @@ public class QonversionWrapper {
             @Nullable String updatePolicyKey,
             String unityCallbackName
     ) {
-        qonversionSandwich.updatePurchase(productId, offerId, applyOffer, oldProductId, updatePolicyKey, getResultListener(unityCallbackName));
+        purchase(productId, offerId, applyOffer, oldProductId, updatePolicyKey, null, unityCallbackName);
     }
 
     public static synchronized void restore(String unityCallbackName) {
@@ -159,7 +186,7 @@ public class QonversionWrapper {
 
             qonversionSandwich.remoteConfigList(contextKeys, includeEmptyContextKey, getResultListener(unityCallbackName));
         } catch (JsonProcessingException e) {
-            handleSerializationException(e);
+            handleSerializationException(e, unityCallbackName);
         }
     }
 
@@ -191,7 +218,7 @@ public class QonversionWrapper {
 
             qonversionSandwich.checkTrialIntroEligibility(productIdList, getResultListener(unityCallbackName));
         } catch (JsonProcessingException e) {
-            handleSerializationException(e);
+            handleSerializationException(e, unityCallbackName);
         }
     }
 
@@ -232,15 +259,27 @@ public class QonversionWrapper {
         sendMessageToUnity(rootNode, methodName);
     }
 
+    private static void handleLocalException(@NotNull String message, @NotNull Exception e, @Nullable String unityCallbackName) {
+        if (unityCallbackName == null) {
+            return;
+        }
+
+        final ObjectNode rootNode = Utils.createErrorNode(NATIVE_MODULE_ERROR_CODE, message, e.getLocalizedMessage());
+
+        sendMessageToUnity(rootNode, unityCallbackName);
+    }
+
     private static void sendMessageToUnity(@NotNull Object objectToConvert, @NotNull String methodName) {
         try {
             messageSender.sendMessageToUnity(objectToConvert, methodName);
         } catch (JsonProcessingException e) {
-            handleSerializationException(e);
+            handleSerializationException(e, methodName);
         }
     }
 
-    private static void handleSerializationException(JsonProcessingException e) {
+    private static void handleSerializationException(JsonProcessingException e, @Nullable String methodName) {
         Log.e(TAG, "An error occurred while serializing data: " + e.getLocalizedMessage());
+
+        handleLocalException("An error occurred while serializing data", e, methodName);
     }
 }

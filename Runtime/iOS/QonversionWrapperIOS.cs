@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System;
 using UnityEngine;
 using System.IO;
+using QonversionUnity.MiniJSON;
 
 namespace QonversionUnity
 {
@@ -62,7 +63,7 @@ namespace QonversionUnity
         private static extern void _userInfo(string callbackName);
 
         [DllImport("__Internal")]
-        private static extern void _purchase(string productID, string callbackName);
+        private static extern void _purchase(string productID, int quantity, string contextKeysJson, string callbackName);
 
         [DllImport("__Internal")]
         private static extern void _products(string callbackName);
@@ -239,7 +240,18 @@ namespace QonversionUnity
         public void Purchase(PurchaseModel purchaseModel, string callbackName)
         {
 #if UNITY_IOS
-            _purchase(purchaseModel.ProductId, callbackName);
+            _purchase(purchaseModel.ProductId, 1, null, callbackName);
+#endif
+        }
+
+        public void Purchase(string productId, PurchaseOptions purchaseOptions, string callbackName)
+        {
+#if UNITY_IOS
+            var contextKeysJson = purchaseOptions.ContextKeys == null
+                ? null
+                : Json.Serialize(purchaseOptions.ContextKeys);
+
+            _purchase(productId, purchaseOptions.Quantity,  contextKeysJson, callbackName);
 #endif
         }
 

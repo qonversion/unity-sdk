@@ -1,5 +1,7 @@
 #import "UtilityBridge.h"
 
+static NSString *const nativeModuleErrorCode = @"NativeModuleError";
+
 @implementation UtilityBridge
 
 + (NSString*)convertCStringToNSString:(const char *)string {
@@ -32,8 +34,15 @@
     return array;
 }
 
-+ (NSDictionary *)convertError:(SandwichError *)error {
-    NSDictionary *errorDict = [UtilityBridge convertSandwichError:error];
++ (NSDictionary *)serializeErrorWithCode:(NSString *)code
+                                  domain:(NSString *)domain
+                             description:(NSString *)description 
+                       additionalMessage:(NSString *)additionalMessage {
+    NSMutableDictionary *errorDict = [NSMutableDictionary new];
+    errorDict[@"code"] = code;
+    errorDict[@"domain"] = domain;
+    errorDict[@"description"] = description;
+    errorDict[@"additionalMessage"] = additionalMessage;
     
     NSMutableDictionary *result = [NSMutableDictionary new];
     result[@"error"] = errorDict;
@@ -41,23 +50,33 @@
     return [result copy];
 }
 
-+ (NSDictionary *)convertSandwichError:(SandwichError *)error {
-    NSMutableDictionary *errorDict = [NSMutableDictionary new];
-    errorDict[@"code"] = error.code;
-    errorDict[@"domain"] = error.domain;
-    errorDict[@"description"] = error.details;
-    errorDict[@"additionalMessage"] = error.additionalMessage;
++ (NSDictionary *)serializeSandwichError:(SandwichError *)error {
+    NSDictionary *errorDict = [UtilityBridge serializeErrorWithCode:error.code
+                                                                    domain:error.domain
+                                                               description:error.details
+                                                         additionalMessage:error.additionalMessage];
     
     return [errorDict copy];
 }
 
 + (void)handleErrorResponse:(SandwichError *)error toMethod:(NSString *)methodName
-              unityListener:(const char *)unityListenerName{
-    NSDictionary *errorDict = [UtilityBridge convertError:error];
-    [UtilityBridge sendUnityMessage:errorDict toMethod:methodName unityListener: unityListenerName];
+              unityListener:(const char *)unityListenerName {
+    NSDictionary *errorDict = [UtilityBridge serializeSandwichError:error];
+    [UtilityBridge sendUnityMessage:errorDict toMethod:methodName unityListener:unityListenerName];
 }
 
-+ (const char *)jsonStringFromObject:(NSObject *)objectToConvert{
++ (void)handleLocalError:(NSError *)error
+                 message:(NSString *)message
+                toMethod:(NSString *)methodName
+           unityListener:(const char *)unityListenerName {
+    NSDictionary *errorDict = [UtilityBridge serializeErrorWithCode:nativeModuleErrorCode
+                                                             domain:error.domain
+                                                        description:message
+                                                  additionalMessage:error.localizedDescription];
+    [UtilityBridge sendUnityMessage:errorDict toMethod:methodName unityListener:unityListenerName];
+}
+
++ (const char *)jsonStringFromObject:(NSObject *)objectToConvert {
     if (objectToConvert == nil) {
         return nil;
     }
@@ -77,8 +96,9 @@
     return nil;
 }
 
-+ (void)sendUnityMessage:(NSObject *)objectToConvert toMethod:(NSString *)methodName
-           unityListener:(const char *)unityListenerName{
++ (void)sendUnityMessage:(NSObject *)objectToConvert
+                toMethod:(NSString *)methodName
+           unityListener:(const char *)unityListenerName {
     const char *data = [UtilityBridge jsonStringFromObject:objectToConvert];
     
     if (data) {
