@@ -206,6 +206,10 @@ public class QonversionWrapper {
         qonversionSandwich.detachUserFromRemoteConfiguration(remoteConfigurationId, getResultListener(unityCallbackName));
     }
 
+    public static synchronized void isFallbackFileAccessible(String unityCallbackName) {
+        qonversionSandwich.isFallbackFileAccessible(getResultListener(unityCallbackName));
+    }
+
     public static synchronized void checkTrialIntroEligibility(String productIds, String unityCallbackName) {
         try {
             ObjectMapper mapper = new ObjectMapper();
