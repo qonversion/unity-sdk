@@ -64,6 +64,8 @@ namespace QonversionUnity
                     return UserPropertyKey.PushWooshHwId;
                 case "_q_pushwoosh_user_id":
                     return UserPropertyKey.PushWooshUserId;
+                case "_q_tenjin_aiid":
+                    return UserPropertyKey.TenjinAnalyticsInstallationId;
             }
 
             return UserPropertyKey.Custom;
