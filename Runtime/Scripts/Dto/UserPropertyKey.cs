@@ -16,6 +16,7 @@ namespace QonversionUnity
         AppMetricaUserProfileId,
         PushWooshHwId,
         PushWooshUserId,
+        TenjinAnalyticsInstallationId,
         Custom,
     }
 }
