@@ -27,7 +27,7 @@ namespace QonversionUnity
         private const string OnDetachUserMethodName = "OnDetachUser";
         private const string OnIsFallbackFileAccessibleMethodName = "OnIsFallbackFileAccessible";
 
-        private const string SdkVersion = "8.1.2";
+        private const string SdkVersion = "8.1.3";
         private const string SdkSource = "unity";
 
         private const string DefaultRemoteConfigContextKey = "";
