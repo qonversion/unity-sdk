@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using QonversionUnity.MiniJSON;
 using UnityEngine;
 
@@ -139,6 +140,17 @@ namespace QonversionUnity
             }
 
             return result;
+        }
+
+        [CanBeNull] internal static PromotionalOffer PromotionalOfferFromJson(string jsonStr)
+        {
+            if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> promoOfferInfo))
+            {
+                Debug.LogError("Could not parse PromotionalOffer");
+                return null;
+            }
+
+            return new PromotionalOffer(promoOfferInfo);
         }
 
         internal static User UserFromJson(string jsonStr)
