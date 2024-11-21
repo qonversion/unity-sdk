@@ -30,18 +30,18 @@ namespace QonversionUnity
         /// </summary>
         public void SyncStoreKit2Purchases();
 
-  		/// <summary>
-   		/// iOS only.
-   		/// Retrieve the promotional offer for the product if it exists.
-   		/// Make sure to call this function before displaying product details to the user.
-   		/// The generated signature for the promotional offer is valid for a single transaction.
-   		/// If the purchase fails, you need to call this function again to obtain a new promotional offer signature.
-  		/// Use this signature to complete the purchase through the purchase function, along with the purchase options object.
-   		/// </summary>
-		/// <param name="product">Product you want to purchase.</param>
-		/// <param name="discount">Discount to create promotional offer signature.</param>
-		/// <param name="callback">Callback that will be called when response is received.</param>
-  		public void GetPromotionalOffer(Product product, SKProductDiscount discount, Qonversion.OnPromotionalOfferReceived callback);
+        /// <summary>
+        /// iOS only.
+        /// Retrieve the promotional offer for the product if it exists.
+        /// Make sure to call this function before displaying product details to the user.
+        /// The generated signature for the promotional offer is valid for a single transaction.
+        /// If the purchase fails, you need to call this function again to obtain a new promotional offer signature.
+        /// Use this signature to complete the purchase through the purchase function, along with the purchase options object.
+        /// </summary>
+        /// <param name="product">Product you want to purchase.</param>
+        /// <param name="discount">Discount to create promotional offer signature.</param>
+        /// <param name="callback">Callback that will be called when response is received.</param>
+        public void GetPromotionalOffer(Product product, SKProductDiscount discount, Qonversion.OnPromotionalOfferReceived callback);
 
         /// <summary>
         /// Make a purchase and validate it through server-to-server using Qonversion's Backend.

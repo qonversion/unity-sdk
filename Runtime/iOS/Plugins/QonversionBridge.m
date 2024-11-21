@@ -143,16 +143,21 @@ void _getPromotionalOffer(const char* productId, const char* discountId, const c
     NSString *discountIdStr = [UtilityBridge convertCStringToNSString:discountId];
     
     [qonversionSandwich getPromotionalOffer:productIdStr productDiscountId:discountIdStr completion:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
+        NSMutableDictionary *enrichedResult = nil;
+      
         if (result) {
-            // For Unity-side callback handling
-            NSMutableDictionary *mutableResult = [result mutableCopy];          
-            mutableResult[@"productId"] = productIdStr;
-            mutableResult[@"discountId"] = discountIdStr;
-
-            [UtilityBridge handleResult:mutableResult error:error callbackName:callbackName unityListener:unityListenerName];
-        } else {
-            [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
+            enrichedResult = [result mutableCopy];
+        } else if (error) {
+            NSDictionary *errorDict = [UtilityBridge serializeSandwichError:error];
+            enrichedResult = [errorDict mutableCopy];
         }
+        
+        if (enrichedResult != nil) {
+            // For Unity-side callback handling
+            enrichedResult[@"productId"] = productIdStr;
+            enrichedResult[@"discountId"] = discountIdStr;
+        }
+        [UtilityBridge sendUnityMessage:enrichedResult toMethod:callbackName unityListener:unityListenerName];
     }];
 }
 
