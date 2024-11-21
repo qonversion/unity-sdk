@@ -1,4 +1,5 @@
 ﻿#if UNITY_IOS
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 #endif
 
@@ -63,7 +64,10 @@ namespace QonversionUnity
         private static extern void _userInfo(string callbackName);
 
         [DllImport("__Internal")]
-        private static extern void _purchase(string productID, int quantity, string contextKeysJson, string callbackName);
+        private static extern void _getPromotionalOffer(string productId, string discountId, string callbackName);
+
+        [DllImport("__Internal")]
+        private static extern void _purchase(string productID, int quantity, string contextKeysJson, string promoOfferData, string callbackName);
 
         [DllImport("__Internal")]
         private static extern void _products(string callbackName);
@@ -110,11 +114,11 @@ namespace QonversionUnity
 #if UNITY_IOS
             try
             {
-                string filePath = Path.Combine(Application.streamingAssetsPath, FallbackFileName);
+                var filePath = Path.Combine(Application.streamingAssetsPath, FallbackFileName);
 
                 if (File.Exists(filePath))
                 {
-                    string result = System.IO.File.ReadAllText(filePath);
+                    var result = System.IO.File.ReadAllText(filePath);
                     File.WriteAllText(Application.persistentDataPath + "/" + FallbackFileName, result);
                 }
             }
@@ -237,10 +241,17 @@ namespace QonversionUnity
 #endif
         }
 
+        public void GetPromotionalOffer(string productId, string discountId, string callbackName)
+        {
+#if UNITY_IOS
+            _getPromotionalOffer(productId, discountId, callbackName);
+#endif
+        }
+
         public void Purchase(PurchaseModel purchaseModel, string callbackName)
         {
 #if UNITY_IOS
-            _purchase(purchaseModel.ProductId, 1, null, callbackName);
+            _purchase(purchaseModel.ProductId, 1, null, null, callbackName);
 #endif
         }
 
@@ -251,7 +262,16 @@ namespace QonversionUnity
                 ? null
                 : Json.Serialize(purchaseOptions.ContextKeys);
 
-            _purchase(productId, purchaseOptions.Quantity,  contextKeysJson, callbackName);
+            var promoOfferData = new Dictionary<string, object>();
+            if (purchaseOptions.PromotionalOffer != null) {
+                promoOfferData.Add("productDiscountId", purchaseOptions.PromotionalOffer.ProductDiscount.Identifier);
+                promoOfferData.Add("keyIdentifier", purchaseOptions.PromotionalOffer.PaymentDiscount.KeyIdentifier);
+                promoOfferData.Add("nonce", purchaseOptions.PromotionalOffer.PaymentDiscount.Nonce);
+                promoOfferData.Add("signature", purchaseOptions.PromotionalOffer.PaymentDiscount.Signature);
+                promoOfferData.Add("timestamp",  purchaseOptions.PromotionalOffer.PaymentDiscount.Timestamp);
+            }
+
+            _purchase(productId, purchaseOptions.Quantity, contextKeysJson, Json.Serialize(promoOfferData), callbackName);
 #endif
         }
 

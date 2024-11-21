@@ -18,13 +18,16 @@ namespace QonversionUnity
 
         public readonly int Quantity;
 
+        [CanBeNull] public readonly PromotionalOffer PromotionalOffer;
+
         public PurchaseOptions(
             [CanBeNull] string offerId,
             bool applyOffer,
             [CanBeNull] Product oldProduct,
             [CanBeNull] PurchaseUpdatePolicy? updatePolicy,
             [CanBeNull] List<string> contextKeys,
-            int quantity)
+            int quantity,
+            [CanBeNull] PromotionalOffer promotionalOffer)
         {
             OfferId = offerId;
             ApplyOffer = applyOffer;
@@ -32,6 +35,7 @@ namespace QonversionUnity
             UpdatePolicy = updatePolicy;
             ContextKeys = contextKeys;
             Quantity = quantity;
+            PromotionalOffer = promotionalOffer;
         }
 
         public override string ToString() {
@@ -39,7 +43,9 @@ namespace QonversionUnity
                    $"{nameof(ApplyOffer)}: {ApplyOffer}, " +
                    $"{nameof(OldProduct)}: {OldProduct}, " +
                    $"{nameof(UpdatePolicy)}: {UpdatePolicy}, " +
-                   $"{nameof(ContextKeys)}: {ContextKeys}";
+                   $"{nameof(ContextKeys)}: {ContextKeys}, " + 
+                   $"{nameof(Quantity)}: {Quantity}, " +
+                   $"{nameof(PromotionalOffer)}: {PromotionalOffer}";
         }
     }
 }

@@ -16,6 +16,9 @@ namespace QonversionUnity
         /// Offer code.
         [CanBeNull] public readonly string OfferCode;
 
+        /// Promo offer id.
+        [CanBeNull] public readonly string PromoOfferId;
+
         /// Transaction date.
         public readonly DateTime TransactionDate;
 
@@ -40,6 +43,7 @@ namespace QonversionUnity
             if (dict.TryGetValue("originalTransactionId", out object value)) OriginalTransactionId = value as string;
             if (dict.TryGetValue("transactionId", out value)) TransactionId = value as string;
             if (dict.TryGetValue("offerCode", out value)) OfferCode = value as string;
+            if (dict.TryGetValue("promoOfferId", out value)) PromoOfferId = value as string;
             if (dict.TryGetValue("transactionTimestamp", out value)) TransactionDate = FormatDate(value);
             if (dict.TryGetValue("expirationTimestamp", out value) && value != null) ExpirationDate = FormatDate(value);
             if (dict.TryGetValue("transactionRevocationTimestamp", out value) && value != null) TransactionRevocationDate = FormatDate(value);
@@ -53,6 +57,7 @@ namespace QonversionUnity
             return $"{nameof(OriginalTransactionId)}: {OriginalTransactionId}, " +
                    $"{nameof(TransactionId)}: {TransactionId}, " +
                    $"{nameof(OfferCode)}: {OfferCode}, " +
+                   $"{nameof(PromoOfferId)}: {PromoOfferId}, " +
                    $"{nameof(TransactionDate)}: {TransactionDate}, " +
                    $"{nameof(ExpirationDate)}: {ExpirationDate}, " +
                    $"{nameof(TransactionRevocationDate)}: {TransactionRevocationDate}, " +

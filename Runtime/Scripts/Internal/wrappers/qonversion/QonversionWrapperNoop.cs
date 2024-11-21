@@ -47,6 +47,10 @@ namespace QonversionUnity
         {
         }
 
+        public void GetPromotionalOffer(string productId, string discountId, string callbackName)
+        {
+        }
+
         public void Purchase(PurchaseModel purchaseModel, string callbackName)
         {
         }

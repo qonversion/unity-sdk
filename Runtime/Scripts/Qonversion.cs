@@ -67,6 +67,7 @@ namespace QonversionUnity
         public delegate void OnEligibilitiesReceived(Dictionary<string, Eligibility> eligibilities, QonversionError error);
         public delegate void OnUserInfoReceived(User userInfo, QonversionError error);
         public delegate void OnFallbackFileAccessibilityResponseReceived(bool success);
+        public delegate void OnPromotionalOfferReceived(PromotionalOffer promotionalOffer, QonversionError error);
 
         /// <summary>
         /// Delegate fires each time a promo purchase from the App Store happens.

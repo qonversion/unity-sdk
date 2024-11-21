@@ -137,12 +137,37 @@ void _restore(const char* unityCallbackName) {
     }];
 }
 
-void _purchase(const char* productId, int quantity, const char* contextKeysJson, const char* unityCallbackName) {
+void _getPromotionalOffer(const char* productId, const char* discountId, const char* unityCallbackName) {
+    NSString *callbackName = [UtilityBridge convertCStringToNSString:unityCallbackName];
+    NSString *productIdStr = [UtilityBridge convertCStringToNSString:productId];
+    NSString *discountIdStr = [UtilityBridge convertCStringToNSString:discountId];
+    
+    [qonversionSandwich getPromotionalOffer:productIdStr productDiscountId:discountIdStr completion:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
+        NSMutableDictionary *enrichedResult = nil;
+      
+        if (result) {
+            enrichedResult = [result mutableCopy];
+        } else if (error) {
+            NSDictionary *errorDict = [UtilityBridge serializeSandwichError:error];
+            enrichedResult = [errorDict mutableCopy];
+        }
+        
+        if (enrichedResult != nil) {
+            // For Unity-side callback handling
+            enrichedResult[@"productId"] = productIdStr;
+            enrichedResult[@"discountId"] = discountIdStr;
+        }
+        [UtilityBridge sendUnityMessage:enrichedResult toMethod:callbackName unityListener:unityListenerName];
+    }];
+}
+
+void _purchase(const char* productId, int quantity, const char* contextKeysJson, const char* promoOfferData, const char* unityCallbackName) {
     NSString *callbackName = [UtilityBridge convertCStringToNSString:unityCallbackName];
     NSString *productIdStr = [UtilityBridge convertCStringToNSString:productId];
     
     NSError *error = nil;
     NSArray *contextKeys = @[];
+    NSDictionary *promoOffer = nil;
     
     if (contextKeysJson) {
         NSString *contextKeysJsonStr = [UtilityBridge convertCStringToNSString:contextKeysJson];
@@ -150,11 +175,15 @@ void _purchase(const char* productId, int quantity, const char* contextKeysJson,
         contextKeys = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
     }
     
+    if (promoOfferData) {
+        promoOffer = [UtilityBridge dictionaryFromJsonString: [UtilityBridge convertCStringToNSString: promoOfferData]];
+    }
+    
     if (error) {
         NSLog(@"An error occurred while serializing data: %@", error.localizedDescription);
         [UtilityBridge handleLocalError:error message:@"An error occurred while serializing data" toMethod:callbackName unityListener:unityListenerName];
     } else if (contextKeys) {
-        [qonversionSandwich purchase:productIdStr quantity:quantity contextKeys:contextKeys completion:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
+        [qonversionSandwich purchase:productIdStr quantity:quantity contextKeys:contextKeys promoOffer:promoOffer completion:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
             [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
         }];
     }
