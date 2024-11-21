@@ -10,6 +10,7 @@ namespace QonversionUnity
         [CanBeNull] private PurchaseUpdatePolicy? _updatePolicy;
         [CanBeNull] private List<string> _contextKeys;
         private int _quantity = 1;
+        [CanBeNull] private PromotionalOffer _promotionalOffer;
 
         /// <summary>
         /// iOS only.
@@ -95,12 +96,23 @@ namespace QonversionUnity
         }
 
         /// <summary>
+        /// Set the promotional offer details.
+        /// </summary>
+        /// <param name="promoOffer">Promotional offer details.</param>
+        /// <returns>Builder instance for chain calls.</returns>
+        public PurchaseOptionsBuilder SetPromotionalOffer(PromotionalOffer promoOffer)
+        {
+            _promotionalOffer = promoOffer;
+            return this;
+        }
+
+        /// <summary>
         /// Generate a <see cref="PurchaseOptions"/> instance with all the provided options.
         /// </summary>
         /// <returns>The complete <see cref="PurchaseOptions"/> instance.</returns>
         public PurchaseOptions Build()
         {
-            return new PurchaseOptions(_offerId, _applyOffer, _oldProduct, _updatePolicy, _contextKeys, _quantity);
+            return new PurchaseOptions(_offerId, _applyOffer, _oldProduct, _updatePolicy, _contextKeys, _quantity, _promotionalOffer);
         }
     }
 }

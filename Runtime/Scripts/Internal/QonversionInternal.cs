@@ -26,8 +26,9 @@ namespace QonversionUnity
         private const string OnAttachUserMethodName = "OnAttachUser";
         private const string OnDetachUserMethodName = "OnDetachUser";
         private const string OnIsFallbackFileAccessibleMethodName = "OnIsFallbackFileAccessible";
+        private const string OnPromotionalOfferMethodName = "OnPromotionalOffer";
 
-        private const string SdkVersion = "8.1.3";
+        private const string SdkVersion = "8.2.0";
         private const string SdkSource = "unity";
 
         private const string DefaultRemoteConfigContextKey = "";
@@ -54,7 +55,9 @@ namespace QonversionUnity
         private Qonversion.OnUserPropertiesReceived UserPropertiesCallback { get; set; }
         private Qonversion.OnAttachUserResponseReceived AttachUserCallback { get; set; }
         private Qonversion.OnAttachUserResponseReceived DetachUserCallback { get; set; }
-        private Qonversion.OnFallbackFileAccessibilityResponseReceived FallbackFileCallback { get; set; }       
+        private Qonversion.OnFallbackFileAccessibilityResponseReceived FallbackFileCallback { get; set; }
+
+        private Dictionary<string, List<Qonversion.OnPromotionalOfferReceived>> PromotionalOfferCallbacks { get; } = new Dictionary<string, List<Qonversion.OnPromotionalOfferReceived>>();
 
         public event Qonversion.OnPromoPurchasesReceived PromoPurchasesReceived
         {
@@ -111,6 +114,24 @@ namespace QonversionUnity
         {
             IQonversionWrapper instance = GetNativeWrapper();
             instance.SyncStoreKit2Purchases();
+        }
+
+        public void GetPromotionalOffer(Product product, SKProductDiscount discount, Qonversion.OnPromotionalOfferReceived callback)
+        {
+            if (discount.Identifier == null)
+            {
+                callback.Invoke(null, new QonversionError(QErrorCode.IncorrectRequest, "Discount identifier is null"));
+                return;
+            }
+            
+            var id = GetPromotionalOfferCallbackIdentifier(product.QonversionId, discount.Identifier);
+            if (!PromotionalOfferCallbacks.ContainsKey(id)) {
+                PromotionalOfferCallbacks[id] = new List<Qonversion.OnPromotionalOfferReceived>();
+            }
+            PromotionalOfferCallbacks[id].Add(callback);
+
+            IQonversionWrapper instance = GetNativeWrapper();
+            instance.GetPromotionalOffer(product.QonversionId, discount.Identifier, OnPromotionalOfferMethodName);
         }
 
         public void Purchase(PurchaseModel purchaseModel, Qonversion.OnPurchaseResultReceived callback)
@@ -523,6 +544,50 @@ namespace QonversionUnity
             FallbackFileCallback(isAccessible);
         }
 
+        private void OnPromotionalOffer(string jsonString)
+        {
+            if (PromotionalOfferCallbacks.Count == 0) return;
+
+            string key = null;
+            if (
+                Json.Deserialize(jsonString) is Dictionary<string, object> dict &&
+                dict.TryGetValue("productId", out var productId) &&
+                dict.TryGetValue("discountId", out var discountId)
+            ) {
+                key = GetPromotionalOfferCallbackIdentifier(productId as string, discountId as string);
+            }
+            
+            var error = Mapper.ErrorFromJson(jsonString);
+            if (error != null)
+            {
+                if (key == null) {
+                    foreach (var callbacksForKey in PromotionalOfferCallbacks)
+                    {
+                        callbacksForKey.Value.ForEach(callback => callback(null, error));
+                    }
+
+                    PromotionalOfferCallbacks.Clear();
+                    return;
+                }
+
+                if (PromotionalOfferCallbacks.ContainsKey(key))
+                {
+                    PromotionalOfferCallbacks[key].ForEach(callback => callback(null, error));
+                    PromotionalOfferCallbacks[key].Clear();
+                }
+            }
+            else if (key != null)
+            {
+                var promotionalOffer = Mapper.PromotionalOfferFromJson(jsonString);
+
+                if (PromotionalOfferCallbacks.ContainsKey(key))
+                {
+                    PromotionalOfferCallbacks[key].ForEach(callback => callback(promotionalOffer, null));
+                    PromotionalOfferCallbacks[key].Clear();
+                }
+            }
+        }
+
         // Called from the native SDK - Called when eligibilities received from the checkTrialIntroEligibilityForProductIds() method 
         private void OnEligibilities(string jsonString)
         {
@@ -660,6 +725,11 @@ namespace QonversionUnity
                 var entitlements = Mapper.EntitlementsFromJson(jsonString);
                 callback(entitlements, null, false);
             }
+        }
+
+        private string GetPromotionalOfferCallbackIdentifier(string productId, string discountId)
+        {
+            return productId + "$%" + discountId;
         }
 
         private IQonversionWrapper GetNativeWrapper()

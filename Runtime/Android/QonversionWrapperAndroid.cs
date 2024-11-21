@@ -106,6 +106,10 @@ namespace QonversionUnity
         {
             CallQonversion("checkEntitlements", callbackName);
         }
+        
+        public void GetPromotionalOffer(string productId, string discountId, string callbackName)
+        {
+        }
 
         public void Purchase(string productId, PurchaseOptions purchaseOptions, string callbackName) {
             var updatePolicyKey = purchaseOptions.UpdatePolicy == null
