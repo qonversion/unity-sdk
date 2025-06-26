@@ -16,7 +16,7 @@ end
 
 def upgrade_sandwich_android(new_version)
   path = "../Editor/QonversionDependencies.xml"
-  common_part = "<androidPackage spec=\"io.qonversion.sandwich:sandwich:"
+  common_part = "<androidPackage spec=\"io.qonversion:sandwich:"
   regex = /#{common_part}.*" \/>/
   result_value = "#{common_part}#{new_version}\" \/>"
 
