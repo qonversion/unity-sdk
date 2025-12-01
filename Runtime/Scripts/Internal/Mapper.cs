@@ -85,28 +85,6 @@ namespace QonversionUnity
             return new RemoteConfigList(remoteConfigList);
         }
 
-        internal static ActionResult ActionResultFromJson(string jsonStr)
-        {
-            if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> actionResult))
-            {
-                Debug.LogError("Could not parse Automations ActionResult");
-                return null;
-            }
-
-            return new ActionResult(actionResult);
-        }
-
-        internal static string ScreenIdFromJson(string jsonStr)
-        {
-            if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> screenResult))
-            {
-                Debug.LogError("Could not parse Automations screen id");
-                return null;
-            }
-
-            return screenResult.GetString("screenId", "");
-        }
-
         internal static bool IsFallbackFileAccessibleFromJson(string jsonStr)
         {
             var isAccessible = false;
@@ -212,6 +190,17 @@ namespace QonversionUnity
                 case "InApp": return QProductType.InApp;
                 default: return QProductType.Unknown;
             }
+        }
+
+        internal static string ScreenIdFromJson(string jsonStr)
+        {
+            if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> screenResult))
+            {
+                Debug.LogError("Could not parse NoCodes screen id");
+                return "";
+            }
+
+            return screenResult.GetString("screenId", "");
         }
     }
 }
