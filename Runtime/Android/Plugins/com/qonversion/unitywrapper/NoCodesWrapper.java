@@ -1,6 +1,5 @@
 package com.qonversion.unitywrapper;
 
-import android.app.Application;
 import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -10,57 +9,49 @@ import com.unity3d.player.UnityPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import io.qonversion.sandwich.NoCodesSandwich;
 import io.qonversion.sandwich.NoCodesEventListener;
+import io.qonversion.sandwich.NoCodesEventListener.Event;
 
 public class NoCodesWrapper {
     public static String TAG = "NoCodesWrapper";
 
     private static MessageSender messageSender;
     private static NoCodesSandwich noCodesSandwich;
+    private static NoCodesEventListener noCodesEventListener;
 
     public static synchronized void initialize(String unityListener) {
         messageSender = new MessageSender(unityListener);
 
-        final Application application = UnityPlayer.currentActivity.getApplication();
-        noCodesSandwich = new NoCodesSandwich(
-                application,
-                () -> UnityPlayer.currentActivity,
-                new NoCodesEventListener() {
-                    @Override
-                    public void onScreenShown(@NotNull Map<String, ?> payload) {
-                        sendMessageToUnity(payload, "OnNoCodesScreenShown");
-                    }
-
-                    @Override
-                    public void onFinished(@NotNull Map<String, ?> payload) {
-                        sendMessageToUnity(payload, "OnNoCodesFinished");
-                    }
-
-                    @Override
-                    public void onActionStarted(@NotNull Map<String, ?> payload) {
-                        sendMessageToUnity(payload, "OnNoCodesActionStarted");
-                    }
-
-                    @Override
-                    public void onActionFailed(@NotNull Map<String, ?> payload) {
-                        sendMessageToUnity(payload, "OnNoCodesActionFailed");
-                    }
-
-                    @Override
-                    public void onActionFinished(@NotNull Map<String, ?> payload) {
-                        sendMessageToUnity(payload, "OnNoCodesActionFinished");
-                    }
-
-                    @Override
-                    public void onScreenFailedToLoad(@NotNull Map<String, ?> payload) {
-                        sendMessageToUnity(payload, "OnNoCodesScreenFailedToLoad");
-                    }
+        noCodesSandwich = new NoCodesSandwich();
+        
+        noCodesEventListener = new NoCodesEventListener() {
+            @Override
+            public void onNoCodesEvent(@NotNull Event event, @NotNull Map<String, ? extends Object> payload) {
+                String methodName;
+                if (event == Event.ScreenShown) {
+                    methodName = "OnNoCodesScreenShown";
+                } else if (event == Event.Finished) {
+                    methodName = "OnNoCodesFinished";
+                } else if (event == Event.ActionStarted) {
+                    methodName = "OnNoCodesActionStarted";
+                } else if (event == Event.ActionFailed) {
+                    methodName = "OnNoCodesActionFailed";
+                } else if (event == Event.ActionFinished) {
+                    methodName = "OnNoCodesActionFinished";
+                } else if (event == Event.ScreenFailedToLoad) {
+                    methodName = "OnNoCodesScreenFailedToLoad";
+                } else {
+                    Log.w(TAG, "Unknown NoCodes event: " + event);
+                    return;
                 }
-        );
+                sendMessageToUnity(payload, methodName);
+            }
+        };
+        
+        noCodesSandwich.setDelegate(noCodesEventListener);
     }
 
     public static synchronized void initializeNoCodes(
@@ -69,7 +60,13 @@ public class NoCodesWrapper {
             String source,
             @Nullable String proxyUrl
     ) {
-        noCodesSandwich.initialize(projectKey, version, source, proxyUrl);
+        noCodesSandwich.initialize(
+                UnityPlayer.currentActivity,
+                projectKey,
+                proxyUrl,
+                null,
+                null
+        );
     }
 
     public static synchronized void setScreenPresentationConfig(String configJson, @Nullable String contextKey) {
@@ -90,15 +87,11 @@ public class NoCodesWrapper {
         noCodesSandwich.close();
     }
 
-    private static void sendMessageToUnity(@NotNull Map<String, ?> data, @NotNull String methodName) {
+    private static void sendMessageToUnity(@NotNull Object objectToConvert, @NotNull String methodName) {
         try {
-            messageSender.sendMessageToUnity(data, methodName);
+            messageSender.sendMessageToUnity(objectToConvert, methodName);
         } catch (JsonProcessingException e) {
             Log.e(TAG, "An error occurred while serializing data: " + e.getLocalizedMessage());
         }
     }
 }
-
-
-
-

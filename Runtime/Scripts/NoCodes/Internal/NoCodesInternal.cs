@@ -57,7 +57,6 @@ namespace QonversionUnity
         void INoCodes.InitializeInstance(NoCodesConfig config)
         {
             INoCodesWrapper instance = GetNativeWrapper();
-            instance.Initialize(GameObjectName);
             instance.InitializeNoCodes(config.ProjectKey, SdkVersion, SdkSource, config.ProxyUrl);
         }
 
