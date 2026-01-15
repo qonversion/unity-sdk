@@ -33,11 +33,13 @@ namespace QonversionUnity
 
             if (_noCodesDelegate != null)
             {
+                LogAndroidNoCodesDelegateWarning();
                 wrapper.SetDelegate();
             }
 
             if (_purchaseDelegate != null)
             {
+                LogAndroidPurchaseDelegateWarning();
                 wrapper.SetPurchaseDelegate();
             }
         }
@@ -72,8 +74,34 @@ namespace QonversionUnity
             
             if (purchaseDelegate != null)
             {
+                LogAndroidPurchaseDelegateWarning();
                 INoCodesWrapper wrapper = GetNativeWrapper();
                 wrapper.SetPurchaseDelegate();
+            }
+        }
+
+        private void LogAndroidNoCodesDelegateWarning()
+        {
+            if (Application.platform == RuntimePlatform.Android)
+            {
+                Debug.LogWarning(
+                    "[Qonversion NoCodes] Android Warning: NoCodesDelegate events will be delivered with a delay. " +
+                    "When a No-Codes screen is displayed, Unity's game loop is paused because the No-Codes screen " +
+                    "runs as a separate Activity. Events will only be received after the No-Codes screen is closed."
+                );
+            }
+        }
+
+        private void LogAndroidPurchaseDelegateWarning()
+        {
+            if (Application.platform == RuntimePlatform.Android)
+            {
+                Debug.LogWarning(
+                    "[Qonversion NoCodes] Android Warning: NoCodesPurchaseDelegate does NOT work on Android. " +
+                    "When a No-Codes screen is displayed, Unity's game loop is paused, so Purchase() and Restore() " +
+                    "methods will not be called while the screen is active. Use the default Qonversion SDK purchase " +
+                    "flow on Android instead."
+                );
             }
         }
 

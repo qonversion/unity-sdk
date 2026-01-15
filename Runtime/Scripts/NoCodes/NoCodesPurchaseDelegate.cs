@@ -9,6 +9,14 @@ namespace QonversionUnity
     /// 
     /// Implement this interface and pass it to <see cref="NoCodesConfigBuilder.SetPurchaseDelegate"/>
     /// to handle purchases initiated from No-Code screens with your own logic.
+    /// 
+    /// <para>
+    /// <b>Android Warning:</b> This delegate does NOT work on Android. When a No-Codes screen is displayed,
+    /// Unity's game loop is paused because the No-Codes screen runs as a separate Activity on top of Unity's Activity.
+    /// As a result, the <see cref="Purchase"/> and <see cref="Restore"/> methods will not be called while
+    /// the No-Codes screen is active. Use this delegate only on iOS, or use the default Qonversion SDK
+    /// purchase flow on Android.
+    /// </para>
     /// </summary>
     public interface NoCodesPurchaseDelegate
     {

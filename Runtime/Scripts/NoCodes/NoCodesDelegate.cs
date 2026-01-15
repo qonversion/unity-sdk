@@ -3,6 +3,13 @@ namespace QonversionUnity
     /// <summary>
     /// Delegate interface for receiving No-Codes events.
     /// Implement this interface to handle events from No-Codes screens.
+    /// 
+    /// <para>
+    /// <b>Android Warning:</b> On Android, when a No-Codes screen is displayed, Unity's game loop
+    /// is paused because the No-Codes screen runs as a separate Activity on top of Unity's Activity.
+    /// This means that all delegate events will be delivered with a delay - they will only be received
+    /// after the No-Codes screen is closed and Unity resumes.
+    /// </para>
     /// </summary>
     public interface NoCodesDelegate
     {

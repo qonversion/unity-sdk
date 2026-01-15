@@ -28,6 +28,12 @@ namespace QonversionUnity
         /// Make sure you provide this delegate for being up-to-date with the No-Codes events.
         /// Else you can lose some important updates. Also, please, consider that this delegate
         /// should live for the whole lifetime of the application.
+        /// 
+        /// <para>
+        /// <b>Android Warning:</b> On Android, when a No-Codes screen is displayed, Unity's game loop
+        /// is paused. All delegate events will be delivered with a delay - only after the No-Codes screen
+        /// is closed and Unity resumes.
+        /// </para>
         /// </summary>
         /// <param name="noCodesDelegate">Delegate to be called when No-Codes events occur.</param>
         /// <returns>Builder instance for chain calls.</returns>
@@ -40,6 +46,12 @@ namespace QonversionUnity
         /// <summary>
         /// Provide a delegate for custom purchase and restore handling.
         /// When this delegate is provided, it replaces the default Qonversion SDK purchase flow.
+        /// 
+        /// <para>
+        /// <b>Android Warning:</b> This delegate does NOT work on Android. When a No-Codes screen is displayed,
+        /// Unity's game loop is paused, so the delegate methods will not be called while the screen is active.
+        /// Use this delegate only on iOS, or use the default Qonversion SDK purchase flow on Android.
+        /// </para>
         /// </summary>
         /// <param name="purchaseDelegate">Delegate to handle purchase and restore operations.</param>
         /// <returns>Builder instance for chain calls.</returns>

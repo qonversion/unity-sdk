@@ -1,5 +1,7 @@
 package com.qonversion.unitywrapper;
 
+import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -8,6 +10,7 @@ import androidx.annotation.Nullable;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.unity3d.player.UnityPlayer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,14 +44,10 @@ public class NoCodesWrapper {
         messageSender = new MessageSender(unityListener);
         noCodesSandwich = new NoCodesSandwich();
 
-        android.content.Context context = Utils.getApplicationContext();
-        if (context == null) {
-            Log.e(TAG, "Failed to get application context");
-            return;
-        }
+        Context context = UnityPlayer.currentActivity.getApplicationContext();
 
-        String effectiveProxyUrl = proxyUrl.isEmpty() ? null : proxyUrl;
-        String effectiveLocale = locale.isEmpty() ? null : locale;
+        String effectiveProxyUrl = (proxyUrl == null || proxyUrl.isEmpty()) ? null : proxyUrl;
+        String effectiveLocale = (locale == null || locale.isEmpty()) ? null : locale;
 
         noCodesSandwich.initialize(
                 context,
@@ -83,7 +82,7 @@ public class NoCodesWrapper {
             TypeReference<HashMap<String, Object>> typeRef = new TypeReference<HashMap<String, Object>>() {};
             Map<String, Object> configData = mapper.readValue(configJson, typeRef);
 
-            String effectiveContextKey = contextKey.isEmpty() ? null : contextKey;
+            String effectiveContextKey = (contextKey == null || contextKey.isEmpty()) ? null : contextKey;
             noCodesSandwich.setScreenPresentationConfig(configData, effectiveContextKey);
         } catch (JsonProcessingException e) {
             Log.e(TAG, "Failed to parse screen presentation config: " + e.getLocalizedMessage());
@@ -114,7 +113,7 @@ public class NoCodesWrapper {
             return;
         }
 
-        String effectiveLocale = locale.isEmpty() ? null : locale;
+        String effectiveLocale = (locale == null || locale.isEmpty()) ? null : locale;
         noCodesSandwich.setLocale(effectiveLocale);
     }
 
