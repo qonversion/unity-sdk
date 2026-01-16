@@ -7,8 +7,7 @@ namespace QonversionUnity
     /// <para>
     /// <b>Android Warning:</b> On Android, when a No-Codes screen is displayed, Unity's game loop
     /// is paused because the No-Codes screen runs as a separate Activity on top of Unity's Activity.
-    /// This means that all delegate events will be delivered with a delay - they will only be received
-    /// after the No-Codes screen is closed and Unity resumes.
+    /// This means that this delegate will only work on iOS, and will not work on Android.
     /// </para>
     /// </summary>
     public interface NoCodesDelegate
