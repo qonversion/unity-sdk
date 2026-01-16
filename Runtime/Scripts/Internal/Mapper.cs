@@ -191,5 +191,17 @@ namespace QonversionUnity
                 default: return QProductType.Unknown;
             }
         }
+
+        [CanBeNull]
+        internal static PurchaseResult PurchaseResultFromJson(string jsonStr)
+        {
+            if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> purchaseResultDict))
+            {
+                Debug.LogError("Could not parse PurchaseResult");
+                return null;
+            }
+
+            return new PurchaseResult(purchaseResultDict);
+        }
     }
 }

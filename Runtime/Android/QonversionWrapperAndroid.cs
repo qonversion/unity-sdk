@@ -131,39 +131,9 @@ namespace QonversionUnity
             );
         }
 
-        public void Purchase(PurchaseModel purchaseModel, string callbackName)
-        {
-            CallQonversion(
-                "purchase",
-                purchaseModel.ProductId,
-                purchaseModel.OfferId,
-                purchaseModel.ApplyOffer,
-                null,
-                null,
-                null,
-                callbackName
-            );
-        }
-
         public void Restore(string callbackName)
         {
             CallQonversion("restore", callbackName);
-        }
-
-        public void UpdatePurchase(PurchaseUpdateModel purchaseUpdateModel, string callbackName) {
-            var updatePolicyKey = purchaseUpdateModel.UpdatePolicy == null
-                ? null
-                : Enum.GetName(typeof(PurchaseUpdatePolicy), purchaseUpdateModel.UpdatePolicy);
-
-            CallQonversion(
-                "updatePurchase",
-                purchaseUpdateModel.ProductId,
-                purchaseUpdateModel.OfferId,
-                purchaseUpdateModel.ApplyOffer,
-                purchaseUpdateModel.OldProductId,
-                updatePolicyKey,
-                callbackName
-            );
         }
 
         public void Products(string callbackName)

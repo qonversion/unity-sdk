@@ -183,7 +183,7 @@ void _purchase(const char* productId, int quantity, const char* contextKeysJson,
         NSLog(@"An error occurred while serializing data: %@", error.localizedDescription);
         [UtilityBridge handleLocalError:error message:@"An error occurred while serializing data" toMethod:callbackName unityListener:unityListenerName];
     } else if (contextKeys) {
-        [qonversionSandwich purchase:productIdStr quantity:quantity contextKeys:contextKeys promoOffer:promoOffer completion:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
+        [qonversionSandwich purchaseWithResult:productIdStr quantity:quantity contextKeys:contextKeys promoOffer:promoOffer completion:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
             [UtilityBridge handleResult:result error:error callbackName:callbackName unityListener:unityListenerName];
         }];
     }
