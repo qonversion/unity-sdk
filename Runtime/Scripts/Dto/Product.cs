@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using JetBrains.Annotations;
@@ -21,12 +20,6 @@ namespace QonversionUnity
 
         /// Google Play Store details of this product.
         /// Android only. Null for iOS, or if the product was not found.
-        /// Doesn't take into account <see cref="BasePlanId"/>.
-        [Obsolete("Consider using StoreDetails instead.")]
-        [CanBeNull] public readonly SkuDetails SkuDetails;
-
-        /// Google Play Store details of this product.
-        /// Android only. Null for iOS, or if the product was not found.
         [CanBeNull] public readonly ProductStoreDetails StoreDetails;
 
         /// Associated SKProduct.
@@ -36,8 +29,7 @@ namespace QonversionUnity
         /// Associated Offering Id
         [CanBeNull] public readonly string OfferingId;
 
-        /// For Android - the subscription base plan duration. If the <see cref="BasePlanId"/> is not specified,
-        /// the duration is calculated using the deprecated <see cref="SkuDetails"/>.
+        /// For Android - the subscription base plan duration.
         /// For iOS - the duration of the <see cref="SkProduct"/>.
         /// Null, if it's not a subscription product or the product was not found in the store.
         [CanBeNull] public readonly SubscriptionPeriod SubscriptionPeriod;
@@ -49,8 +41,7 @@ namespace QonversionUnity
         [CanBeNull] public readonly SubscriptionPeriod TrialPeriod;
 
         /// The calculated type of this product based on the store information.
-        /// On Android uses deprecated <see cref="SkuDetails"/> for the old subscription products
-        /// where <see cref="BasePlanId"/> is not specified, and <see cref="StoreDetails"/> for all the other products.
+        /// On Android uses <see cref="StoreDetails"/>.
         /// On iOS uses <see cref="SkProduct"/> information.
         public readonly QProductType Type;
 
@@ -95,18 +86,6 @@ namespace QonversionUnity
             if (Application.platform == RuntimePlatform.Android)
             {
                 long priceMicros = 0;
-                if (dict.TryGetValue("skuDetails", out value) && value is Dictionary<string, object> skuDetails)
-                {
-                    SkuDetails = new SkuDetails(skuDetails);
-
-                    priceMicros = SkuDetails.PriceAmountMicros;
-                    CurrencyCode = SkuDetails.PriceCurrencyCode;
-                    StoreTitle = SkuDetails.Title;
-                    StoreDescription = SkuDetails.Description;
-
-                    string introPrice = SkuDetails.IntroductoryPrice;
-                    PrettyIntroductoryPrice = (introPrice.Length != 0) ? introPrice : null;
-                }
                 if (dict.TryGetValue("storeDetails", out value) && value is Dictionary<string, object> productStoreDetails)
                 {
                     StoreDetails = new ProductStoreDetails(productStoreDetails);
@@ -219,7 +198,6 @@ namespace QonversionUnity
                    $"{nameof(PrettyPrice)}: {PrettyPrice}, " +
                    $"{nameof(SkProduct)}: {SkProduct}, " +
                    $"{nameof(StoreDetails)}: {StoreDetails}, " +
-                   $"{nameof(SkuDetails)}: {SkuDetails}" +
                    $"{nameof(OfferingId)}: {OfferingId}, " +
                    $"{nameof(StoreTitle)}: {StoreTitle}, " +
                    $"{nameof(StoreDescription)}: {StoreDescription}, " +
