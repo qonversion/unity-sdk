@@ -19,9 +19,7 @@ namespace QonversionUnity
         void CheckEntitlements(string callbackName);
         void GetPromotionalOffer(string productId, string discountId, string callbackName);
         void Purchase(string productId, PurchaseOptions purchaseOptions, string callbackName);
-        void Purchase(PurchaseModel purchaseModel, string callbackName);
         void Restore(string callbackName);
-        void UpdatePurchase(PurchaseUpdateModel purchaseUpdateModel, string callbackName);
         void Products(string callbackName);
         void Offerings(string callbackName);
         void RemoteConfig([CanBeNull] string contextKey, string callbackName);

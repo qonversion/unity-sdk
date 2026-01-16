@@ -248,13 +248,6 @@ namespace QonversionUnity
 #endif
         }
 
-        public void Purchase(PurchaseModel purchaseModel, string callbackName)
-        {
-#if UNITY_IOS
-            _purchase(purchaseModel.ProductId, 1, null, null, callbackName);
-#endif
-        }
-
         public void Purchase(string productId, PurchaseOptions purchaseOptions, string callbackName)
         {
 #if UNITY_IOS
@@ -280,10 +273,6 @@ namespace QonversionUnity
 #if UNITY_IOS
             _restore(callbackName);
 #endif
-        }
-
-        public void UpdatePurchase(PurchaseUpdateModel purchaseUpdateModel, string callbackName)
-        {
         }
 
         public void Products(string callbackName)

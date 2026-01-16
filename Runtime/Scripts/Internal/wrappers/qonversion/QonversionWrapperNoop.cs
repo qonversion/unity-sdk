@@ -51,19 +51,11 @@ namespace QonversionUnity
         {
         }
 
-        public void Purchase(PurchaseModel purchaseModel, string callbackName)
-        {
-        }
-
         public void Purchase(string productId, PurchaseOptions purchaseOptions, string callbackName)
         {
         }
 
         public void Restore(string callbackName)
-        {
-        }
-
-        public void UpdatePurchase(PurchaseUpdateModel purchaseUpdateModel, string callbackName)
         {
         }
 

@@ -12,7 +12,6 @@ namespace QonversionUnity
         private const string OnCheckEntitlementsMethodName = "OnCheckEntitlements";
         private const string OnPurchaseMethodName = "OnPurchase";
         private const string OnPromoPurchaseMethodName = "OnPromoPurchase";
-        private const string OnUpdatePurchaseMethodName = "OnUpdatePurchase";
         private const string OnRestoreMethodName = "OnRestore";
         private const string OnProductsMethodName = "OnProducts";
         private const string OnOfferingsMethodName = "OnOfferings";
@@ -28,7 +27,7 @@ namespace QonversionUnity
         private const string OnIsFallbackFileAccessibleMethodName = "OnIsFallbackFileAccessible";
         private const string OnPromotionalOfferMethodName = "OnPromotionalOffer";
 
-        private const string SdkVersion = "8.2.1";
+        private const string SdkVersion = "9.0.0";
         private const string SdkSource = "unity";
 
         private const string DefaultRemoteConfigContextKey = "";
@@ -42,7 +41,6 @@ namespace QonversionUnity
         private List<Qonversion.OnEntitlementsReceived> CheckEntitlementsCallbacks { get; } = new List<Qonversion.OnEntitlementsReceived>();
         private List<Qonversion.OnEntitlementsReceived> RestoreCallbacks { get; } = new List<Qonversion.OnEntitlementsReceived>();
         private Qonversion.OnPurchaseResultReceived PurchaseCallback { get; set; }
-        private Qonversion.OnPurchaseResultReceived UpdatePurchaseCallback { get; set; }
         private List<Qonversion.OnProductsReceived> ProductsCallbacks { get; } = new List<Qonversion.OnProductsReceived>();
         private List<Qonversion.OnOfferingsReceived> OfferingsCallbacks { get; } = new List<Qonversion.OnOfferingsReceived>();
         private Dictionary<string, List<Qonversion.OnRemoteConfigReceived>> RemoteConfigCallbacks { get; } = new Dictionary<string, List<Qonversion.OnRemoteConfigReceived>>();
@@ -134,29 +132,17 @@ namespace QonversionUnity
             instance.GetPromotionalOffer(product.QonversionId, discount.Identifier, OnPromotionalOfferMethodName);
         }
 
-        public void Purchase(PurchaseModel purchaseModel, Qonversion.OnPurchaseResultReceived callback)
+        public void Purchase(Product product, Qonversion.OnPurchaseResultReceived callback)
         {
-            PurchaseCallback = callback;
-            IQonversionWrapper instance = GetNativeWrapper();
-            instance.Purchase(purchaseModel, OnPurchaseMethodName);
-        }
-
-        public void PurchaseProduct(Product product, Qonversion.OnPurchaseResultReceived callback) {
             var emptyOptions = new PurchaseOptionsBuilder().Build();
-            PurchaseProduct(product, emptyOptions, callback);
+            Purchase(product, emptyOptions, callback);
         }
 
-        public void PurchaseProduct(Product product, PurchaseOptions options, Qonversion.OnPurchaseResultReceived callback) {
+        public void Purchase(Product product, PurchaseOptions options, Qonversion.OnPurchaseResultReceived callback)
+        {
             PurchaseCallback = callback;
             IQonversionWrapper instance = GetNativeWrapper();
             instance.Purchase(product.QonversionId, options, OnPurchaseMethodName);
-        }
-
-        public void UpdatePurchase(PurchaseUpdateModel purchaseUpdateModel, Qonversion.OnPurchaseResultReceived callback)
-        {
-            UpdatePurchaseCallback = callback;
-            IQonversionWrapper instance = GetNativeWrapper();
-            instance.UpdatePurchase(purchaseUpdateModel, OnUpdatePurchaseMethodName);
         }
 
         public void Products(Qonversion.OnProductsReceived callback)
@@ -369,7 +355,17 @@ namespace QonversionUnity
         // Called from the native SDK - Called when purchase result received from the purchase() method
         private void OnPurchase(string jsonString)
         {
-            HandlePurchaseResult(PurchaseCallback, jsonString);
+            if (PurchaseCallback == null) return;
+
+            var purchaseResult = Mapper.PurchaseResultFromJson(jsonString);
+            if (purchaseResult != null)
+            {
+                PurchaseCallback(purchaseResult);
+            }
+            else
+            {
+                Debug.LogError("Failed to parse PurchaseResult from JSON");
+            }
             PurchaseCallback = null;
         }
 
@@ -378,13 +374,6 @@ namespace QonversionUnity
         {
             HandleEntitlements(RestoreCallbacks, jsonString);
             RestoreCallbacks.Clear();
-        }
-
-        // Called from the native SDK - Called when purchase result received from the updatePurchase() method 
-        private void OnUpdatePurchase(string jsonString)
-        {
-            HandlePurchaseResult(UpdatePurchaseCallback, jsonString);
-            UpdatePurchaseCallback = null;
         }
 
         // Called from the native SDK - Called when entitlements received from the promoPurchase() method 
@@ -707,23 +696,6 @@ namespace QonversionUnity
             {
                 var entitlements = Mapper.EntitlementsFromJson(jsonString);
                 callbacks.ForEach(callback => callback(entitlements, null));
-            }
-        }
-
-        private void HandlePurchaseResult(Qonversion.OnPurchaseResultReceived callback, string jsonString)
-        {
-            if (callback == null) return;
-
-            var error = Mapper.ErrorFromJson(jsonString);
-            if (error != null)
-            {
-                var isCancelled = error.Code == QErrorCode.PurchaseCanceled;
-                callback(null, error, isCancelled);
-            }
-            else
-            {
-                var entitlements = Mapper.EntitlementsFromJson(jsonString);
-                callback(entitlements, null, false);
             }
         }
 
