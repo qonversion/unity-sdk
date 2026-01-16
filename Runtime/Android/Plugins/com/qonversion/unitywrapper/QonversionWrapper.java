@@ -132,7 +132,7 @@ public class QonversionWrapper {
                 TypeReference<List<String>> typeRef = new TypeReference<List<String>>() {};
                 contextKeysList = mapper.readValue(contextKeys, typeRef);
             }
-            qonversionSandwich.purchase(
+            qonversionSandwich.purchaseWithResult(
                     productId,
                     offerId,
                     applyOffer,
@@ -144,17 +144,6 @@ public class QonversionWrapper {
         } catch (JsonProcessingException e) {
             handleSerializationException(e, unityCallbackName);
         }
-    }
-
-    public static synchronized void updatePurchase(
-            String productId,
-            @Nullable String offerId,
-            boolean applyOffer,
-            String oldProductId,
-            @Nullable String updatePolicyKey,
-            String unityCallbackName
-    ) {
-        purchase(productId, offerId, applyOffer, oldProductId, updatePolicyKey, null, unityCallbackName);
     }
 
     public static synchronized void restore(String unityCallbackName) {

@@ -56,7 +56,7 @@ namespace QonversionUnity
             return _backingInstance;
         }
 
-        public delegate void OnPurchaseResultReceived(Dictionary<string, Entitlement> entitlements, QonversionError error, bool isCancelled);
+        public delegate void OnPurchaseResultReceived(PurchaseResult result);
         public delegate void OnEntitlementsReceived(Dictionary<string, Entitlement> entitlements, QonversionError error);
         public delegate void OnProductsReceived(Dictionary<string, Product> products, QonversionError error);
         public delegate void OnOfferingsReceived(Offerings offerings, QonversionError error);
