@@ -39,6 +39,7 @@ public class NoCodesWrapper {
             String projectKey,
             String proxyUrl,
             String locale,
+            String theme,
             String sdkVersion
     ) {
         messageSender = new MessageSender(unityListener);
@@ -48,6 +49,7 @@ public class NoCodesWrapper {
 
         String effectiveProxyUrl = (proxyUrl == null || proxyUrl.isEmpty()) ? null : proxyUrl;
         String effectiveLocale = (locale == null || locale.isEmpty()) ? null : locale;
+        String effectiveTheme = (theme == null || theme.isEmpty()) ? null : theme;
 
         noCodesSandwich.initialize(
                 context,
@@ -55,7 +57,8 @@ public class NoCodesWrapper {
                 effectiveProxyUrl,
                 null, // logLevelKey
                 null, // logTag
-                effectiveLocale
+                effectiveLocale,
+                effectiveTheme
         );
 
         // Store SDK info
@@ -115,6 +118,15 @@ public class NoCodesWrapper {
 
         String effectiveLocale = (locale == null || locale.isEmpty()) ? null : locale;
         noCodesSandwich.setLocale(effectiveLocale);
+    }
+
+    public static synchronized void setTheme(String theme) {
+        if (noCodesSandwich == null) {
+            Log.e(TAG, "NoCodesSandwich is not initialized");
+            return;
+        }
+
+        noCodesSandwich.setTheme(theme);
     }
 
     public static synchronized void setPurchaseDelegate() {

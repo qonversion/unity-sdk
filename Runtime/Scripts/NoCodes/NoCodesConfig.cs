@@ -24,6 +24,11 @@ namespace QonversionUnity
         [CanBeNull] public readonly string Locale;
 
         /// <summary>
+        /// Theme mode for No-Codes screens.
+        /// </summary>
+        public readonly NoCodesTheme? Theme;
+
+        /// <summary>
         /// Delegate for receiving No-Codes events.
         /// </summary>
         [CanBeNull] public readonly NoCodesDelegate NoCodesDelegate;
@@ -37,12 +42,14 @@ namespace QonversionUnity
             string projectKey,
             string proxyUrl,
             string locale,
+            NoCodesTheme? theme,
             NoCodesDelegate noCodesDelegate,
             NoCodesPurchaseDelegate purchaseDelegate)
         {
             ProjectKey = projectKey;
             ProxyUrl = proxyUrl;
             Locale = locale;
+            Theme = theme;
             NoCodesDelegate = noCodesDelegate;
             PurchaseDelegate = purchaseDelegate;
         }

@@ -35,6 +35,14 @@ namespace QonversionUnity
         void SetLocale([CanBeNull] string locale);
 
         /// <summary>
+        /// Set the theme mode for No-Code screens.
+        /// Controls how screens adapt to light/dark themes.
+        /// </summary>
+        /// <param name="theme">The desired theme mode. Use Auto to follow device settings,
+        ///                     Light to force light theme, or Dark to force dark theme.</param>
+        void SetTheme(NoCodesTheme theme);
+
+        /// <summary>
         /// Set or update the purchase delegate for custom purchase handling.
         /// When this delegate is set, it replaces the default Qonversion SDK purchase flow.
         /// This can be called at any time after initialization.
