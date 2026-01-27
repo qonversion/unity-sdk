@@ -44,13 +44,14 @@ char* noCodesListenerName = nil;
     return self;
 }
 
-- (void)initializeWithProjectKey:(NSString *)projectKey proxyUrl:(NSString * _Nullable)proxyUrl locale:(NSString * _Nullable)locale sdkVersion:(NSString *)sdkVersion {
+- (void)initializeWithProjectKey:(NSString *)projectKey proxyUrl:(NSString * _Nullable)proxyUrl locale:(NSString * _Nullable)locale theme:(NSString * _Nullable)theme sdkVersion:(NSString *)sdkVersion {
     _noCodesSandwich = [[NoCodesSandwich alloc] initWithNoCodesEventListener:self];
     
     NSString *effectiveProxyUrl = proxyUrl.length > 0 ? proxyUrl : nil;
     NSString *effectiveLocale = locale.length > 0 ? locale : nil;
+    NSString *effectiveTheme = theme.length > 0 ? theme : nil;
     
-    [_noCodesSandwich initializeWithProjectKey:projectKey proxyUrl:effectiveProxyUrl locale:effectiveLocale];
+    [_noCodesSandwich initializeWithProjectKey:projectKey proxyUrl:effectiveProxyUrl locale:effectiveLocale theme:effectiveTheme];
     [_noCodesSandwich storeSdkInfoWithSource:@"unity" version:sdkVersion];
 }
 
@@ -74,6 +75,10 @@ char* noCodesListenerName = nil;
 - (void)setLocale:(NSString *)locale {
     NSString *effectiveLocale = locale.length > 0 ? locale : nil;
     [self.noCodesSandwich setLocale:effectiveLocale];
+}
+
+- (void)setTheme:(NSString *)theme {
+    [self.noCodesSandwich setTheme:theme];
 }
 
 - (void)setPurchaseDelegate {

@@ -29,7 +29,8 @@ namespace QonversionUnity
         private void InitializeNative()
         {
             INoCodesWrapper wrapper = GetNativeWrapper();
-            wrapper.Initialize(GameObjectName, _config.ProjectKey, _config.ProxyUrl, _config.Locale, SdkVersion);
+            string theme = _config.Theme.HasValue ? _config.Theme.Value.ToNativeString() : null;
+            wrapper.Initialize(GameObjectName, _config.ProjectKey, _config.ProxyUrl, _config.Locale, theme, SdkVersion);
 
             if (_noCodesDelegate != null)
             {
@@ -66,6 +67,12 @@ namespace QonversionUnity
         {
             INoCodesWrapper wrapper = GetNativeWrapper();
             wrapper.SetLocale(locale);
+        }
+
+        public void SetTheme(NoCodesTheme theme)
+        {
+            INoCodesWrapper wrapper = GetNativeWrapper();
+            wrapper.SetTheme(theme.ToNativeString());
         }
 
         public void SetPurchaseDelegate(NoCodesPurchaseDelegate purchaseDelegate)

@@ -6,9 +6,9 @@ namespace QonversionUnity
     {
         private const string NoCodesWrapper = "com.qonversion.unitywrapper.NoCodesWrapper";
 
-        public void Initialize(string gameObjectName, string projectKey, string proxyUrl, string locale, string sdkVersion)
+        public void Initialize(string gameObjectName, string projectKey, string proxyUrl, string locale, string theme, string sdkVersion)
         {
-            CallNoCodes("initialize", gameObjectName, projectKey, proxyUrl ?? "", locale ?? "", sdkVersion);
+            CallNoCodes("initialize", gameObjectName, projectKey, proxyUrl ?? "", locale ?? "", theme ?? "", sdkVersion);
         }
 
         public void SetDelegate()
@@ -34,6 +34,11 @@ namespace QonversionUnity
         public void SetLocale(string locale)
         {
             CallNoCodes("setLocale", locale ?? "");
+        }
+
+        public void SetTheme(string theme)
+        {
+            CallNoCodes("setTheme", theme);
         }
 
         public void SetPurchaseDelegate()
