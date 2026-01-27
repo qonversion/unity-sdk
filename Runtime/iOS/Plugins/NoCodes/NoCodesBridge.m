@@ -6,7 +6,7 @@ char* noCodesUnityListenerName = nil;
 
 static QNUNoCodesDelegate *noCodesBridge;
 
-void _initializeNoCodes(const char* unityListener, const char* projectKey, const char* proxyUrl, const char* locale, const char* sdkVersion) {
+void _initializeNoCodes(const char* unityListener, const char* projectKey, const char* proxyUrl, const char* locale, const char* theme, const char* sdkVersion) {
     unsigned long len = strlen(unityListener);
     noCodesUnityListenerName = malloc(len + 1);
     strcpy(noCodesUnityListenerName, unityListener);
@@ -16,9 +16,10 @@ void _initializeNoCodes(const char* unityListener, const char* projectKey, const
     NSString *projectKeyStr = [UtilityBridge convertCStringToNSString:projectKey];
     NSString *proxyUrlStr = [UtilityBridge convertCStringToNSString:proxyUrl];
     NSString *localeStr = [UtilityBridge convertCStringToNSString:locale];
+    NSString *themeStr = [UtilityBridge convertCStringToNSString:theme];
     NSString *sdkVersionStr = [UtilityBridge convertCStringToNSString:sdkVersion];
     
-    [noCodesBridge initializeWithProjectKey:projectKeyStr proxyUrl:proxyUrlStr locale:localeStr sdkVersion:sdkVersionStr];
+    [noCodesBridge initializeWithProjectKey:projectKeyStr proxyUrl:proxyUrlStr locale:localeStr theme:themeStr sdkVersion:sdkVersionStr];
 }
 
 void _setNoCodesDelegate() {
@@ -43,6 +44,11 @@ void _closeNoCodes() {
 void _setNoCodesLocale(const char* locale) {
     NSString *localeStr = [UtilityBridge convertCStringToNSString:locale];
     [noCodesBridge setLocale:localeStr];
+}
+
+void _setNoCodesTheme(const char* theme) {
+    NSString *themeStr = [UtilityBridge convertCStringToNSString:theme];
+    [noCodesBridge setTheme:themeStr];
 }
 
 void _setNoCodesPurchaseDelegate() {

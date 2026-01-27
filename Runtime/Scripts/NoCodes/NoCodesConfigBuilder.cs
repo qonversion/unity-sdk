@@ -10,6 +10,7 @@ namespace QonversionUnity
         private readonly string _projectKey;
         private string _proxyUrl;
         private string _locale;
+        private NoCodesTheme? _theme;
         private NoCodesDelegate _noCodesDelegate;
         private NoCodesPurchaseDelegate _purchaseDelegate;
 
@@ -85,6 +86,18 @@ namespace QonversionUnity
         }
 
         /// <summary>
+        /// Set the theme mode for No-Code screens.
+        /// Controls how screens adapt to light/dark themes.
+        /// </summary>
+        /// <param name="theme">The desired theme mode.</param>
+        /// <returns>Builder instance for chain calls.</returns>
+        public NoCodesConfigBuilder SetTheme(NoCodesTheme theme)
+        {
+            _theme = theme;
+            return this;
+        }
+
+        /// <summary>
         /// Generate <see cref="NoCodesConfig"/> instance with all the provided configurations.
         /// </summary>
         /// <returns>The complete <see cref="NoCodesConfig"/> instance.</returns>
@@ -94,6 +107,7 @@ namespace QonversionUnity
                 _projectKey,
                 _proxyUrl,
                 _locale,
+                _theme,
                 _noCodesDelegate,
                 _purchaseDelegate
             );

@@ -8,7 +8,7 @@ namespace QonversionUnity
     {
 #if UNITY_IOS
         [DllImport("__Internal")]
-        private static extern void _initializeNoCodes(string gameObjectName, string projectKey, string proxyUrl, string locale, string sdkVersion);
+        private static extern void _initializeNoCodes(string gameObjectName, string projectKey, string proxyUrl, string locale, string theme, string sdkVersion);
 
         [DllImport("__Internal")]
         private static extern void _setNoCodesDelegate();
@@ -26,6 +26,9 @@ namespace QonversionUnity
         private static extern void _setNoCodesLocale(string locale);
 
         [DllImport("__Internal")]
+        private static extern void _setNoCodesTheme(string theme);
+
+        [DllImport("__Internal")]
         private static extern void _setNoCodesPurchaseDelegate();
 
         [DllImport("__Internal")]
@@ -41,10 +44,10 @@ namespace QonversionUnity
         private static extern void _noCodesDelegatedRestoreFailed(string errorMessage);
 #endif
 
-        public void Initialize(string gameObjectName, string projectKey, string proxyUrl, string locale, string sdkVersion)
+        public void Initialize(string gameObjectName, string projectKey, string proxyUrl, string locale, string theme, string sdkVersion)
         {
 #if UNITY_IOS
-            _initializeNoCodes(gameObjectName, projectKey, proxyUrl ?? "", locale ?? "", sdkVersion);
+            _initializeNoCodes(gameObjectName, projectKey, proxyUrl ?? "", locale ?? "", theme ?? "", sdkVersion);
 #endif
         }
 
@@ -80,6 +83,13 @@ namespace QonversionUnity
         {
 #if UNITY_IOS
             _setNoCodesLocale(locale ?? "");
+#endif
+        }
+
+        public void SetTheme(string theme)
+        {
+#if UNITY_IOS
+            _setNoCodesTheme(theme);
 #endif
         }
 

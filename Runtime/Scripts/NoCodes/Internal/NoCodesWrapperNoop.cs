@@ -7,7 +7,7 @@ namespace QonversionUnity
     /// </summary>
     internal class NoCodesWrapperNoop : INoCodesWrapper
     {
-        public void Initialize(string gameObjectName, string projectKey, string proxyUrl, string locale, string sdkVersion)
+        public void Initialize(string gameObjectName, string projectKey, string proxyUrl, string locale, string theme, string sdkVersion)
         {
             Debug.Log("NoCodes is not supported on this platform.");
         }
@@ -33,6 +33,11 @@ namespace QonversionUnity
         }
 
         public void SetLocale(string locale)
+        {
+            // No-op
+        }
+
+        public void SetTheme(string theme)
         {
             // No-op
         }
