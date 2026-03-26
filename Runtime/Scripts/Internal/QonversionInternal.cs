@@ -27,7 +27,7 @@ namespace QonversionUnity
         private const string OnIsFallbackFileAccessibleMethodName = "OnIsFallbackFileAccessible";
         private const string OnPromotionalOfferMethodName = "OnPromotionalOffer";
 
-        private const string SdkVersion = "9.3.0";
+        private const string SdkVersion = "9.4.0";
         private const string SdkSource = "unity";
 
         private const string DefaultRemoteConfigContextKey = "";
