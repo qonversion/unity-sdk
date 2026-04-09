@@ -7,6 +7,7 @@ char* unityListenerName = nil;
 
 - (void)qonversionDidReceiveUpdatedEntitlements:(NSDictionary<NSString *,id> * _Nonnull)entitlements;
 - (void)shouldPurchasePromoProductWith:(NSString * _Nonnull)productId;
+- (void)qonversionDidCompleteDeferredPurchase:(NSDictionary<NSString *,id> * _Nonnull)transaction;
 
 @end
 
@@ -18,6 +19,10 @@ char* unityListenerName = nil;
 
 - (void)qonversionDidReceiveUpdatedEntitlements:(NSDictionary<NSString *,id> * _Nonnull)entitlements {
     [UtilityBridge sendUnityMessage:entitlements toMethod:@"OnReceivedUpdatedEntitlements" unityListener: unityListenerName];
+}
+
+- (void)qonversionDidCompleteDeferredPurchase:(NSDictionary<NSString *,id> * _Nonnull)transaction {
+    [UtilityBridge sendUnityMessage:transaction toMethod:@"OnDeferredPurchaseReceived" unityListener: unityListenerName];
 }
 
 @end
