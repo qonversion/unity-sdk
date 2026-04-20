@@ -94,6 +94,14 @@ namespace QonversionUnity
         /// Delegate fires each time a user entitlements change asynchronously,
         /// for example, when pending purchases like SCA, Ask to buy, etc., happen.
         /// </summary>
+        [System.Obsolete("Use OnDeferredPurchaseCompleted instead, which provides more detailed purchase result information.")]
         public delegate void OnUpdatedEntitlementsReceived(Dictionary<string, Entitlement> entitlements);
+
+        /// <summary>
+        /// Delegate fires when a deferred purchase is completed.
+        /// For example, when pending purchases like SCA, Ask to buy, etc., are finalized.
+        /// Provides detailed purchase result information including status, entitlements, and store transaction.
+        /// </summary>
+        public delegate void OnDeferredPurchaseCompleted(PurchaseResult purchaseResult);
     }
 }

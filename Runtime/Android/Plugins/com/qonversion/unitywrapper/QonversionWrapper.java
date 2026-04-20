@@ -17,6 +17,7 @@ import java.util.List;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.qonversion.sandwich.QonversionEventsListener;
 import io.qonversion.sandwich.QonversionSandwich;
 import io.qonversion.sandwich.ResultListener;
 import io.qonversion.sandwich.SandwichError;
@@ -27,6 +28,7 @@ import androidx.annotation.Nullable;
 public class QonversionWrapper {
     public static String TAG = "QonversionWrapper";
     public static String ENTITLEMENTS_UPDATE_LISTENER = "OnReceivedUpdatedEntitlements";
+    public static String DEFERRED_PURCHASE_LISTENER = "OnDeferredPurchaseReceived";
     public static String NATIVE_MODULE_ERROR_CODE = "NativeModuleError";
 
     private static MessageSender messageSender;
@@ -39,7 +41,17 @@ public class QonversionWrapper {
         qonversionSandwich = new QonversionSandwich(
                 application,
                 () -> UnityPlayer.currentActivity,
-                entitlements -> sendMessageToUnity(entitlements, ENTITLEMENTS_UPDATE_LISTENER)
+                new QonversionEventsListener() {
+                    @Override
+                    public void onEntitlementsUpdated(@NonNull Map<String, ?> entitlements) {
+                        sendMessageToUnity(entitlements, ENTITLEMENTS_UPDATE_LISTENER);
+                    }
+
+                    @Override
+                    public void onDeferredPurchaseCompleted(@NonNull Map<String, ?> transaction) {
+                        sendMessageToUnity(transaction, DEFERRED_PURCHASE_LISTENER);
+                    }
+                }
         );
     }
 

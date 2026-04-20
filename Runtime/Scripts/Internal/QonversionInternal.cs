@@ -27,13 +27,14 @@ namespace QonversionUnity
         private const string OnIsFallbackFileAccessibleMethodName = "OnIsFallbackFileAccessible";
         private const string OnPromotionalOfferMethodName = "OnPromotionalOffer";
 
-        private const string SdkVersion = "9.4.0";
+        private const string SdkVersion = "9.5.0";
         private const string SdkSource = "unity";
 
         private const string DefaultRemoteConfigContextKey = "";
 
         private IQonversionWrapper _nativeWrapperInstance;
         private Qonversion.OnUpdatedEntitlementsReceived _onUpdatedEntitlementsReceived;
+        private Qonversion.OnDeferredPurchaseCompleted _onDeferredPurchaseCompleted;
 
         private Qonversion.OnPromoPurchasesReceived _onPromoPurchasesReceived;
         private string _storedPromoProductId = null;
@@ -78,6 +79,18 @@ namespace QonversionUnity
             remove
             {
                 _onUpdatedEntitlementsReceived -= value;
+            }
+        }
+
+        public event Qonversion.OnDeferredPurchaseCompleted DeferredPurchaseCompleted
+        {
+            add
+            {
+                _onDeferredPurchaseCompleted += value;
+            }
+            remove
+            {
+                _onDeferredPurchaseCompleted -= value;
             }
         }
 
@@ -663,6 +676,25 @@ namespace QonversionUnity
 
             Dictionary<string, Entitlement> entitlements = Mapper.EntitlementsFromJson(jsonString);
             _onUpdatedEntitlementsReceived(entitlements);
+        }
+
+        // Called from the native SDK - Called when a deferred purchase is completed.
+        private void OnDeferredPurchaseReceived(string jsonString)
+        {
+            if (_onDeferredPurchaseCompleted == null)
+            {
+                return;
+            }
+
+            var purchaseResult = Mapper.PurchaseResultFromJson(jsonString);
+            if (purchaseResult != null)
+            {
+                _onDeferredPurchaseCompleted(purchaseResult);
+            }
+            else
+            {
+                Debug.LogError("Failed to parse PurchaseResult from deferred purchase JSON");
+            }
         }
 
         private void OnReceivePromoPurchase(string storeProductId)

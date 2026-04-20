@@ -16,7 +16,15 @@ namespace QonversionUnity
         /// This event will be fired for each asynchronous entitlements update,
         /// for example, when a deferred transaction happens.
         /// </summary>
+        [System.Obsolete("Use DeferredPurchaseCompleted instead, which provides more detailed purchase result information.")]
         public event Qonversion.OnUpdatedEntitlementsReceived UpdatedEntitlementsReceived;
+
+        /// <summary>
+        /// This event will be fired when a deferred purchase is completed.
+        /// For example, when pending purchases like SCA, Ask to buy, etc., are finalized.
+        /// Provides detailed purchase result information including status, entitlements, and store transaction.
+        /// </summary>
+        public event Qonversion.OnDeferredPurchaseCompleted DeferredPurchaseCompleted;
 
         /// <summary>
         /// Call this function to sync the subscriber data with the first launch when Qonversion is implemented.
