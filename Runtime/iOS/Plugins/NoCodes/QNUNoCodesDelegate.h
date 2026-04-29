@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)initializeWithProjectKey:(NSString *)projectKey proxyUrl:(NSString * _Nullable)proxyUrl locale:(NSString * _Nullable)locale theme:(NSString * _Nullable)theme sdkVersion:(NSString *)sdkVersion;
 - (void)setDelegate;
 - (void)setScreenPresentationConfig:(NSDictionary *)config contextKey:(NSString * _Nullable)contextKey;
-- (void)showScreen:(NSString *)contextKey;
+- (void)showScreen:(NSString *)contextKey customVariables:(NSDictionary<NSString *, NSString *> * _Nullable)customVariables;
 - (void)close;
 - (void)setLocale:(NSString * _Nullable)locale;
 - (void)setTheme:(NSString * _Nullable)theme;

@@ -284,6 +284,14 @@ namespace QonversionUnity
         public void UserProperties(Qonversion.OnUserPropertiesReceived callback);
 
         /// <summary>
+        /// Force-flushes any pending user property updates to the server immediately.
+        /// Use this when you need to ensure all previously set properties have been sent
+        /// before performing an operation that depends on them.
+        /// </summary>
+        /// <param name="callback">Callback that will be called when the flush is complete.</param>
+        public void ForceSendProperties(Qonversion.OnForceSendPropertiesCompleted callback);
+
+        /// <summary>
         /// iOS only.
         /// On iOS 14.5+, after requesting the app tracking entitlement using ATT, you need to notify Qonversion if tracking
         /// is allowed and IDFA is available.

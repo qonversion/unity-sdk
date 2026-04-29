@@ -64,8 +64,8 @@ char* noCodesListenerName = nil;
     [self.noCodesSandwich setScreenPresentationConfig:config forContextKey:effectiveContextKey];
 }
 
-- (void)showScreen:(NSString *)contextKey {
-    [self.noCodesSandwich showScreen:contextKey];
+- (void)showScreen:(NSString *)contextKey customVariables:(NSDictionary<NSString *, NSString *> * _Nullable)customVariables {
+    [self.noCodesSandwich showScreen:contextKey customVariables:customVariables];
 }
 
 - (void)close {
