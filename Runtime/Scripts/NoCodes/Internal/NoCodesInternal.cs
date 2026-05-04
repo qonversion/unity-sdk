@@ -51,10 +51,11 @@ namespace QonversionUnity
             wrapper.SetScreenPresentationConfig(config.ToJson(), contextKey);
         }
 
-        public void ShowScreen(string contextKey)
+        public void ShowScreen(string contextKey, System.Collections.Generic.Dictionary<string, string> customVariables = null)
         {
             INoCodesWrapper wrapper = GetNativeWrapper();
-            wrapper.ShowScreen(contextKey);
+            string customVariablesJson = customVariables != null ? MiniJSON.Json.Serialize(customVariables) : null;
+            wrapper.ShowScreen(contextKey, customVariablesJson);
         }
 
         public void Close()

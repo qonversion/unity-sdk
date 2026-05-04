@@ -19,7 +19,10 @@ namespace QonversionUnity
         /// Show the screen using its context key.
         /// </summary>
         /// <param name="contextKey">The context key of the screen which must be shown.</param>
-        void ShowScreen(string contextKey);
+        /// <param name="customVariables">Optional dictionary of custom variables that will be injected
+        /// into the screen's JavaScript context. Variables are scoped to the provided contextKey
+        /// and only applied to that screen.</param>
+        void ShowScreen(string contextKey, [CanBeNull] System.Collections.Generic.Dictionary<string, string> customVariables = null);
 
         /// <summary>
         /// Close the current opened No-Code screen.

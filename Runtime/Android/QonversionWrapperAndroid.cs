@@ -55,6 +55,11 @@ namespace QonversionUnity
             CallQonversion("userProperties", callbackName);
         }
 
+        public void ForceSendProperties(string callbackName)
+        {
+            CallQonversion("forceSendProperties", callbackName);
+        }
+
         public void SyncPurchases()
         {
             using (var purchases = new AndroidJavaClass("com.qonversion.unitywrapper.QonversionWrapper"))

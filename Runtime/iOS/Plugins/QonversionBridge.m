@@ -98,6 +98,14 @@ void _userProperties(const char* unityCallbackName) {
     }];
 }
 
+void _forceSendProperties(const char* unityCallbackName) {
+    NSString *callbackName = [UtilityBridge convertCStringToNSString:unityCallbackName];
+
+    [qonversionSandwich forceSendProperties:^{
+        UnitySendMessage(unityListenerName, [callbackName UTF8String], "");
+    }];
+}
+
 void _addAttributionData(const char* conversionData, const char* provider) {
     NSDictionary *conversionInfo = [UtilityBridge dictionaryFromJsonString: [UtilityBridge convertCStringToNSString: conversionData]];
     NSString *providerStr = [UtilityBridge convertCStringToNSString:provider];

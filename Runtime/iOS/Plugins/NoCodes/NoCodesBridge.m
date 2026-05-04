@@ -32,9 +32,22 @@ void _setNoCodesScreenPresentationConfig(const char* configData, const char* con
     [noCodesBridge setScreenPresentationConfig:config contextKey:contextKeyStr];
 }
 
-void _showNoCodesScreen(const char* contextKey) {
+void _showNoCodesScreen(const char* contextKey, const char* customVariablesJson) {
     NSString *contextKeyStr = [UtilityBridge convertCStringToNSString:contextKey];
-    [noCodesBridge showScreen:contextKeyStr];
+    NSString *jsonStr = [UtilityBridge convertCStringToNSString:customVariablesJson];
+    NSDictionary *parsed = jsonStr.length > 0 ? [UtilityBridge dictionaryFromJsonString:jsonStr] : nil;
+    NSDictionary<NSString *, NSString *> *customVariables = nil;
+    if ([parsed isKindOfClass:[NSDictionary class]]) {
+        NSMutableDictionary<NSString *, NSString *> *typed = [NSMutableDictionary dictionaryWithCapacity:parsed.count];
+        for (NSString *key in parsed) {
+            id value = parsed[key];
+            if ([key isKindOfClass:[NSString class]] && [value isKindOfClass:[NSString class]]) {
+                typed[key] = value;
+            }
+        }
+        customVariables = typed;
+    }
+    [noCodesBridge showScreen:contextKeyStr customVariables:customVariables];
 }
 
 void _closeNoCodes() {

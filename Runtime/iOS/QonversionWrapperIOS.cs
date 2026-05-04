@@ -43,6 +43,9 @@ namespace QonversionUnity
         private static extern void _userProperties(string callbackName);
 
         [DllImport("__Internal")]
+        private static extern void _forceSendProperties(string callbackName);
+
+        [DllImport("__Internal")]
         private static extern void _setAppleSearchAdsAttributionEnabled(bool enable);
 
         [DllImport("__Internal")]
@@ -189,6 +192,12 @@ namespace QonversionUnity
         public void UserProperties(string callbackName) {
 #if UNITY_IOS
             _userProperties(callbackName);
+#endif
+        }
+
+        public void ForceSendProperties(string callbackName) {
+#if UNITY_IOS
+            _forceSendProperties(callbackName);
 #endif
         }
 
