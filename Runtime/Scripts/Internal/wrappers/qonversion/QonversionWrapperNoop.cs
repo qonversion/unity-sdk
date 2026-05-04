@@ -31,6 +31,10 @@ namespace QonversionUnity
         {
         }
 
+        public void ForceSendProperties(string callbackName)
+        {
+        }
+
         public void AddAttributionData(string conversionData, string providerName)
         {
         }
