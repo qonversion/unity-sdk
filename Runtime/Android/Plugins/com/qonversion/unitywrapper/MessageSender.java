@@ -18,4 +18,8 @@ public class MessageSender {
         final String json = mapper.writeValueAsString(objectToConvert);
         UnityPlayer.UnitySendMessage(unityListenerName, methodName, json);
     }
+
+    public String getListenerName() {
+        return unityListenerName;
+    }
 }

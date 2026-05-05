@@ -21,9 +21,9 @@ namespace QonversionUnity
             CallNoCodes("setScreenPresentationConfig", configJson, contextKey ?? "");
         }
 
-        public void ShowScreen(string contextKey)
+        public void ShowScreen(string contextKey, string customVariablesJson)
         {
-            CallNoCodes("showScreen", contextKey);
+            CallNoCodes("showScreen", contextKey, customVariablesJson ?? "");
         }
 
         public void Close()

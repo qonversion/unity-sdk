@@ -7,7 +7,7 @@ namespace QonversionUnity
         void Initialize(string gameObjectName, string projectKey, [CanBeNull] string proxyUrl, [CanBeNull] string locale, [CanBeNull] string theme, string sdkVersion);
         void SetDelegate();
         void SetScreenPresentationConfig(string configJson, [CanBeNull] string contextKey);
-        void ShowScreen(string contextKey);
+        void ShowScreen(string contextKey, [CanBeNull] string customVariablesJson);
         void Close();
         void SetLocale([CanBeNull] string locale);
         void SetTheme(string theme);

@@ -22,7 +22,7 @@ namespace QonversionUnity
             // No-op
         }
 
-        public void ShowScreen(string contextKey)
+        public void ShowScreen(string contextKey, string customVariablesJson)
         {
             Debug.Log($"NoCodes.ShowScreen({contextKey}) called on unsupported platform.");
         }

@@ -22,12 +22,13 @@ namespace QonversionUnity
         private const string OnIdentityMethodName = "OnIdentity";
         private const string OnUserInfoMethodName = "OnUserInfo";
         private const string OnUserPropertiesMethodName = "OnUserProperties";
+        private const string OnForceSendPropertiesMethodName = "OnForceSendProperties";
         private const string OnAttachUserMethodName = "OnAttachUser";
         private const string OnDetachUserMethodName = "OnDetachUser";
         private const string OnIsFallbackFileAccessibleMethodName = "OnIsFallbackFileAccessible";
         private const string OnPromotionalOfferMethodName = "OnPromotionalOffer";
 
-        private const string SdkVersion = "9.5.1";
+        private const string SdkVersion = "9.6.0";
         private const string SdkSource = "unity";
 
         private const string DefaultRemoteConfigContextKey = "";
@@ -52,6 +53,7 @@ namespace QonversionUnity
         private Qonversion.OnUserInfoReceived IdentityCallback { get; set; }
         private Qonversion.OnUserInfoReceived UserInfoCallback { get; set; }
         private Qonversion.OnUserPropertiesReceived UserPropertiesCallback { get; set; }
+        private Qonversion.OnForceSendPropertiesCompleted ForceSendPropertiesCallback { get; set; }
         private Qonversion.OnAttachUserResponseReceived AttachUserCallback { get; set; }
         private Qonversion.OnAttachUserResponseReceived DetachUserCallback { get; set; }
         private Qonversion.OnFallbackFileAccessibilityResponseReceived FallbackFileCallback { get; set; }
@@ -338,6 +340,13 @@ namespace QonversionUnity
             UserPropertiesCallback = callback;
             IQonversionWrapper instance = GetNativeWrapper();
             instance.UserProperties(OnUserPropertiesMethodName);
+        }
+
+        public void ForceSendProperties(Qonversion.OnForceSendPropertiesCompleted callback)
+        {
+            ForceSendPropertiesCallback = callback;
+            IQonversionWrapper instance = GetNativeWrapper();
+            instance.ForceSendProperties(OnForceSendPropertiesMethodName);
         }
 
         public void CollectAdvertisingId()
@@ -664,6 +673,13 @@ namespace QonversionUnity
             }
 
             UserPropertiesCallback = null;
+        }
+
+        // Called from the native SDK - Called when forceSendProperties completes
+        private void OnForceSendProperties(string _)
+        {
+            ForceSendPropertiesCallback?.Invoke();
+            ForceSendPropertiesCallback = null;
         }
 
         // Called from the native SDK - Called when entitlements update. For example, when pending purchases like SCA, Ask to buy, etc., happen.

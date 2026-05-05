@@ -17,7 +17,7 @@ namespace QonversionUnity
         private static extern void _setNoCodesScreenPresentationConfig(string configJson, string contextKey);
 
         [DllImport("__Internal")]
-        private static extern void _showNoCodesScreen(string contextKey);
+        private static extern void _showNoCodesScreen(string contextKey, string customVariablesJson);
 
         [DllImport("__Internal")]
         private static extern void _closeNoCodes();
@@ -65,10 +65,10 @@ namespace QonversionUnity
 #endif
         }
 
-        public void ShowScreen(string contextKey)
+        public void ShowScreen(string contextKey, string customVariablesJson)
         {
 #if UNITY_IOS
-            _showNoCodesScreen(contextKey);
+            _showNoCodesScreen(contextKey, customVariablesJson ?? "");
 #endif
         }
 

@@ -92,13 +92,24 @@ public class NoCodesWrapper {
         }
     }
 
-    public static synchronized void showScreen(String contextKey) {
+    public static synchronized void showScreen(String contextKey, String customVariablesJson) {
         if (noCodesSandwich == null) {
             Log.e(TAG, "NoCodesSandwich is not initialized");
             return;
         }
 
-        noCodesSandwich.showScreen(contextKey);
+        Map<String, String> customVariables = null;
+        if (customVariablesJson != null && !customVariablesJson.isEmpty()) {
+            try {
+                ObjectMapper mapper = new ObjectMapper();
+                TypeReference<HashMap<String, String>> typeRef = new TypeReference<HashMap<String, String>>() {};
+                customVariables = mapper.readValue(customVariablesJson, typeRef);
+            } catch (JsonProcessingException e) {
+                Log.e(TAG, "Failed to parse custom variables: " + e.getLocalizedMessage());
+            }
+        }
+
+        noCodesSandwich.showScreen(contextKey, customVariables);
     }
 
     public static synchronized void close() {

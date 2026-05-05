@@ -98,6 +98,13 @@ public class QonversionWrapper {
         qonversionSandwich.userProperties(getResultListener(unityCallbackName));
     }
 
+    public static synchronized void forceSendProperties(String unityCallbackName) {
+        qonversionSandwich.forceSendProperties(() -> {
+            UnityPlayer.UnitySendMessage(messageSender.getListenerName(), unityCallbackName, "");
+            return null;
+        });
+    }
+
     public static synchronized void attribution(String conversionData, String attributionProvider) {
         try {
             ObjectMapper mapper = new ObjectMapper();

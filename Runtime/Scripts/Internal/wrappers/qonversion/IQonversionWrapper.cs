@@ -14,6 +14,7 @@ namespace QonversionUnity
         void SetUserProperty(UserPropertyKey key, string value);
         void SetCustomUserProperty(string key, string value);
         void UserProperties(string callbackName);
+        void ForceSendProperties(string callbackName);
         void SyncPurchases();
         void AddAttributionData(string conversionData, string providerName);
         void CheckEntitlements(string callbackName);
