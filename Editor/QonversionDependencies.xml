@@ -6,6 +6,13 @@
         <androidPackage spec="org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.61" />
     </androidPackages>
     <iosPods>
+      <!-- Fallback for EDM4U < 1.2.187 which does not understand <remoteSwiftPackage>.
+           On newer EDM4U the pod is skipped because of replacesPod below. -->
       <iosPod name="QonversionSandwich" version="7.9.0" />
     </iosPods>
+    <remoteSwiftPackage url="https://github.com/qonversion/sandwich-sdk.git"
+                        version="7.10.0"
+                        upToNextMajor="true">
+      <swiftPackage name="QonversionSandwich" replacesPod="QonversionSandwich" />
+    </remoteSwiftPackage>
 </dependencies>
