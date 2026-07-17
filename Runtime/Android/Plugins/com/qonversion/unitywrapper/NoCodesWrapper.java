@@ -15,9 +15,13 @@ import com.unity3d.player.UnityPlayer;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import io.qonversion.sandwich.NoCodesEventListener;
 import io.qonversion.sandwich.NoCodesPurchaseDelegateBridge;
 import io.qonversion.sandwich.NoCodesSandwich;
+import io.qonversion.sandwich.ResultListener;
+import io.qonversion.sandwich.SandwichError;
 
 public class NoCodesWrapper {
     private static final String TAG = "NoCodesWrapper";
@@ -28,6 +32,9 @@ public class NoCodesWrapper {
     private static final String EVENT_ACTION_FINISHED = "OnNoCodesActionFinished";
     private static final String EVENT_FINISHED = "OnNoCodesFinished";
     private static final String EVENT_SCREEN_FAILED_TO_LOAD = "OnNoCodesScreenFailedToLoad";
+    private static final String EVENT_CUSTOM_ACTION = "OnNoCodesCustomAction";
+    private static final String EVENT_SCREEN_LOADED = "OnNoCodesScreenLoaded";
+    private static final String EVENT_SCREEN_LOAD_FAILED = "OnNoCodesScreenLoadFailed";
     private static final String EVENT_PURCHASE = "OnNoCodesPurchase";
     private static final String EVENT_RESTORE = "OnNoCodesRestore";
 
@@ -110,6 +117,27 @@ public class NoCodesWrapper {
         }
 
         noCodesSandwich.showScreen(contextKey, customVariables);
+    }
+
+    public static synchronized void loadScreen(final String contextKey) {
+        if (noCodesSandwich == null) {
+            Log.e(TAG, "NoCodesSandwich is not initialized");
+            return;
+        }
+
+        noCodesSandwich.loadScreen(contextKey, new ResultListener() {
+            @Override
+            public void onSuccess(@NonNull Map<String, ?> data) {
+                sendMessageToUnity(data, EVENT_SCREEN_LOADED);
+            }
+
+            @Override
+            public void onError(@NonNull SandwichError error) {
+                ObjectNode payload = Utils.createErrorNode(error);
+                payload.put("contextKey", contextKey);
+                sendMessageToUnity(payload, EVENT_SCREEN_LOAD_FAILED);
+            }
+        });
     }
 
     public static synchronized void close() {
@@ -207,6 +235,9 @@ public class NoCodesWrapper {
                     break;
                 case ScreenFailedToLoad:
                     methodName = EVENT_SCREEN_FAILED_TO_LOAD;
+                    break;
+                case CustomAction:
+                    methodName = EVENT_CUSTOM_ACTION;
                     break;
                 default:
                     return;
