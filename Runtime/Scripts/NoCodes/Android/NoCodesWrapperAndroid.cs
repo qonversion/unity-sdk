@@ -26,6 +26,11 @@ namespace QonversionUnity
             CallNoCodes("showScreen", contextKey, customVariablesJson ?? "");
         }
 
+        public void LoadScreen(string contextKey)
+        {
+            CallNoCodes("loadScreen", contextKey);
+        }
+
         public void Close()
         {
             CallNoCodes("close");

@@ -44,6 +44,58 @@ namespace QonversionUnity
         }
 
         [CanBeNull]
+        internal static NoCodesScreen ScreenFromJson(string jsonStr)
+        {
+            if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> screenDict))
+            {
+                Debug.LogError("Could not parse NoCodes screen");
+                return null;
+            }
+
+            return new NoCodesScreen(screenDict);
+        }
+
+        internal static string CustomActionValueFromJson(string jsonStr)
+        {
+            if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> dict))
+            {
+                Debug.LogError("Could not parse NoCodes custom action");
+                return "";
+            }
+
+            return dict.GetString("value");
+        }
+
+        [CanBeNull]
+        internal static string ContextKeyFromJson(string jsonStr)
+        {
+            if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> dict))
+            {
+                return null;
+            }
+
+            return dict.GetString("contextKey");
+        }
+
+        internal static NoCodesError LoadScreenErrorFromJson(string jsonStr)
+        {
+            if (Json.Deserialize(jsonStr) is Dictionary<string, object> dict &&
+                dict.TryGetValue("error", out object errorValue) &&
+                errorValue is Dictionary<string, object> errorDict)
+            {
+                return new NoCodesError(errorDict);
+            }
+
+            Debug.LogError("Could not parse NoCodes screen loading error");
+            return new NoCodesError(new Dictionary<string, object>
+            {
+                { "code", "Unknown" },
+                { "description", "Failed to load No-Code screen" },
+                { "additionalMessage", "Native error parsing failed." }
+            });
+        }
+
+        [CanBeNull]
         internal static Product ProductFromJson(string jsonStr)
         {
             if (!(Json.Deserialize(jsonStr) is Dictionary<string, object> productDict))

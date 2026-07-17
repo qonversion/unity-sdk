@@ -12,6 +12,9 @@ static NSString *const kEventActionFailed = @"OnNoCodesActionFailed";
 static NSString *const kEventActionFinished = @"OnNoCodesActionFinished";
 static NSString *const kEventFinished = @"OnNoCodesFinished";
 static NSString *const kEventScreenFailedToLoad = @"OnNoCodesScreenFailedToLoad";
+static NSString *const kEventCustomAction = @"OnNoCodesCustomAction";
+static NSString *const kEventScreenLoaded = @"OnNoCodesScreenLoaded";
+static NSString *const kEventScreenLoadFailed = @"OnNoCodesScreenLoadFailed";
 static NSString *const kEventPurchase = @"OnNoCodesPurchase";
 static NSString *const kEventRestore = @"OnNoCodesRestore";
 
@@ -37,7 +40,8 @@ char* noCodesListenerName = nil;
             @"nocodes_action_failed": kEventActionFailed,
             @"nocodes_action_finished": kEventActionFinished,
             @"nocodes_finished": kEventFinished,
-            @"nocodes_screen_failed_to_load": kEventScreenFailedToLoad
+            @"nocodes_screen_failed_to_load": kEventScreenFailedToLoad,
+            @"nocodes_custom_action": kEventCustomAction
         };
     }
     
@@ -66,6 +70,18 @@ char* noCodesListenerName = nil;
 
 - (void)showScreen:(NSString *)contextKey customVariables:(NSDictionary<NSString *, NSString *> * _Nullable)customVariables {
     [self.noCodesSandwich showScreen:contextKey customVariables:customVariables];
+}
+
+- (void)loadScreen:(NSString *)contextKey {
+    [self.noCodesSandwich loadScreen:contextKey completion:^(NSDictionary<NSString *,id> * _Nullable result, SandwichError * _Nullable error) {
+        if (error) {
+            NSMutableDictionary *payload = [[UtilityBridge serializeSandwichError:error] mutableCopy];
+            payload[@"contextKey"] = contextKey;
+            [UtilityBridge sendUnityMessage:payload toMethod:kEventScreenLoadFailed unityListener:noCodesListenerName];
+        } else {
+            [UtilityBridge sendUnityMessage:result ?: @{} toMethod:kEventScreenLoaded unityListener:noCodesListenerName];
+        }
+    }];
 }
 
 - (void)close {

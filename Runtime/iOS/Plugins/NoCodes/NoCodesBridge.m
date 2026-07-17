@@ -50,6 +50,11 @@ void _showNoCodesScreen(const char* contextKey, const char* customVariablesJson)
     [noCodesBridge showScreen:contextKeyStr customVariables:customVariables];
 }
 
+void _loadNoCodesScreen(const char* contextKey) {
+    NSString *contextKeyStr = [UtilityBridge convertCStringToNSString:contextKey];
+    [noCodesBridge loadScreen:contextKeyStr];
+}
+
 void _closeNoCodes() {
     [noCodesBridge close];
 }
