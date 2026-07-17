@@ -52,7 +52,17 @@ namespace QonversionUnity
                 return null;
             }
 
-            return new NoCodesScreen(screenDict);
+            try
+            {
+                return new NoCodesScreen(screenDict);
+            }
+            catch (System.Exception e)
+            {
+                // An anomalous payload (e.g. null field values) must fail the pending
+                // LoadScreen callbacks, not escape into the UnitySendMessage handler.
+                Debug.LogError("Could not map NoCodes screen: " + e.Message);
+                return null;
+            }
         }
 
         internal static string CustomActionValueFromJson(string jsonStr)
