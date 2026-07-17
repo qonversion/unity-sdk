@@ -12,6 +12,17 @@ namespace QonversionUnity
         private NoCodesPurchaseDelegate _purchaseDelegate;
         private NoCodesConfig _config;
 
+        private struct LoadScreenCallbacks
+        {
+            public System.Action<NoCodesScreen> OnSuccess;
+            public System.Action<NoCodesError> OnError;
+        }
+
+        // Load requests are correlated by contextKey: both the success payload (the screen map)
+        // and the native failure payload carry it.
+        private readonly System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<LoadScreenCallbacks>> _loadScreenCallbacks =
+            new System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<LoadScreenCallbacks>>();
+
         public static NoCodesInternal CreateInstance(NoCodesConfig config)
         {
             GameObject go = new GameObject(GameObjectName);
@@ -56,6 +67,28 @@ namespace QonversionUnity
             INoCodesWrapper wrapper = GetNativeWrapper();
             string customVariablesJson = customVariables != null ? MiniJSON.Json.Serialize(customVariables) : null;
             wrapper.ShowScreen(contextKey, customVariablesJson);
+        }
+
+        public void LoadScreen(string contextKey, System.Action<NoCodesScreen> onSuccess, System.Action<NoCodesError> onError)
+        {
+            INoCodesWrapper wrapper = GetNativeWrapper();
+            if (wrapper is NoCodesWrapperNoop)
+            {
+                // The noop wrapper never sends anything back — fail synchronously
+                // instead of leaving the request pending forever.
+                onError?.Invoke(NoCodesMapper.UnsupportedPlatformError());
+                return;
+            }
+
+            if (!_loadScreenCallbacks.TryGetValue(contextKey, out var callbacks))
+            {
+                callbacks = new System.Collections.Generic.List<LoadScreenCallbacks>();
+                _loadScreenCallbacks[contextKey] = callbacks;
+            }
+
+            callbacks.Add(new LoadScreenCallbacks { OnSuccess = onSuccess, OnError = onError });
+
+            wrapper.LoadScreen(contextKey);
         }
 
         public void Close()
@@ -197,6 +230,60 @@ namespace QonversionUnity
             {
                 _noCodesDelegate.OnScreenFailedToLoad(error);
             }
+        }
+
+        private void OnNoCodesCustomAction(string jsonString)
+        {
+            if (!(_noCodesDelegate is NoCodesCustomActionDelegate customActionDelegate)) return;
+
+            string value = NoCodesMapper.CustomActionValueFromJson(jsonString);
+            customActionDelegate.OnCustomAction(value);
+        }
+
+        // Called from native with the loaded screen data
+        private void OnNoCodesScreenLoaded(string jsonString)
+        {
+            NoCodesScreen screen = NoCodesMapper.ScreenFromJson(jsonString);
+            if (screen == null)
+            {
+                // Don't leave the request pending on an unparseable payload — fail the
+                // callbacks the payload's contextKey still lets us correlate.
+                string contextKey = NoCodesMapper.ContextKeyFromJson(jsonString);
+                NoCodesError parseError = NoCodesMapper.ScreenParsingError();
+                foreach (LoadScreenCallbacks callbacks in TakeLoadScreenCallbacks(contextKey))
+                {
+                    callbacks.OnError?.Invoke(parseError);
+                }
+                return;
+            }
+
+            foreach (LoadScreenCallbacks callbacks in TakeLoadScreenCallbacks(screen.ContextKey))
+            {
+                callbacks.OnSuccess?.Invoke(screen);
+            }
+        }
+
+        // Called from native when loading a screen failed; payload: { contextKey, error }
+        private void OnNoCodesScreenLoadFailed(string jsonString)
+        {
+            string contextKey = NoCodesMapper.ContextKeyFromJson(jsonString);
+            NoCodesError error = NoCodesMapper.LoadScreenErrorFromJson(jsonString);
+
+            foreach (LoadScreenCallbacks callbacks in TakeLoadScreenCallbacks(contextKey))
+            {
+                callbacks.OnError?.Invoke(error);
+            }
+        }
+
+        private System.Collections.Generic.List<LoadScreenCallbacks> TakeLoadScreenCallbacks(string contextKey)
+        {
+            if (contextKey == null || !_loadScreenCallbacks.TryGetValue(contextKey, out var callbacks))
+            {
+                return new System.Collections.Generic.List<LoadScreenCallbacks>();
+            }
+
+            _loadScreenCallbacks.Remove(contextKey);
+            return callbacks;
         }
 
         // Called from native for purchase delegate

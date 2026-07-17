@@ -85,6 +85,7 @@ namespace QonversionUnity
                 case "RateLimitExceeded": return NoCodesErrorCode.RateLimitExceeded;
                 case "ScreenLoadingFailed": return NoCodesErrorCode.ScreenLoadingFailed;
                 case "SDKInitializationError": return NoCodesErrorCode.SdkInitializationError;
+                case "ClientError": return NoCodesErrorCode.ClientError;
                 default: return NoCodesErrorCode.Unknown;
             }
         }

@@ -8,6 +8,7 @@ namespace QonversionUnity
         void SetDelegate();
         void SetScreenPresentationConfig(string configJson, [CanBeNull] string contextKey);
         void ShowScreen(string contextKey, [CanBeNull] string customVariablesJson);
+        void LoadScreen(string contextKey);
         void Close();
         void SetLocale([CanBeNull] string locale);
         void SetTheme(string theme);

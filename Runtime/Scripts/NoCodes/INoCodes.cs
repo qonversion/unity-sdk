@@ -25,6 +25,19 @@ namespace QonversionUnity
         void ShowScreen(string contextKey, [CanBeNull] System.Collections.Generic.Dictionary<string, string> customVariables = null);
 
         /// <summary>
+        /// Load a No-Code screen (from cache or network) without presenting it, so you can decide
+        /// whether to present it or show your own fallback UI before any SDK screen appears.
+        /// Present the screen with <see cref="ShowScreen"/> — the loaded content is served from cache.
+        ///
+        /// The returned <see cref="NoCodesScreen"/> exposes the typed default variables configured
+        /// in the builder and the default selected product id.
+        /// </summary>
+        /// <param name="contextKey">The context key of the screen to load.</param>
+        /// <param name="onSuccess">Called with the loaded screen data.</param>
+        /// <param name="onError">Called when loading fails.</param>
+        void LoadScreen(string contextKey, System.Action<NoCodesScreen> onSuccess, System.Action<NoCodesError> onError);
+
+        /// <summary>
         /// Close the current opened No-Code screen.
         /// </summary>
         void Close();

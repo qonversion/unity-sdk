@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setDelegate;
 - (void)setScreenPresentationConfig:(NSDictionary *)config contextKey:(NSString * _Nullable)contextKey;
 - (void)showScreen:(NSString *)contextKey customVariables:(NSDictionary<NSString *, NSString *> * _Nullable)customVariables;
+- (void)loadScreen:(NSString *)contextKey;
 - (void)close;
 - (void)setLocale:(NSString * _Nullable)locale;
 - (void)setTheme:(NSString * _Nullable)theme;

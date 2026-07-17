@@ -27,6 +27,11 @@ namespace QonversionUnity
             Debug.Log($"NoCodes.ShowScreen({contextKey}) called on unsupported platform.");
         }
 
+        public void LoadScreen(string contextKey)
+        {
+            Debug.Log($"NoCodes.LoadScreen({contextKey}) called on unsupported platform.");
+        }
+
         public void Close()
         {
             // No-op
