@@ -71,6 +71,15 @@ namespace QonversionUnity
 
         public void LoadScreen(string contextKey, System.Action<NoCodesScreen> onSuccess, System.Action<NoCodesError> onError)
         {
+            INoCodesWrapper wrapper = GetNativeWrapper();
+            if (wrapper is NoCodesWrapperNoop)
+            {
+                // The noop wrapper never sends anything back — fail synchronously
+                // instead of leaving the request pending forever.
+                onError?.Invoke(NoCodesMapper.UnsupportedPlatformError());
+                return;
+            }
+
             if (!_loadScreenCallbacks.TryGetValue(contextKey, out var callbacks))
             {
                 callbacks = new System.Collections.Generic.List<LoadScreenCallbacks>();
@@ -79,7 +88,6 @@ namespace QonversionUnity
 
             callbacks.Add(new LoadScreenCallbacks { OnSuccess = onSuccess, OnError = onError });
 
-            INoCodesWrapper wrapper = GetNativeWrapper();
             wrapper.LoadScreen(contextKey);
         }
 
@@ -236,7 +244,18 @@ namespace QonversionUnity
         private void OnNoCodesScreenLoaded(string jsonString)
         {
             NoCodesScreen screen = NoCodesMapper.ScreenFromJson(jsonString);
-            if (screen == null) return;
+            if (screen == null)
+            {
+                // Don't leave the request pending on an unparseable payload — fail the
+                // callbacks the payload's contextKey still lets us correlate.
+                string contextKey = NoCodesMapper.ContextKeyFromJson(jsonString);
+                NoCodesError parseError = NoCodesMapper.ScreenParsingError();
+                foreach (LoadScreenCallbacks callbacks in TakeLoadScreenCallbacks(contextKey))
+                {
+                    callbacks.OnError?.Invoke(parseError);
+                }
+                return;
+            }
 
             foreach (LoadScreenCallbacks callbacks in TakeLoadScreenCallbacks(screen.ContextKey))
             {

@@ -77,6 +77,26 @@ namespace QonversionUnity
             return dict.GetString("contextKey");
         }
 
+        internal static NoCodesError ScreenParsingError()
+        {
+            return new NoCodesError(new Dictionary<string, object>
+            {
+                { "code", "Deserialization" },
+                { "description", "Failed to parse the loaded No-Code screen" },
+                { "additionalMessage", "Native payload parsing failed." }
+            });
+        }
+
+        internal static NoCodesError UnsupportedPlatformError()
+        {
+            return new NoCodesError(new Dictionary<string, object>
+            {
+                { "code", "Unknown" },
+                { "description", "No-Codes is not supported on this platform" },
+                { "additionalMessage", "" }
+            });
+        }
+
         internal static NoCodesError LoadScreenErrorFromJson(string jsonStr)
         {
             if (Json.Deserialize(jsonStr) is Dictionary<string, object> dict &&

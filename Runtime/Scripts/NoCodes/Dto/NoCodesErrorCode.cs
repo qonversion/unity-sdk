@@ -30,6 +30,7 @@ namespace QonversionUnity
         ProductsLoadingFailed,
         RateLimitExceeded,
         ScreenLoadingFailed,
-        SdkInitializationError
+        SdkInitializationError,
+        ClientError
     }
 }
