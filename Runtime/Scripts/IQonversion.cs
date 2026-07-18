@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 
@@ -86,8 +87,9 @@ namespace QonversionUnity
         /// Offerings allow changing the products offered remotely without releasing app updates.
         /// </summary>
         /// <param name="callback">Callback that will be called when response is received.</param>
-        /// <see href="https://qonversion.io/docs/offerings">Offerings</see>
+        /// <see href="https://documentation.qonversion.io/docs/migrate-offerings-to-remote-configs">Migrate Offerings to Remote Configs</see>
         /// <see href="https://qonversion.io/docs/product-center">Product Center</see>
+        [Obsolete("Offerings are deprecated. Manage paywall products with Remote Configs instead: https://documentation.qonversion.io/docs/migrate-offerings-to-remote-configs")]
         public void Offerings(Qonversion.OnOfferingsReceived callback);
 
         /// <summary>

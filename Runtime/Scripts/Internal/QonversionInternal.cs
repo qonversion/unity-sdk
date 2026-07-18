@@ -167,6 +167,7 @@ namespace QonversionUnity
             instance.Products(OnProductsMethodName);
         }
 
+        [Obsolete("Offerings are deprecated. Manage paywall products with Remote Configs instead: https://documentation.qonversion.io/docs/migrate-offerings-to-remote-configs")]
         public void Offerings(Qonversion.OnOfferingsReceived callback)
         {
             OfferingsCallbacks.Add(callback);
