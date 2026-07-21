@@ -15,8 +15,13 @@ namespace QonversionUnity
         [Tooltip("Create Products: (https://qonversion.io/docs/create-products")]
         [CanBeNull] public readonly string StoreId;
 
-        /// Identifier of the base plan for Google product.
-        [CanBeNull] public readonly string BasePlanId; 
+        /// Identifier of the base plan for a Google Play subscription product.
+        /// Android only. Null for one-time products - use <see cref="PurchaseOptionId"/> for those.
+        [CanBeNull] public readonly string BasePlanId;
+
+        /// Identifier of the Google Play purchase option for a one-time (in-app) product.
+        /// Android only. Null for subscription products - use <see cref="BasePlanId"/> for those.
+        [CanBeNull] public readonly string PurchaseOptionId;
 
         /// Google Play Store details of this product.
         /// Android only. Null for iOS, or if the product was not found.
@@ -68,6 +73,7 @@ namespace QonversionUnity
             if (dict.TryGetValue("id", out object value)) QonversionId = value as string;
             if (dict.TryGetValue("storeId", out value)) StoreId = value as string;
             if (dict.TryGetValue("basePlanId", out value)) BasePlanId = value as string;
+            if (dict.TryGetValue("purchaseOptionId", out value)) PurchaseOptionId = value as string;
             if (dict.TryGetValue("offeringId", out value)) OfferingId = value as string;
 
             if (dict.TryGetValue("subscriptionPeriod", out value) && value is Dictionary<string, object> subscriptionPeriod)
@@ -192,6 +198,7 @@ namespace QonversionUnity
             return $"{nameof(QonversionId)}: {QonversionId}, " +
                    $"{nameof(StoreId)}: {StoreId}, " +
                    $"{nameof(BasePlanId)}: {BasePlanId}, " +
+                   $"{nameof(PurchaseOptionId)}: {PurchaseOptionId}, " +
                    $"{nameof(Type)}: {Type}, " +
                    $"{nameof(SubscriptionPeriod)}: {SubscriptionPeriod}, " +
                    $"{nameof(TrialPeriod)}: {TrialPeriod}, " +

@@ -10,9 +10,13 @@ namespace QonversionUnity
     /// </summary>
     public class ProductStoreDetails
     {
-        /// Identifier of the base plan to which these details relate.
-        /// Null for in-app products.
+        /// Identifier of the base plan for a Google Play subscription product.
+        /// Null for one-time products - use <see cref="PurchaseOptionId"/> for those.
         public readonly string BasePlanId;
+
+        /// Identifier of the Google Play purchase option for a one-time (in-app) product.
+        /// Null for subscription products - use <see cref="BasePlanId"/> for those.
+        public readonly string PurchaseOptionId;
 
         /// Identifier of the subscription or the in-app product.
         public readonly string ProductId;
@@ -82,6 +86,7 @@ namespace QonversionUnity
         {
             if (dict.TryGetValue("productId", out object value)) ProductId = value as string;
             if (dict.TryGetValue("basePlanId", out value)) BasePlanId = value as string;
+            if (dict.TryGetValue("purchaseOptionId", out value)) PurchaseOptionId = value as string;
             if (dict.TryGetValue("name", out value)) Name = value as string;
             if (dict.TryGetValue("title", out value)) Title = value as string;
             if (dict.TryGetValue("description", out value)) Description = value as string;
@@ -135,6 +140,7 @@ namespace QonversionUnity
             }
 
             return $"{nameof(BasePlanId)}: {BasePlanId}, " +
+                   $"{nameof(PurchaseOptionId)}: {PurchaseOptionId}, " +
                    $"{nameof(ProductId)}: {ProductId}, " +
                    $"{nameof(Name)}: {Name}, " +
                    $"{nameof(Title)}: {Title}, " +
