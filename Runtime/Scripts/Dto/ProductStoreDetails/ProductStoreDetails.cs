@@ -140,6 +140,7 @@ namespace QonversionUnity
             }
 
             return $"{nameof(BasePlanId)}: {BasePlanId}, " +
+                   $"{nameof(PurchaseOptionId)}: {PurchaseOptionId}, " +
                    $"{nameof(ProductId)}: {ProductId}, " +
                    $"{nameof(Name)}: {Name}, " +
                    $"{nameof(Title)}: {Title}, " +

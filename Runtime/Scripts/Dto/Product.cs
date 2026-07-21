@@ -198,6 +198,7 @@ namespace QonversionUnity
             return $"{nameof(QonversionId)}: {QonversionId}, " +
                    $"{nameof(StoreId)}: {StoreId}, " +
                    $"{nameof(BasePlanId)}: {BasePlanId}, " +
+                   $"{nameof(PurchaseOptionId)}: {PurchaseOptionId}, " +
                    $"{nameof(Type)}: {Type}, " +
                    $"{nameof(SubscriptionPeriod)}: {SubscriptionPeriod}, " +
                    $"{nameof(TrialPeriod)}: {TrialPeriod}, " +
