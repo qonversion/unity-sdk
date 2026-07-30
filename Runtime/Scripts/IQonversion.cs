@@ -128,22 +128,27 @@ namespace QonversionUnity
         public void RemoteConfigList(string[] contextKeys, bool includeEmptyContextKey, Qonversion.OnRemoteConfigListReceived callback);
 
         /// <summary>
-        /// Invalidates the cache of remote configs so the next RemoteConfig or
-        /// RemoteConfigList call fetches a fresh targeting evaluation from the
-        /// server instead of returning the cached copy.
-        ///
+        /// Invalidates the cache of remote configs so the next <see cref="RemoteConfig"/> or
+        /// <see cref="RemoteConfigList(Qonversion.OnRemoteConfigListReceived)"/> call fetches
+        /// a fresh targeting evaluation from the server instead of returning the cached copy.
+        /// </summary>
+        /// <remarks>
         /// This method performs no network request itself — it only marks the
         /// cached values as stale. An in-flight RemoteConfig load is re-issued
         /// once so its waiting callbacks receive a fresh evaluation; an
         /// in-flight RemoteConfigList completes with the evaluation it started
-        /// with.
+        /// with. If the re-issued load fails, the previously received evaluation
+        /// is delivered instead of an error — the call never degrades below the
+        /// pre-invalidation result.
         ///
         /// Call it when the targeting inputs changed and you need the change
         /// reflected immediately, for example after setting a batch of user
         /// properties your remote config targeting depends on. You do NOT need
-        /// to call it after Identify — the SDK invalidates the cache on
-        /// identity changes automatically. Call it after initialization.
-        /// </summary>
+        /// to call it after <see cref="Identify"/> — the SDK invalidates the
+        /// cache on identity changes automatically. Call it after
+        /// <see cref="Qonversion.Initialize"/>: calling before initialization
+        /// throws.
+        /// </remarks>
         /// <see href="https://documentation.qonversion.io/docs/remote-config">Remote Configs</see>
         public void InvalidateRemoteConfigsCache();
 

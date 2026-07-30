@@ -215,7 +215,7 @@ namespace QonversionUnity
 
         public void InvalidateRemoteConfigsCache()
         {
-            var instance = GetNativeWrapper();
+            IQonversionWrapper instance = GetNativeWrapper();
             instance.InvalidateRemoteConfigsCache();
         }
 
