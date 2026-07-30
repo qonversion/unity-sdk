@@ -58,6 +58,10 @@ void _syncHistoricalData() {
     [qonversionSandwich syncHistoricalData];
 }
 
+void _invalidateRemoteConfigsCache() {
+    [qonversionSandwich invalidateRemoteConfigsCache];
+}
+
 void _syncStoreKit2Purchases() {
     [qonversionSandwich syncStoreKit2Purchases];
 }

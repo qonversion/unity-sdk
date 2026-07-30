@@ -26,6 +26,7 @@ namespace QonversionUnity
         void RemoteConfig([CanBeNull] string contextKey, string callbackName);
         void RemoteConfigList(string callbackName);
         void RemoteConfigList(string contextKeysJson, bool includeEmptyContextKey, string callbackName);
+        void InvalidateRemoteConfigsCache();
         void AttachUserToExperiment(string experimentId, string groupId, string callbackName);
         void DetachUserFromExperiment(string experimentId, string callbackName);
         void AttachUserToRemoteConfiguration(string remoteConfigurationId, string callbackName);
