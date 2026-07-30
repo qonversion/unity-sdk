@@ -82,6 +82,10 @@ public class QonversionWrapper {
         qonversionSandwich.syncHistoricalData();
     }
 
+    public static synchronized void invalidateRemoteConfigsCache() {
+        qonversionSandwich.invalidateRemoteConfigsCache();
+    }
+
     public static synchronized void syncPurchases() {
         qonversionSandwich.syncPurchases();
     }

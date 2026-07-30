@@ -213,6 +213,12 @@ namespace QonversionUnity
             instance.RemoteConfigList(contextKeysJson, includeEmptyContextKey, OnRemoteConfigListForContextKeysMethodName);
         }
 
+        public void InvalidateRemoteConfigsCache()
+        {
+            var instance = GetNativeWrapper();
+            instance.InvalidateRemoteConfigsCache();
+        }
+
         public void AttachUserToExperiment(string experimentId, string groupId, Qonversion.OnAttachUserResponseReceived callback)
         {
             AttachUserCallback = callback;

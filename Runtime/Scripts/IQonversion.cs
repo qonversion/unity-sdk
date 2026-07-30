@@ -128,6 +128,26 @@ namespace QonversionUnity
         public void RemoteConfigList(string[] contextKeys, bool includeEmptyContextKey, Qonversion.OnRemoteConfigListReceived callback);
 
         /// <summary>
+        /// Invalidates the cache of remote configs so the next RemoteConfig or
+        /// RemoteConfigList call fetches a fresh targeting evaluation from the
+        /// server instead of returning the cached copy.
+        ///
+        /// This method performs no network request itself — it only marks the
+        /// cached values as stale. An in-flight RemoteConfig load is re-issued
+        /// once so its waiting callbacks receive a fresh evaluation; an
+        /// in-flight RemoteConfigList completes with the evaluation it started
+        /// with.
+        ///
+        /// Call it when the targeting inputs changed and you need the change
+        /// reflected immediately, for example after setting a batch of user
+        /// properties your remote config targeting depends on. You do NOT need
+        /// to call it after Identify — the SDK invalidates the cache on
+        /// identity changes automatically. Call it after initialization.
+        /// </summary>
+        /// <see href="https://documentation.qonversion.io/docs/remote-config">Remote Configs</see>
+        public void InvalidateRemoteConfigsCache();
+
+        /// <summary>
         /// This function should be used for the test purposes only. Do not forget to delete the usage of this function before the release.
         /// Use this function to attach the user to the experiment.
         /// </summary>

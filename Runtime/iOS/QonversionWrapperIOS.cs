@@ -28,6 +28,9 @@ namespace QonversionUnity
         private static extern void _syncHistoricalData();
 
         [DllImport("__Internal")]
+        private static extern void _invalidateRemoteConfigsCache();
+
+        [DllImport("__Internal")]
         private static extern void _syncStoreKit2Purchases();
 
         [DllImport("__Internal")]
@@ -153,6 +156,13 @@ namespace QonversionUnity
         {
 #if UNITY_IOS
             _syncHistoricalData();
+#endif
+        }
+
+        public void InvalidateRemoteConfigsCache()
+        {
+#if UNITY_IOS
+            _invalidateRemoteConfigsCache();
 #endif
         }
 

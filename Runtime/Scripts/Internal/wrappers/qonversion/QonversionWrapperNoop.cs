@@ -83,6 +83,10 @@ namespace QonversionUnity
         {
         }
 
+        public void InvalidateRemoteConfigsCache()
+        {
+        }
+
         public void AttachUserToExperiment(string experimentId, string groupId, string callbackName)
         {
         }

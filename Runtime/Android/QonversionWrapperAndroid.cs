@@ -27,6 +27,11 @@ namespace QonversionUnity
             CallQonversion("syncHistoricalData");
         }
 
+        public void InvalidateRemoteConfigsCache()
+        {
+            CallQonversion("invalidateRemoteConfigsCache");
+        }
+
         public void SyncStoreKit2Purchases()
         {
         }
