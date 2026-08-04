@@ -33,6 +33,10 @@ namespace QonversionUnity
             {
                 return RemoteConfigurationAssignmentType.Manual;
             }
+            else if (type == "frozen")
+            {
+                return RemoteConfigurationAssignmentType.Frozen;
+            }
 
             return RemoteConfigurationAssignmentType.Unknown;
         }
@@ -70,7 +74,8 @@ namespace QonversionUnity
     {
         Unknown,
         Auto,
-        Manual
+        Manual,
+        Frozen
     }
 
     public enum RemoteConfigurationSourceType
