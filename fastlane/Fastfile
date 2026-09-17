@@ -14,22 +14,41 @@ def update_constant(new_version)
     update_file(path, regex, result_value)
 end
 
-def upgrade_sandwich_android(new_version)
-  path = "../Editor/QonversionDependencies.xml"
-  common_part = "<androidPackage spec=\"io.qonversion:sandwich:"
-  regex = /#{common_part}.*" \/>/
-  result_value = "#{common_part}#{new_version}\" \/>"
+DEPENDENCIES_XML = "../Editor/QonversionDependencies.xml"
 
-  update_file(path, regex, result_value)
+def upgrade_sandwich_android(new_version)
+  update_file_strict(DEPENDENCIES_XML, /<androidPackage spec="io\.qonversion:sandwich:.*" \/>/, "<androidPackage spec=\"io.qonversion:sandwich:#{new_version}\" />")
 end
 
+# The iOS sandwich pin lives twice in the dependencies XML: the Swift package (EDM4U 1.2.187+ with SPM enabled) and
+# the CocoaPod fallback; they must always match.
 def upgrade_sandwich_ios(new_version)
-  path = "../Editor/QonversionDependencies.xml"
-  common_part = "<iosPod name=\"QonversionSandwich\" version=\""
-  regex = /#{common_part}.*" \/>/
-  result_value = "#{common_part}#{new_version}\" \/>"
+  update_file_strict(DEPENDENCIES_XML, /<remoteSwiftPackage url="https:\/\/github\.com\/qonversion\/sandwich-sdk\.git" version=".*">/, "<remoteSwiftPackage url=\"https://github.com/qonversion/sandwich-sdk.git\" version=\"#{new_version}\">")
+  update_file_strict(DEPENDENCIES_XML, /<iosPod name="QonversionSandwich" version=".*" \/>/, "<iosPod name=\"QonversionSandwich\" version=\"#{new_version}\" />")
+end
 
-  update_file(path, regex, result_value)
+# Every pattern the sandwich pin lives in; each must match exactly once.
+SANDWICH_PIN_PATTERNS = [
+  /<androidPackage spec="io\.qonversion:sandwich:.*" \/>/,
+  /<remoteSwiftPackage url="https:\/\/github\.com\/qonversion\/sandwich-sdk\.git" version=".*">/,
+  /<iosPod name="QonversionSandwich" version=".*" \/>/,
+]
+
+def assert_sandwich_pins_updatable
+  content = File.read(DEPENDENCIES_XML)
+  SANDWICH_PIN_PATTERNS.each do |regex|
+    matches = content.scan(regex).length
+    UI.user_error!("#{DEPENDENCIES_XML}: expected exactly one match for #{regex.inspect}, found #{matches}") unless matches == 1
+  end
+end
+
+# Like update_file, but fails loudly unless the pattern matches exactly once —
+# a silent no-op would let the Swift package and CocoaPod pins drift apart.
+def update_file_strict(path, regex, result_value)
+  file = File.read(path)
+  matches = file.scan(regex).length
+  UI.user_error!("#{path}: expected exactly one match for #{regex.inspect}, found #{matches}") unless matches == 1
+  File.write(path, file.sub(regex, result_value))
 end
 
 def update_file(path, regex, result_value)
@@ -102,6 +121,9 @@ end
 
 lane :upgrade_sandwich do |options|
   new_version = options[:version]
+  UI.user_error!("Pass version:x.y.z") unless new_version.to_s.match?(/\A\d+\.\d+\.\d+\z/)
+  # Check every pattern first so a broken one cannot leave the file half-bumped.
+  assert_sandwich_pins_updatable
 
   upgrade_sandwich_android(new_version)
   upgrade_sandwich_ios(new_version)
