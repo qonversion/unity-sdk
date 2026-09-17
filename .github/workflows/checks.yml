@@ -1,0 +1,28 @@
+name: Checks
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  # The sandwich pin lives three times in Editor/QonversionDependencies.xml (Android package, iOS Swift package,
+  # iOS pod fallback); `fastlane upgrade_sandwich version:x.y.z` bumps them — this gate keeps them equal.
+  pins:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check the dependencies XML is well-formed
+        run: python3 -c 'import xml.etree.ElementTree as ET; ET.parse("Editor/QonversionDependencies.xml")'
+      - name: Check the sandwich pins match
+        run: |
+          pins=""
+          pins="$pins $(grep -oE 'io.qonversion:sandwich:[0-9.]+' Editor/QonversionDependencies.xml | grep -oE '[0-9.]+$' || true)"
+          pins="$pins $(grep -oE 'sandwich-sdk.git" version="[0-9.]+"' Editor/QonversionDependencies.xml | grep -oE '"[0-9.]+"$' | tr -d '"' || true)"
+          pins="$pins $(grep -oE '<iosPod name="QonversionSandwich" version="[0-9.]+"' Editor/QonversionDependencies.xml | grep -oE '"[0-9.]+"$' | tr -d '"' || true)"
+          echo "pins (android, ios swift package, ios pod):$pins"
+          count=$(echo $pins | wc -w)
+          unique=$(echo $pins | tr ' ' '\n' | sort -u | wc -l)
+          if [ "$count" -ne 3 ] || [ "$unique" -ne 1 ]; then
+            echo "::error::Sandwich pins differ or are missing:$pins"
+            exit 1
+          fi
