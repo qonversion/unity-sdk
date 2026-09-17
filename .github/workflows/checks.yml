@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Check the dependencies XML is well-formed
-        run: xmllint --noout Editor/QonversionDependencies.xml
+        run: python3 -c 'import xml.etree.ElementTree as ET; ET.parse("Editor/QonversionDependencies.xml")'
       - name: Check the sandwich pins match
         run: |
           pins=""
