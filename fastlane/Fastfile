@@ -17,21 +17,21 @@ end
 DEPENDENCIES_XML = "../Editor/QonversionDependencies.xml"
 
 def upgrade_sandwich_android(new_version)
-  update_file_strict(DEPENDENCIES_XML, /<androidPackage spec="io\.qonversion:sandwich:.*" \/>/, "<androidPackage spec=\"io.qonversion:sandwich:#{new_version}\" />")
+  update_file_strict(DEPENDENCIES_XML, /<androidPackage spec="io\.qonversion:sandwich:[^"]*" \/>/, "<androidPackage spec=\"io.qonversion:sandwich:#{new_version}\" />")
 end
 
 # The iOS sandwich pin lives twice in the dependencies XML: the Swift package (EDM4U 1.2.189+ with SPM enabled) and
 # the CocoaPod fallback; they must always match.
 def upgrade_sandwich_ios(new_version)
-  update_file_strict(DEPENDENCIES_XML, /<remoteSwiftPackage url="https:\/\/github\.com\/qonversion\/sandwich-sdk\.git" version=".*">/, "<remoteSwiftPackage url=\"https://github.com/qonversion/sandwich-sdk.git\" version=\"#{new_version}\">")
-  update_file_strict(DEPENDENCIES_XML, /<iosPod name="QonversionSandwich" version=".*" \/>/, "<iosPod name=\"QonversionSandwich\" version=\"#{new_version}\" />")
+  update_file_strict(DEPENDENCIES_XML, /<remoteSwiftPackage url="https:\/\/github\.com\/qonversion\/sandwich-sdk\.git" version="[^"]*">/, "<remoteSwiftPackage url=\"https://github.com/qonversion/sandwich-sdk.git\" version=\"#{new_version}\">")
+  update_file_strict(DEPENDENCIES_XML, /<iosPod name="QonversionSandwich" version="[^"]*" \/>/, "<iosPod name=\"QonversionSandwich\" version=\"#{new_version}\" />")
 end
 
 # Every pattern the sandwich pin lives in; each must match exactly once.
 SANDWICH_PIN_PATTERNS = [
-  /<androidPackage spec="io\.qonversion:sandwich:.*" \/>/,
-  /<remoteSwiftPackage url="https:\/\/github\.com\/qonversion\/sandwich-sdk\.git" version=".*">/,
-  /<iosPod name="QonversionSandwich" version=".*" \/>/,
+  /<androidPackage spec="io\.qonversion:sandwich:[^"]*" \/>/,
+  /<remoteSwiftPackage url="https:\/\/github\.com\/qonversion\/sandwich-sdk\.git" version="[^"]*">/,
+  /<iosPod name="QonversionSandwich" version="[^"]*" \/>/,
 ]
 
 def assert_sandwich_pins_updatable
