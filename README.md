@@ -17,7 +17,7 @@ Qonversion - In-app subscription monetization: implement subscriptions and grow 
 </p>
 
 [![openupm](https://img.shields.io/npm/v/com.qonversion.unity?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.qonversion.unity/)
-[![MIT License](http://img.shields.io/cocoapods/l/Qonversion.svg?style=flat)](https://qonversion.io)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](#license)
 
 
 ## In-App Subscription Implementation & Management
@@ -96,6 +96,12 @@ Send user-level subscription data to your favorite platforms.
 * **Customer support.** You can always reach out to our customer support and get the help required.
 
 Convinced? Let's go!
+
+## Installation
+
+Follow the [installation guide](https://documentation.qonversion.io/docs/unity-sdk). Native dependencies are resolved by the External Dependency Manager for Unity (EDM4U); with EDM4U 1.2.189+ on Unity 2021.3+ the iOS part is linked as a Swift package, older setups fall back to CocoaPods — see [Install Native Dependencies](https://documentation.qonversion.io/docs/unity-sdk#install-native-dependencies).
+
+> CocoaPods trunk becomes read-only on December 2, 2026 — see the [CocoaPods → Swift Package Manager migration guide](https://documentation.qonversion.io/docs/dec-2026-migration-guide-cocoapods-to-spm).
 
 ## Documentation
 
