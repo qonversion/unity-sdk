@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <dependencies>
     <androidPackages>
-        <androidPackage spec="io.qonversion:sandwich:7.13.0" />
+        <androidPackage spec="io.qonversion:sandwich:7.13.1" />
         <androidPackage spec="com.fasterxml.jackson.core:jackson-databind:2.11.1" />
         <androidPackage spec="org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.61" />
     </androidPackages>
@@ -9,10 +9,10 @@
          settings (the default), the sandwich is linked into UnityFramework as a Swift package and the pod below is
          skipped (replacesPod). Older EDM4U ignores this element; older Unity or SPM disabled fall back to the pod.
          Both versions must match: `fastlane upgrade_sandwich version:x.y.z` bumps them together. -->
-    <remoteSwiftPackage url="https://github.com/qonversion/sandwich-sdk.git" version="7.13.0">
+    <remoteSwiftPackage url="https://github.com/qonversion/sandwich-sdk.git" version="7.13.1">
         <swiftPackage name="QonversionSandwich" replacesPod="QonversionSandwich" />
     </remoteSwiftPackage>
     <iosPods>
-        <iosPod name="QonversionSandwich" version="7.13.0" />
+        <iosPod name="QonversionSandwich" version="7.13.1" />
     </iosPods>
 </dependencies>
