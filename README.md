@@ -17,7 +17,7 @@ Qonversion - In-app subscription monetization: implement subscriptions and grow 
 </p>
 
 [![openupm](https://img.shields.io/npm/v/com.qonversion.unity?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.qonversion.unity/)
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](#license)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
 
 
 ## In-App Subscription Implementation & Management
