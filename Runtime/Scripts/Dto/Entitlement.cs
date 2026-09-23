@@ -194,7 +194,8 @@ namespace QonversionUnity
         AppStore,
         PlayStore,
         Stripe,
-        Manual
+        Manual,
+        Paddle
     }
 
     public enum QEntitlementGrantType
