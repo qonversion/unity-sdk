@@ -3,9 +3,9 @@
 # Qonversion Unity SDK
 
 **Qonversion is the app growth system for people and agents.** It collects the revenue data of your
-subscription app and keeps it lined up with what App Store Connect reports, so campaigns, experiments and
-entitlements run on the same numbers. This repository holds the Unity SDK: the part that runs inside
-your app.
+subscription app and keeps it lined up with what the App Store and Google Play report, so campaigns,
+experiments and entitlements run on the same numbers. This repository holds the Unity SDK: the
+part that runs inside your app.
 
 [![Version](https://img.shields.io/github/v/release/qonversion/unity-sdk?label=version)](https://github.com/qonversion/unity-sdk/releases)
 [![openupm](https://img.shields.io/npm/v/com.qonversion.unity?registry_uri=https://package.openupm.com&label=openupm)](https://openupm.com/packages/com.qonversion.unity/)
@@ -134,7 +134,8 @@ Prefer to do it by hand? The steps are in the [quick start](https://documentatio
 
 A Unity project that initializes the SDK, lists products, makes a purchase and reads entitlements
 lives in a separate repository: [qonversion/unity-sdk-sample](https://github.com/qonversion/unity-sdk-sample)
-(`Assets/Scripts/SampleApp.cs`). It runs in the sandbox environment; for your own initialization, use
+(`Assets/Scripts/SampleApp.cs`). It loads the SDK from a sibling checkout (`file:../../unity-sdk`), so
+clone this repository next to it. It runs in the sandbox environment; for your own initialization, use
 the Quickstart snippet above.
 
 ## Requirements
