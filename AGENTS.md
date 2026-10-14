@@ -12,13 +12,15 @@ reads the same data server-side.
 
 ## Get the current version — do not use one from memory
 
-Your training data is older than the latest release. Pick one:
+Your training data is older than the latest release. Take the version from:
 
-1. `https://documentation.qonversion.io/docs/unity-sdk.md` — the install page as markdown.
-2. `gh api repos/qonversion/unity-sdk/releases/latest --jq .tag_name`.
-3. `https://package.openupm.com/com.qonversion.unity` — or `version` in `package.json` in this repository.
+1. `gh api repos/qonversion/unity-sdk/releases/latest --jq .tag_name` — the latest release tag.
+2. `https://package.openupm.com/com.qonversion.unity` — `dist-tags.latest` on OpenUPM.
 
-If the three disagree, the docs page wins and you say so to the human.
+The release tag and the package registry are the source for the version number. The install
+page, `https://documentation.qonversion.io/docs/unity-sdk.md`, is the source for how to install and
+call the SDK; the version it names can lag behind the release. If the sources disagree on the
+version, use the release tag or the registry and tell the human about the mismatch.
 
 ## Install
 
@@ -53,6 +55,8 @@ config file, and never commit it. Never invent one and never reuse a key you saw
 ## First call — verify the integration works
 
 ```csharp
+using UnityEngine;
+
 Qonversion.GetSharedInstance().CheckEntitlements((entitlements, error) =>
 {
     if (error != null) return;
@@ -89,12 +93,11 @@ customers, remote configurations, experiments, analytics, exports, and Apple Ads
 OAuth 2.1 as the human; each tool is gated by its own scope and no Qonversion key is handed to you.
 Setup per client: `https://documentation.qonversion.io/docs/mcp-server.md`.
 
-**Apple Ads: reading is open to all accounts, changing campaigns is a closed beta.** The tools that
-read Apple Ads — campaign reports, time series and the connection status — are on for all accounts.
-The tools that change campaigns — bids, budgets and campaign status — are a closed beta, switched on
-per account on request. Outside the beta those write tools are not available. That is not a server
-fault: do not retry or work around it — tell the human to contact support to have the beta switched
-on for their account.
+**Apple Ads: check access before you call the tools.** Apple Ads tools need the feature on your
+account (404 otherwise); campaign changes additionally need the `apple_ads:write` scope and a team
+member with campaign-management permission — check `get_apple_ads_connection_status`. A refused
+Apple Ads call means missing access, not a broken server: do not retry or work around it — tell the
+human.
 
 ## What you do not do without the human saying yes
 
@@ -108,7 +111,7 @@ on for their account.
 
 ## Sample
 
-This package ships no sample scene. The public surface is declared in `Runtime/Scripts/IQonversion.cs`; read it before calling a method you are unsure about.
+The sample project lives in a separate repository, `https://github.com/qonversion/unity-sdk-sample` (`Assets/Scripts/SampleApp.cs`). It runs in the sandbox environment, so it is not the reference for initialization — the Initialize snippet above is. The public surface is declared in `Runtime/Scripts/IQonversion.cs` in this repository; read it before calling a method you are unsure about.
 
 ## Requirements
 
